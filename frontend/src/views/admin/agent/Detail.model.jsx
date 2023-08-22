@@ -13,6 +13,7 @@ const DetailAgentmodule = ({ dataraw, close, reload }) => {
   }, [dataraw]);
 
   const [inpbal, setInpbal] = useState(0);
+
   // const add valence
   const AddBal = async () => {
     try {
@@ -77,10 +78,43 @@ const DetailAgentmodule = ({ dataraw, close, reload }) => {
             Swal.fire({
               position: "top-end",
               icon: "success",
+              title: "Agent has been activated.",
+              showConfirmButton: false,
+              timer: 1000,
+            });
+            reload((old) => old + 1);
+            close(false);
+          } catch (error) {
+            console.log(error);
+          }
+        }
+      });
+  }
+
+  function unblockAgent() {
+    swalWithBootstrapButtons
+      .fire({
+        title: "Are you sure?",
+        text: `You want to unblock ${data.name}?`,
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Yes, Unblock!",
+        cancelButtonText: "No, cancel!",
+        reverseButtons: true,
+      })
+      .then(async (result) => {
+        if (result.isConfirmed) {
+          try {
+            await axios.post("/api/admin/unblock-agent", { id: data.id });
+            Swal.fire({
+              position: "top-end",
+              icon: "success",
               title: "Agent has been blocked.",
               showConfirmButton: false,
               timer: 1000,
             });
+            reload((old) => old + 1);
+            close(false);
           } catch (error) {
             console.log(error);
           }
@@ -129,7 +163,7 @@ const DetailAgentmodule = ({ dataraw, close, reload }) => {
             {/* side b  */}
             <div className="relative col-span-2 w-full md:col-span-1">
               <div className="flex items-center px-2 pt-2 text-xl font-bold">
-                <span>Aprove By </span>:{" "}
+                <span>Approve By </span>:{" "}
                 <span className="flex items-center">
                   <span className="px-2">
                     <PhThumbsUp />
@@ -155,7 +189,7 @@ const DetailAgentmodule = ({ dataraw, close, reload }) => {
                 Agent setting
               </div>
 
-              <div className="grid grid-cols-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2">
                 <div className=" p-2">
                   <div className="relative w-full">
                     <h1>Add Balance to Agent Account</h1>
@@ -201,15 +235,26 @@ const DetailAgentmodule = ({ dataraw, close, reload }) => {
                 <div className="p-2">
                   <div className="relative w-full space-y-2">
                     <h1>
-                      Agent is currently{" "}
-                      <span className="font-bold"> active</span>
+                      Agent is currently
+                      <span className="font-bold">
+                        {data.status === 403 ? " Blocked" : " Active"}
+                      </span>
                     </h1>
-                    <button
-                      onClick={blockAgent}
-                      className="rounded bg-red-500 px-4 py-2 text-left font-medium text-white transition duration-200 hover:bg-red-600 active:bg-red-700 "
-                    >
-                      Block Agent
-                    </button>
+                    {data.status === 403 ? (
+                      <button
+                        onClick={unblockAgent}
+                        className="rounded bg-green-500 px-4 py-2 text-left font-medium text-white transition duration-200 hover:bg-green-600 active:bg-green-700 "
+                      >
+                        Unlock Agent
+                      </button>
+                    ) : (
+                      <button
+                        onClick={blockAgent}
+                        className="rounded bg-red-500 px-4 py-2 text-left font-medium text-white transition duration-200 hover:bg-red-600 active:bg-red-700 "
+                      >
+                        Block Agent
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>

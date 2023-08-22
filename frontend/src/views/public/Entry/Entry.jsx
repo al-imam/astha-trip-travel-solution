@@ -26,10 +26,9 @@ const Entry = () => {
 
   useEffect(() => {
     const getData = async () => {
-      console.log('helo');
+      console.log("helo");
       let ad = false;
       try {
-
         //get admin data
         try {
           const resAdmin = await axios("/api/auth/info");
@@ -40,9 +39,9 @@ const Entry = () => {
         }
         let resAgent;
         try {
-           resAgent = await axios("/api/agent/info");
+          resAgent = await axios("/api/agent/info");
         } catch (error) {
-          console.log("🚀 ~ file: Entry.jsx:44 ~ getData ~ error:", error)
+          console.log("🚀 ~ file: Entry.jsx:44 ~ getData ~ error:", error);
           resAgent = false;
         }
 
@@ -52,7 +51,6 @@ const Entry = () => {
 
         SetAgent(resAgent.data);
       } catch (error) {
-        
         Navigate("/agent/login");
       }
     };
@@ -108,10 +106,10 @@ const Entry = () => {
   const onsubmit = async (e) => {
     e.preventDefault();
 
-    if(!Admin){
-      let length = dataList.length; 
-      if(+(Agent.balance) <= (+(Agent.rate)*length)){
-        return toast.warn('Your balance is Low please add balance')
+    if (!Admin) {
+      let length = dataList.length;
+      if (+Agent.balance <= +Agent.rate * length) {
+        return toast.warn("Your balance is Low please add balance");
       }
     }
     if (load) {
@@ -167,23 +165,20 @@ const Entry = () => {
       e.target.querySelector("#reset").click();
       setload(false);
     } catch (error) {
-      console.log("🚀 ~ file: Entry.jsx:159 ~ onsubmit ~ error:", error)
+      console.log("🚀 ~ file: Entry.jsx:159 ~ onsubmit ~ error:", error);
       setload(false);
     }
   };
 
   // submit all data
   const submitFullList = async () => {
-   
-    if(!Admin){
-
-      let length = dataList.length; 
-      if(+(Agent.balance) < (+(Agent.rate)*length)){
-        return toast.warn('Your balance is Low please add balance')
+    if (!Admin) {
+      let length = dataList.length;
+      if (+Agent.balance < +Agent.rate * length) {
+        return toast.warn("Your balance is Low please add balance");
       }
     }
 
-    
     if (load) {
       return toast.warn("wait for pending job!");
     }
@@ -215,12 +210,14 @@ const Entry = () => {
           },
         }
       );
-          if(Admin){
-            Navigate("/admin/default");
-          }
-          else{
-            Navigate("/agent");
-          }
+      {
+        /* TODO: FIX THIS */
+      }
+      if (Admin) {
+        Navigate("/admin/default");
+      } else {
+        Navigate("/agent");
+      }
     } catch (error) {
       setload(false);
     }
@@ -276,14 +273,15 @@ const Entry = () => {
               </select>
             </div>
           </div>
-          {
-            Admin?("admin"):(
-              <div>
-                <span>Remaining Balence: {Agent.balance}</span><br />
-                <span>Submition Rate: {Agent.rate}</span>
-              </div>
-            )
-          }
+          {Admin ? (
+            "admin"
+          ) : (
+            <div>
+              <span>Remaining Balence: {Agent.balance}</span>
+              <br />
+              <span>Submition Rate: {Agent.rate}</span>
+            </div>
+          )}
         </div>
         {/* form  */}
         <div className="relative p-2">
