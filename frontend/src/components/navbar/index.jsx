@@ -204,27 +204,27 @@ const Navbar = (props) => {
             />
           }
           children={
-            <div className="flex w-56 flex-col justify-start rounded-[20px] bg-white bg-cover bg-no-repeat shadow-xl shadow-shadow-500 dark:!bg-navy-700 dark:text-white dark:shadow-none">
+            <div className="flex w-56 flex-col justify-start rounded-[20px] bg-white bg-cover bg-no-repeat text-base shadow-xl shadow-shadow-500 dark:!bg-navy-700 dark:text-white dark:shadow-none">
               <div className="p-4">
                 <div className="flex items-center gap-2">
-                  <p className="text-sm font-bold text-navy-700 dark:text-white">
+                  <p className=" font-bold text-navy-700 dark:text-white">
                     👋 Hey, Adela
                   </p>
                 </div>
               </div>
               <div className="h-px w-full bg-gray-200 dark:bg-white/20 " />
 
-              <div className="flex flex-col p-4">
-                <a
-                  href=" "
-                  className="text-sm text-gray-800 dark:text-white hover:dark:text-white"
+              <div className="flex flex-col gap-2 p-4">
+                <Link
+                  to="/admin/profile"
+                  className="rounded bg-brand-500 px-4 py-2 font-medium text-white transition duration-200 hover:bg-brand-600 active:bg-brand-700 dark:bg-brand-400 dark:text-white dark:hover:bg-brand-300 dark:active:bg-brand-200"
                 >
                   Profile Settings
-                </a>
+                </Link>
 
                 <button
                   onClick={logout}
-                  className="mt-3 text-sm font-medium text-red-500 hover:text-red-500"
+                  className="rounded bg-red-500 px-4 py-2 text-left font-medium text-white transition duration-200 hover:bg-red-600 active:bg-red-700 "
                 >
                   Log Out
                 </button>

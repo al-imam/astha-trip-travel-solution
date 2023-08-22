@@ -12,8 +12,6 @@ const dirSize = async (dir) => {
     return 0;
   });
 
-  console.log(paths);
-
   return (await Promise.all(paths))
     .flat(Infinity)
     .reduce((i, size) => i + size, 0);
