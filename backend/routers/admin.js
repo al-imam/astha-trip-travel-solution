@@ -13,6 +13,7 @@ const changePassword = require("../controller/account/changePassword");
 const storage = require("../controller/os/storage");
 const clearCache = require("../controller/os/clearCache");
 const blockAgent = require("../controller/account/blockAgent");
+const unblockAgent = require("../controller/account/unblockAgent");
 
 AdminRouter.get("/get-all-agent", isAdmin, getAllAgent);
 AdminRouter.get("/get-status", isAdmin, getStatus);
@@ -42,6 +43,12 @@ AdminRouter.post(
   "/block-agent",
   validateBody([isNumber("id", true)]),
   blockAgent
+);
+
+AdminRouter.post(
+  "/unblock-agent",
+  validateBody([isNumber("id", true)]),
+  unblockAgent
 );
 
 module.exports = AdminRouter;
