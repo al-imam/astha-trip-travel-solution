@@ -1,11 +1,9 @@
 const Agent = require("../../model/Agent");
 
 async function unblockAgent(req, res, next) {
-  const status = req.body.status === "approved" ? 1 : 0;
-
   try {
     await Agent.findByIdAndUpdate(req.body.id, {
-      status: status,
+      status: 1,
     });
 
     res.json({ success: true });
