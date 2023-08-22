@@ -12,14 +12,13 @@ const DetailAgentmodule = ({ dataraw, close, reload }) => {
     setData(dataraw);
   }, [dataraw]);
 
-  const [inpbal, setInpbal] = useState(0);
+  const [inpbal, setInpbal] = useState("");
 
   // const add valence
   const AddBal = async () => {
     try {
-      let url = "/api/admin/add-balance";
-      const res = await toast.promise(
-        axios.post(url, {
+      await toast.promise(
+        axios.post("/api/admin/add-balance", {
           id: `${data.id}`,
           balance: inpbal,
         }),
@@ -36,7 +35,7 @@ const DetailAgentmodule = ({ dataraw, close, reload }) => {
     }
   };
 
-  const [inpRate, setInprate] = useState(0);
+  const [inpRate, setInprate] = useState("");
   // const add rate
   const setRate = async () => {
     try {
@@ -80,7 +79,7 @@ const DetailAgentmodule = ({ dataraw, close, reload }) => {
               icon: "success",
               title: "Agent has been activated.",
               showConfirmButton: false,
-              timer: 1000,
+              timer: 1500,
             });
             reload((old) => old + 1);
             close(false);
@@ -111,7 +110,7 @@ const DetailAgentmodule = ({ dataraw, close, reload }) => {
               icon: "success",
               title: "Agent has been blocked.",
               showConfirmButton: false,
-              timer: 1000,
+              timer: 1500,
             });
             reload((old) => old + 1);
             close(false);
@@ -122,8 +121,14 @@ const DetailAgentmodule = ({ dataraw, close, reload }) => {
       });
   }
 
+  console.log(data);
+
+  if (data) {
+    document.body.style.overflow = "hidden";
+  }
+
   return (
-    <div className="remove-scroll-bar fixed top-0 left-0 z-10 h-screen  w-full overflow-auto bg-white/60 pt-48 backdrop-blur-md ">
+    <div className=" fixed top-0 left-0 z-10 h-screen  w-full overflow-auto bg-white/60 pt-48 backdrop-blur-md ">
       {data ? (
         <div className="mx-2 mb-8 w-full rounded-md bg-brand-100 p-3 shadow-md md:mx-auto md:w-11/12">
           <div className="relative flex w-full items-center justify-between border-b-2 border-brand-600 p-3 text-xl font-bold text-white">
@@ -137,6 +142,7 @@ const DetailAgentmodule = ({ dataraw, close, reload }) => {
               <button
                 onClick={() => {
                   close(false);
+                  document.body.style.overflow = "unset";
                 }}
                 className="rounded-md border-2 border-red-500 px-4 py-2 text-red-500 transition-all duration-500 hover:bg-red-500 hover:text-white"
               >
@@ -190,7 +196,7 @@ const DetailAgentmodule = ({ dataraw, close, reload }) => {
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2">
-                <div className=" p-2">
+                <div className="p-2">
                   <div className="relative w-full">
                     <h1>Add Balance to Agent Account</h1>
                     <input
@@ -232,7 +238,7 @@ const DetailAgentmodule = ({ dataraw, close, reload }) => {
                     </button>
                   </div>
                 </div>
-                <div className="p-2">
+                <div className="mt-2 p-2 sm:mt-0">
                   <div className="relative w-full space-y-2">
                     <h1>
                       Agent is currently
