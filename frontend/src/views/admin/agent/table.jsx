@@ -139,7 +139,10 @@ const Table = ({ datas, colunm, nav = true }) => {
         ""
       )}
 
-      <div className="relative w-full overflow-auto">
+      <div
+        className="relative w-full overflow-auto
+      "
+      >
         <table {...getTableProps()}>
           <thead>
             {
@@ -174,7 +177,7 @@ const Table = ({ datas, colunm, nav = true }) => {
             }
           </thead>
           {/* Apply the table body props */}
-          <tbody {...getTableBodyProps()}>
+          <tbody {...getTableBodyProps()} className="dark:text-gray-50">
             {
               // Loop over the table rows
               page.map((row, i) => {
