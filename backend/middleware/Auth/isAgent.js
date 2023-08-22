@@ -22,6 +22,13 @@ async function isAgent(req, res, next) {
 
     const [dbAgtRes] = await Agent.findById(agt.id);
 
+    if (dbAgtRes && dbAgtRes.status === 403) {
+      return res.status(403).json({
+        message: "permission denied",
+        code: "blocked",
+      });
+    }
+
     if (dbAgtRes && dbAgtRes.status === 1) {
       req.AGENT = dbAgtRes;
       return next();
