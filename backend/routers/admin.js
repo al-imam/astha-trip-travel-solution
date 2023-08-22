@@ -42,12 +42,14 @@ AdminRouter.post("/clear-cache", isAdmin, clearCache);
 AdminRouter.post(
   "/block-agent",
   validateBody([isNumber("id", true)]),
+  isAdmin,
   blockAgent
 );
 
 AdminRouter.post(
   "/unblock-agent",
   validateBody([isNumber("id", true)]),
+  isAdmin,
   unblockAgent
 );
 

@@ -13,6 +13,21 @@
   }
 }
 
+@layer components {
+  .outline-v2 * {
+    outline: solid rgb(0 0 0 / 0.5) 1px;
+  }
+
+  .remove-scroll-bar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .remove-scroll-bar::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 input.defaultCheckbox::before {
   content: url(../src/assets/svg/checked.svg);
   color: white;
@@ -37,5 +52,5 @@ input:checked.defaultCheckbox::before {
     ),
     radial-gradient(at 9% 43%, rgba(255, 229, 219, 0.476) 0px, transparent 50%),
     radial-gradient(at 39% 78%, hsla(231, 97%, 54%, 1) 0px, transparent 50%);
-    background-attachment: fixed;
+  background-attachment: fixed;
 }
