@@ -4,13 +4,15 @@ const approve = require("../controller/agent/approve");
 const validateBody = require("../middleware/validator/validateBody");
 const { isString, isNumber } = require("nested-object-validate");
 const Login = require("../controller/agent/login");
-const AgentRoute = express.Router();
+const balanceInvoice = require("../controller/agent/balanceInvoice");
 const isAdmin = require("../middleware/Auth/isAdmin");
 const getInfo = require("../controller/agent/info");
 const isAgent = require("../middleware/Auth/isAgent");
 const addBalance = require("../controller/agent/addBalance");
 const changePassword = require("../controller/agent/changePassword");
 const getLOIById = require("../controller/agent/getLOIById");
+
+const AgentRoute = express.Router();
 
 AgentRoute.post(
   "/reg",
@@ -51,5 +53,7 @@ AgentRoute.post("/approve", isAdmin, validateBody(["id"]), approve);
 AgentRoute.get("/info", getInfo);
 
 AgentRoute.get("/agent-loi-by-id", isAgent, getLOIById);
+
+AgentRoute.get("/balance-invoice/:agent_id", isAgent, balanceInvoice);
 
 module.exports = AgentRoute;

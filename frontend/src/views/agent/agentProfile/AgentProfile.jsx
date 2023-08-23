@@ -8,6 +8,8 @@ const AgentProfile = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isPassOpen, setIsPassOpen] = useState(false);
   const [agent, setAgent] = useState({});
+  const [invoices, setInvoices] = useState([]);
+
   const { register, handleSubmit, reset } = useForm();
   const {
     register: passReg,
@@ -19,8 +21,12 @@ const AgentProfile = () => {
   useEffect(() => {
     const getAuth = async () => {
       try {
-        const { data: agent } = await axios.get("/api/agent/info");
-        setAgent(agent);
+        const { data: agentRes } = await axios.get("/api/agent/info");
+        setAgent(agentRes);
+        const { data: invoiceRes } = await axios.get(
+          `/api/agent/balance-invoice/${agentRes.id}`
+        );
+        setInvoices(invoiceRes);
       } catch (e) {
         console.log(e);
       }
@@ -271,62 +277,27 @@ const AgentProfile = () => {
                 <th className="py-3 px-4 text-left font-semibold">Amount</th>
                 <th className="py-3 px-4 text-left font-semibold">Date</th>
                 <th className="py-3 px-4 text-left font-semibold">Status</th>
-                <th className="py-3 px-4 text-left font-semibold">Action</th>
+                {/* <th className="py-3 px-4 text-left font-semibold">Action</th> */}
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 ">
-              <tr className="even:bg-[#F7F4FE] hover:bg-[#F7F4FE]">
-                <td className="py-3 px-4">invoice.invoiceNumber</td>
-                <td className="py-3 px-4">invoice.amount</td>
-                <td className="py-3 px-4">invoice.date</td>
-                <td className="py-3 px-4">
-                  <span>status</span>
-                </td>
-                <td className="py-3 px-4">
-                  <button className="text-blue-500 hover:underline">
-                    Details
-                  </button>
-                </td>
-              </tr>
-              <tr className="even:bg-[#F7F4FE] hover:bg-[#F7F4FE]">
-                <td className="py-3 px-4">invoice.invoiceNumber</td>
-                <td className="py-3 px-4">invoice.amount</td>
-                <td className="py-3 px-4">invoice.date</td>
-                <td className="py-3 px-4">
-                  <span>status</span>
-                </td>
-                <td className="py-3 px-4">
-                  <button className="text-blue-500 hover:underline">
-                    Details
-                  </button>
-                </td>
-              </tr>
-              <tr className="even:bg-[#F7F4FE] hover:bg-[#F7F4FE]">
-                <td className="py-3 px-4">invoice.invoiceNumber</td>
-                <td className="py-3 px-4">invoice.amount</td>
-                <td className="py-3 px-4">invoice.date</td>
-                <td className="py-3 px-4">
-                  <span>status</span>
-                </td>
-                <td className="py-3 px-4">
-                  <button className="text-blue-500 hover:underline">
-                    Details
-                  </button>
-                </td>
-              </tr>
-              <tr className="even:bg-[#F7F4FE] hover:bg-[#F7F4FE]">
-                <td className="py-3 px-4">invoice.invoiceNumber</td>
-                <td className="py-3 px-4">invoice.amount</td>
-                <td className="py-3 px-4">invoice.date</td>
-                <td className="py-3 px-4">
-                  <span>status</span>
-                </td>
-                <td className="py-3 px-4">
-                  <button className="text-blue-500 hover:underline">
-                    Details
-                  </button>
-                </td>
-              </tr>
+              {invoices.map((invoice) => (
+                <tr className="even:bg-[#F7F4FE] hover:bg-[#F7F4FE]">
+                  <td className="py-3 px-4">{invoice.id}</td>
+                  <td className="py-3 px-4">{invoice.amount}</td>
+                  <td className="py-3 px-4">
+                    {new Date(invoice.createdAt)
+                      .toLocaleString()
+                      .replaceAll("/", "-")}
+                  </td>
+                  <td className="py-3 px-4">{invoice.status}</td>
+                  {/* <td className="py-3 px-4">
+                    <button className="text-blue-500 hover:underline">
+                      Details
+                    </button>
+                  </td> */}
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
