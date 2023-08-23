@@ -1,7 +1,9 @@
 const dirSize = require("./dirsize");
-const { normalize } = require("path");
+const { normalize, join } = require("path");
 
-const dir = normalize(process.env.CONTAINING_FOLDER_PATH);
+const dir = normalize(join(__dirname, "../../../"));
+
+console.log(dir);
 
 function round(num) {
   const strNum = num.toString();

@@ -67,7 +67,7 @@ const AgentLogin = () => {
             <li className="w-full md:w-auto">
               <Link
                 to="/agent/registration"
-                className="ml-auto rounded bg-brand-500 py-4 px-6 text-base font-medium text-white transition duration-200 hover:bg-brand-600 active:bg-brand-700 dark:bg-brand-400 dark:text-white dark:hover:bg-brand-300 dark:active:bg-brand-200 md:ml-0"
+                className="ml-auto inline-block rounded bg-brand-500 py-4 px-6 text-base font-medium text-white transition duration-200 hover:bg-brand-600 active:bg-brand-700 dark:bg-brand-400 dark:text-white dark:hover:bg-brand-300 dark:active:bg-brand-200 md:ml-0"
               >
                 Create account
               </Link>
