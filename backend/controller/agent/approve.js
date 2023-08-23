@@ -34,7 +34,7 @@ async function approve(req, res, next) {
     console.log("🚀 ~ file: approve.js:34 ~ approve ~ req.ADMIN:", req.ADMIN)
     await Agent.findByIdAndUpdate(req.body.id, {
       status: 1,
-      admin: req.ADMIN.user,
+      admin: req.ADMIN.username,
       rate: 100,
       balance: 0,
       password: bcrypt.hashSync(password, 10),

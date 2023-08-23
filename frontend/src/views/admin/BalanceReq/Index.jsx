@@ -83,15 +83,15 @@ const Index = () => {
                 <div>
                   <p className="font-bold text-brand-900">
                     <span>Name: </span>
-                    {props.row.original.agent.name}
+                    {props.row.original?.agent?.name}
                   </p>
                   <p>
                     <span>Email: </span>
-                    {props.row.original.agent.email}
+                    {props.row.original?.agent?.email}
                   </p>
                   <p>
                     <span>Phone: </span>
-                    {props.row.original.agent.phone}
+                    {props.row.original?.agent?.phone}
                   </p>
                 </div>
               );

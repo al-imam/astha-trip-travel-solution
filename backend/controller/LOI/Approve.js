@@ -23,9 +23,6 @@ const prosses = async (req, res, element) => {
       element.guest_name,
       "itenary"
     );
-    const updaet = await LOI.RayQuery(
-      `UPDATE loi_data SET status = 'approved' WHERE loi_data.id = ${element.id};`
-    );
 
     const filelist = [];
     if (element.pasport_copy && element.pasport_copy !== "") {
@@ -48,13 +45,13 @@ const prosses = async (req, res, element) => {
     });
 
     const agentmail = [];
-    if(element.agent){
-        agentmail.push(JSON.parse(element.agent).username);
+    if (element.agent) {
+      agentmail.push(JSON.parse(element.agent).username);
     }
 
     const SendMailres = await SendMail(
       ["nahidhasan141400@gmail.com"],
-      ["nahidhasan.opt@gmail.com",...agentmail],
+      ["nahidhasan.opt@gmail.com", ...agentmail],
       `${element.pasport_number}-${element.guest_name}`,
       "",
       `
@@ -84,6 +81,10 @@ const prosses = async (req, res, element) => {
       };
     }
 
+    const updaet = await LOI.RayQuery(
+      `UPDATE loi_data SET status = 'approved' WHERE loi_data.id = ${element.id};`
+    );
+
     return false;
   } catch (error) {
     return error;
@@ -99,7 +100,7 @@ const approved = async (req, res, next) => {
         instanceof: "loiapp",
       };
     }
-    
+
     const [resdb] = await LOI.findAll();
     const [Guest] = resdb.filter((e) => e.id === id);
     const AllGuest = resdb.filter((e) => e.reference === Guest.reference);
