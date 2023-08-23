@@ -1,25 +1,21 @@
-const UploadTempPhoto = async (req,res)=>{
-
-
-
-const response = {
-    passpor:{
-        name:req.files?.imgpasport[0]?.filename
+const UploadTempPhoto = async (req, res) => {
+  const response = {
+    passpor: {
+      name: req.files?.imgpasport[0]?.filename,
     },
-    visa:{
-        name:req.files?.imgvisa? req.files?.imgvisa[0]?.filename : null
+    visa: {
+      name: req.files?.imgvisa ? req.files?.imgvisa[0]?.filename : null,
     },
-    hotelbooking:{
-        name: req.files?.hotel? req.files?.hotel[0]?.filename : null
+    hotelbooking: {
+      name: req.files?.hotel ? req.files?.hotel[0]?.filename : null,
     },
-    tiket:{
-        name: req.files?.ticket? req.files?.ticket[0]?.filename : null
-    }
-}
-    res.send({
-        ...response
-    })
-
-}
+    tiket: {
+      name: req.files?.ticket ? req.files?.ticket[0]?.filename : null,
+    },
+  };
+  res.send({
+    ...response,
+  });
+};
 
 module.exports = UploadTempPhoto;
