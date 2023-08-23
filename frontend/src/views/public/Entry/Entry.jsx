@@ -23,6 +23,34 @@ const Entry = () => {
   // chack auth
   const [Admin, setAdmin] = useState({});
   const [Agent, SetAgent] = useState({});
+  const [Hotelname, SetHotelname] = useState("");
+
+  const [referench, setReferench] = useState({
+    fromdata: [],
+    todata: [],
+  });
+  useEffect(()=>{
+    setReferench({
+      fromdata: [
+        "From AirPort",
+        `${Hotelname} to Market`,
+        `${Hotelname} to Universal`,
+        `${Hotelname} to Merrina`,
+        ` ${Hotelname} to AirPort`,
+        `${Hotelname} to Sentosa Theme Park`,
+        ` ${Hotelname}`,
+      ],
+      todata: [
+        `Hotel ${Hotelname}`,
+        "To AirPort",
+        `Market to ${Hotelname}`,
+        `Universal to ${Hotelname}`,
+        `Merrina to ${Hotelname}`,
+        `City Tour`,
+        `Sentosa Theme Park to ${Hotelname}`,
+      ],
+    })
+  },[Hotelname])
 
   useEffect(() => {
     const getData = async () => {
@@ -210,9 +238,7 @@ const Entry = () => {
           },
         }
       );
-      {
-        /* TODO: FIX THIS */
-      }
+
       if (Admin) {
         Navigate("/admin/default");
       } else {
@@ -354,6 +380,10 @@ const Entry = () => {
                   type="text"
                   name="hotelName"
                   required
+                  onChange={(e) => {
+                    SetHotelname(e.target.value);
+                  }}
+                  value={Hotelname}
                   placeholder="Type Hotel Name Here"
                   className="w-full rounded-sm border-2 border-brand-100 p-2 outline-none"
                 />
@@ -568,23 +598,53 @@ const Entry = () => {
             </div>
             <div className="relative col-span-2 w-full">
               <label className="pl-px text-brand-900">From *</label>
-              <input
+              {/* <input
                 type="text"
                 name="from"
                 required
                 placeholder="Type From Here"
                 className="w-full rounded-sm border-2 border-brand-100 p-2 outline-none"
-              />
+              /> */}
+              <select
+              type="text"
+              name="from"
+              required
+              className="w-full rounded-sm border-2 border-brand-100 p-2 outline-none"
+              > 
+                {
+                  referench.fromdata.map((e)=>{
+                    return(
+                      <option key={e} value={e}>{e}</option>
+                    )
+                  })
+                  // <option value=""></option>
+                }
+              </select>
             </div>
             <div className="relative col-span-2 w-full">
               <label className="pl-px text-brand-900">To *</label>
-              <input
+              {/* <input
                 type="text"
                 name="to"
                 required
                 placeholder="Type to Here"
                 className="w-full rounded-sm border-2 border-brand-100 p-2 outline-none"
-              />
+              /> */}
+              <select
+              type="text"
+              name="to"
+              required
+              className="w-full rounded-sm border-2 border-brand-100 p-2 outline-none"
+              > 
+                {
+                  referench.todata.map((e)=>{
+                    return(
+                      <option key={e} value={e}>{e}</option>
+                    )
+                  })
+                  // <option value=""></option>
+                }
+              </select>
             </div>
             <button className="mt-5 rounded-xl border-2 border-brand-300 bg-white/10 px-3 py-2 shadow-lg dark:text-brand-200">
               Add
