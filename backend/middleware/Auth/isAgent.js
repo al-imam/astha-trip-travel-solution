@@ -25,7 +25,7 @@ async function isAgent(req, res, next) {
     if (dbAgtRes && dbAgtRes.status === 403) {
       return res.status(403).json({
         message: "permission denied",
-        code: "blocked",
+        code: "blocked-agent",
       });
     }
 
