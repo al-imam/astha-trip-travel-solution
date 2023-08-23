@@ -24,7 +24,7 @@ const Slider = () => {
         </SwiperSlide>
         <SwiperSlide>
             <div className='relative w-full h-full'>
-                <img src="/post1.jpg" className='w-full relative h-full object-contain' alt="" />
+                <img src="/astha2.jpg" className='w-full relative h-full object-contain' alt="" />
             </div>
         </SwiperSlide>
       </Swiper>
