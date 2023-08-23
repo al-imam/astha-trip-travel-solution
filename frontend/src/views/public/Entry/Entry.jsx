@@ -29,7 +29,7 @@ const Entry = () => {
     fromdata: [],
     todata: [],
   });
-  useEffect(()=>{
+  useEffect(() => {
     setReferench({
       fromdata: [
         "From AirPort",
@@ -49,8 +49,8 @@ const Entry = () => {
         `City Tour`,
         `Sentosa Theme Park to ${Hotelname}`,
       ],
-    })
-  },[Hotelname])
+    });
+  }, [Hotelname]);
 
   useEffect(() => {
     const getData = async () => {
@@ -376,17 +376,41 @@ const Entry = () => {
               {/* Hotel Name */}
               <div className="relative w-full">
                 <label className="pl-px text-brand-900">Hotel Name *</label>
-                <input
-                  type="text"
+                <select
                   name="hotelName"
                   required
                   onChange={(e) => {
                     SetHotelname(e.target.value);
                   }}
                   value={Hotelname}
-                  placeholder="Type Hotel Name Here"
                   className="w-full rounded-sm border-2 border-brand-100 p-2 outline-none"
-                />
+                >
+                  <option value="Hilton singapore orchard">
+                    Hilton singapore orchard
+                  </option>
+                  <option value="Galaxy pods @ chinatown">
+                    Galaxy pods @ chinatown
+                  </option>
+                  <option value="Holiday inn express singapor">
+                    Holiday inn express singapor
+                  </option>
+                  <option value="Ibis singapore on bencoolen">
+                    Ibis singapore on bencoolen
+                  </option>
+                  <option value="Swissotel the stamford">
+                    Swissotel the stamford
+                  </option>
+                  <option value="V hotel bencoolen">V hotel bencoolen</option>
+                  <option value="Parkroyal collection marina bay, singapore">
+                    Parkroyal collection marina bay, singapore
+                  </option>
+                  <option value="Sofitel singapore sentosa resort & spa">
+                    Sofitel singapore sentosa resort & spa
+                  </option>
+                  <option value="Sofitel singapore city centre">
+                    Sofitel singapore city centre
+                  </option>
+                </select>
               </div>
             </div>
             {/* file input  */}
@@ -606,16 +630,18 @@ const Entry = () => {
                 className="w-full rounded-sm border-2 border-brand-100 p-2 outline-none"
               /> */}
               <select
-              type="text"
-              name="from"
-              required
-              className="w-full rounded-sm border-2 border-brand-100 p-2 outline-none"
-              > 
+                type="text"
+                name="from"
+                required
+                className="w-full rounded-sm border-2 border-brand-100 p-2 outline-none"
+              >
                 {
-                  referench.fromdata.map((e)=>{
-                    return(
-                      <option key={e} value={e}>{e}</option>
-                    )
+                  referench.fromdata.map((e) => {
+                    return (
+                      <option key={e} value={e}>
+                        {e}
+                      </option>
+                    );
                   })
                   // <option value=""></option>
                 }
@@ -631,17 +657,17 @@ const Entry = () => {
                 className="w-full rounded-sm border-2 border-brand-100 p-2 outline-none"
               /> */}
               <select
-              type="text"
-              name="to"
-              required
-              className="w-full rounded-sm border-2 border-brand-100 p-2 outline-none"
-              > 
+                type="text"
+                name="to"
+                required
+                className="w-full rounded-sm border-2 border-brand-100 p-2 outline-none"
+              >
                 {
-                  referench.todata.map((e)=>{
-                    return(
-                      <option key={e} value={e}>{e}</option>
-                    )
-                  })
+                  referench.todata.map((e) => (
+                    <option key={e} value={e}>
+                      {e}
+                    </option>
+                  ))
                   // <option value=""></option>
                 }
               </select>
