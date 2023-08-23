@@ -18,6 +18,8 @@ const AgentLogin = () => {
               return "User not found!";
             } else if (data.response.data.code === "not-match") {
               return "User and Password not match!";
+            } else if (data.response.data.code === "blocked-agent") {
+              return "You're suspended from astha trip";
             }
             return "Something went wrong!";
           },
@@ -131,7 +133,6 @@ const AgentLogin = () => {
           </div>
         </div>
       </div>
-     
     </div>
   );
 };
