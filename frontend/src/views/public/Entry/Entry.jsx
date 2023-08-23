@@ -238,6 +238,7 @@ const Entry = () => {
           },
         }
       );
+
       if (Admin) {
         Navigate("/admin/default");
       } else {

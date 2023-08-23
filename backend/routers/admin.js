@@ -1,5 +1,5 @@
 const AdminRouter = require("express").Router();
-const { isString } = require("nested-object-validate");
+const { isString, isNumber } = require("nested-object-validate");
 const getAllAgent = require("../controller/agent/getAllAgent");
 const addBalance = require("../controller/account/balance");
 const setrate = require("../controller/account/setrate");
@@ -12,6 +12,8 @@ const reject = require("../controller/account/reject");
 const changePassword = require("../controller/account/changePassword");
 const storage = require("../controller/os/storage");
 const clearCache = require("../controller/os/clearCache");
+const blockAgent = require("../controller/account/blockAgent");
+const unblockAgent = require("../controller/account/unblockAgent");
 
 AdminRouter.get("/get-all-agent", isAdmin, getAllAgent);
 AdminRouter.get("/get-status", isAdmin, getStatus);
@@ -36,5 +38,19 @@ AdminRouter.post("/change-password", isAdmin, changePassword);
 
 AdminRouter.get("/storage-info", isAdmin, storage);
 AdminRouter.post("/clear-cache", isAdmin, clearCache);
+
+AdminRouter.post(
+  "/block-agent",
+  validateBody([isNumber("id", true)]),
+  isAdmin,
+  blockAgent
+);
+
+AdminRouter.post(
+  "/unblock-agent",
+  validateBody([isNumber("id", true)]),
+  isAdmin,
+  unblockAgent
+);
 
 module.exports = AdminRouter;

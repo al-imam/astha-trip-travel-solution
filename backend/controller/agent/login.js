@@ -21,6 +21,13 @@ const Login = async (req, res) => {
     });
   }
 
+  if (user.status === 403) {
+    return res.status(403).json({
+      message: "You're blocked",
+      code: "blocked-agent",
+    });
+  }
+
   const session = v4();
 
   const token = jwt.sign(

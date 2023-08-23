@@ -18,6 +18,8 @@ const AgentLogin = () => {
               return "User not found!";
             } else if (data.response.data.code === "not-match") {
               return "User and Password not match!";
+            } else if (data.response.data.code === "blocked-agent") {
+              return "You're suspended from astha trip";
             }
             return "Something went wrong!";
           },
@@ -65,7 +67,7 @@ const AgentLogin = () => {
             <li className="w-full md:w-auto">
               <Link
                 to="/agent/registration"
-                className="ml-auto rounded bg-brand-500 py-4 px-6 text-base font-medium text-white transition duration-200 hover:bg-brand-600 active:bg-brand-700 dark:bg-brand-400 dark:text-white dark:hover:bg-brand-300 dark:active:bg-brand-200 md:ml-0"
+                className="ml-auto inline-block rounded bg-brand-500 py-4 px-6 text-base font-medium text-white transition duration-200 hover:bg-brand-600 active:bg-brand-700 dark:bg-brand-400 dark:text-white dark:hover:bg-brand-300 dark:active:bg-brand-200 md:ml-0"
               >
                 Create account
               </Link>
@@ -131,7 +133,6 @@ const AgentLogin = () => {
           </div>
         </div>
       </div>
-     
     </div>
   );
 };

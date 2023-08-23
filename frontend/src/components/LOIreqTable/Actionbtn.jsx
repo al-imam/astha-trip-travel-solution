@@ -11,8 +11,6 @@ function CardMenu(props) {
   const [open, setOpen] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
 
-  console.log(props);
-
   const handleApproved = () => {
     let family = 1;
 

@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import Widget from "components/widget/Widget";
 import { toast } from "react-toastify";
 import axios from "axios";
+import Swal from "sweetalert2";
+
+const swalWithBootstrapButtons = Swal.mixin();
 
 const DetailAgentmodule = ({ dataraw, close, reload }) => {
   const [data, setData] = useState(null);
@@ -9,13 +12,13 @@ const DetailAgentmodule = ({ dataraw, close, reload }) => {
     setData(dataraw);
   }, [dataraw]);
 
-  const [inpbal, setInpbal] = useState(0);
+  const [inpbal, setInpbal] = useState("");
+
   // const add valence
   const AddBal = async () => {
     try {
-      let url = "/api/admin/add-balance";
-      const res = await toast.promise(
-        axios.post(url, {
+      await toast.promise(
+        axios.post("/api/admin/add-balance", {
           id: `${data.id}`,
           balance: inpbal,
         }),
@@ -32,7 +35,7 @@ const DetailAgentmodule = ({ dataraw, close, reload }) => {
     }
   };
 
-  const [inpRate, setInprate] = useState(0);
+  const [inpRate, setInprate] = useState("");
   // const add rate
   const setRate = async () => {
     try {
@@ -54,10 +57,80 @@ const DetailAgentmodule = ({ dataraw, close, reload }) => {
       console.log("🚀 ~ file: Detail.model.jsx:11 ~ AddBal ~ error:", error);
     }
   };
+
+  function blockAgent() {
+    swalWithBootstrapButtons
+      .fire({
+        title: "Are you sure?",
+        text: `You want to block ${data.name}?`,
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Yes, Block!",
+        cancelButtonText: "No, cancel!",
+        reverseButtons: true,
+        confirmButtonColor: "#ff0000db",
+      })
+      .then(async (result) => {
+        if (result.isConfirmed) {
+          try {
+            await axios.post("/api/admin/block-agent", { id: data.id });
+            Swal.fire({
+              position: "top-end",
+              icon: "success",
+              title: "Agent has been activated.",
+              showConfirmButton: false,
+              timer: 1500,
+            });
+            reload((old) => old + 1);
+            close(false);
+          } catch (error) {
+            console.log(error);
+          }
+        }
+      });
+  }
+
+  function unblockAgent() {
+    swalWithBootstrapButtons
+      .fire({
+        title: "Are you sure?",
+        text: `You want to unblock ${data.name}?`,
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Yes, Unblock!",
+        cancelButtonText: "No, cancel!",
+        reverseButtons: true,
+      })
+      .then(async (result) => {
+        if (result.isConfirmed) {
+          try {
+            await axios.post("/api/admin/unblock-agent", { id: data.id });
+            Swal.fire({
+              position: "top-end",
+              icon: "success",
+              title: "Agent has been blocked.",
+              showConfirmButton: false,
+              timer: 1500,
+            });
+            reload((old) => old + 1);
+            close(false);
+          } catch (error) {
+            console.log(error);
+          }
+        }
+      });
+  }
+
+  console.log(data);
+
+  if (data) {
+    document.body.style.overflow = "hidden";
+  }
+
   return (
-    <div className="fixed top-0 left-0 z-10 h-screen  w-full overflow-auto bg-white/60 pt-48 backdrop-blur-md ">
+    <div className=" fixed top-0 left-0 z-10 h-screen  w-full overflow-auto bg-white/60 pt-48 backdrop-blur-md ">
       {data ? (
-        <div className="mx-2 w-full rounded-md bg-brand-100 p-3 shadow-md md:mx-auto md:w-11/12">
+        <div className="mx-2 mb-8 w-full rounded-md bg-brand-100 p-3 shadow-md md:mx-auto md:w-11/12">
           <div className="relative flex w-full items-center justify-between border-b-2 border-brand-600 p-3 text-xl font-bold text-white">
             <div className="flex items-center">
               <span className="pr-2 text-2xl text-brand-700">
@@ -69,6 +142,7 @@ const DetailAgentmodule = ({ dataraw, close, reload }) => {
               <button
                 onClick={() => {
                   close(false);
+                  document.body.style.overflow = "unset";
                 }}
                 className="rounded-md border-2 border-red-500 px-4 py-2 text-red-500 transition-all duration-500 hover:bg-red-500 hover:text-white"
               >
@@ -95,7 +169,7 @@ const DetailAgentmodule = ({ dataraw, close, reload }) => {
             {/* side b  */}
             <div className="relative col-span-2 w-full md:col-span-1">
               <div className="flex items-center px-2 pt-2 text-xl font-bold">
-                <span>Aprove By </span>:{" "}
+                <span>Approve By </span>:{" "}
                 <span className="flex items-center">
                   <span className="px-2">
                     <PhThumbsUp />
@@ -121,46 +195,73 @@ const DetailAgentmodule = ({ dataraw, close, reload }) => {
                 Agent setting
               </div>
 
-              <div className=" p-2">
-                <div className="relative w-full">
-                  <h1>Add Balance to Agent Account</h1>
-                  <input
-                    onChange={(e) => {
-                      setInpbal(e.target.value);
-                    }}
-                    value={inpbal}
-                    type="number"
-                    placeholder="Enter The Ammount"
-                    className="rounded-md p-2 shadow-sm"
-                  />
-                  <br />
-                  <button
-                    onClick={() => {
-                      AddBal();
-                    }}
-                    className="mt-2 rounded-md  border-2 border-brand-500 px-4 py-2"
-                  >
-                    Add
-                  </button>
+              <div className="grid grid-cols-1 sm:grid-cols-2">
+                <div className="p-2">
+                  <div className="relative w-full">
+                    <h1>Add Balance to Agent Account</h1>
+                    <input
+                      onChange={(e) => {
+                        setInpbal(e.target.value);
+                      }}
+                      value={inpbal}
+                      type="number"
+                      placeholder="Enter The Ammount"
+                      className="rounded-md p-2 shadow-sm"
+                    />
+                    <br />
+                    <button
+                      onClick={() => {
+                        AddBal();
+                      }}
+                      className="mt-2 rounded-md  border-2 border-brand-500 px-4 py-2"
+                    >
+                      Add
+                    </button>
+                  </div>
+                  <div className="relative mt-8 w-full">
+                    <h1>Set Agent rate</h1>
+                    <input
+                      type="number"
+                      onChange={(e) => {
+                        setInprate(e.target.value);
+                      }}
+                      value={inpRate}
+                      placeholder="Enter The Ammount"
+                      className="rounded-md p-2 shadow-sm"
+                    />
+                    <br />
+                    <button
+                      onClick={setRate}
+                      className="mt-2 rounded-md  border-2 border-brand-500 px-4 py-2"
+                    >
+                      Update
+                    </button>
+                  </div>
                 </div>
-                <div className="relative mt-8 w-full">
-                  <h1>Set Agent rate</h1>
-                  <input
-                    type="number"
-                    onChange={(e) => {
-                      setInprate(e.target.value);
-                    }}
-                    value={inpRate}
-                    placeholder="Enter The Ammount"
-                    className="rounded-md p-2 shadow-sm"
-                  />
-                  <br />
-                  <button
-                    onClick={setRate}
-                    className="mt-2 rounded-md  border-2 border-brand-500 px-4 py-2"
-                  >
-                    Update
-                  </button>
+                <div className="mt-2 p-2 sm:mt-0">
+                  <div className="relative w-full space-y-2">
+                    <h1>
+                      Agent is currently
+                      <span className="font-bold">
+                        {data.status === 403 ? " Blocked" : " Active"}
+                      </span>
+                    </h1>
+                    {data.status === 403 ? (
+                      <button
+                        onClick={unblockAgent}
+                        className="rounded bg-green-500 px-4 py-2 text-left font-medium text-white transition duration-200 hover:bg-green-600 active:bg-green-700 "
+                      >
+                        Unlock Agent
+                      </button>
+                    ) : (
+                      <button
+                        onClick={blockAgent}
+                        className="rounded bg-red-500 px-4 py-2 text-left font-medium text-white transition duration-200 hover:bg-red-600 active:bg-red-700 "
+                      >
+                        Block Agent
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
