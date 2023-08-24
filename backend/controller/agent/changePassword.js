@@ -14,6 +14,8 @@ async function changePassword(req, res, next) {
       password: bcrypt.hashSync(req.body.password, 10),
     });
 
+    res.clearCookie("offer");
+
     res.json({ success: true });
   } catch (error) {
     next(error);
