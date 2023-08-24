@@ -6,7 +6,6 @@ export default function () {
   const { register, handleSubmit } = useForm();
 
   async function onSubmit(data) {
-    console.log(data);
     try {
       await toast.promise(axios.post("/api/admin/change-password", data), {
         pending: "Please wait loading..",

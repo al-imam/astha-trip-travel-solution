@@ -14,6 +14,7 @@ const storage = require("../controller/os/storage");
 const clearCache = require("../controller/os/clearCache");
 const blockAgent = require("../controller/account/blockAgent");
 const unblockAgent = require("../controller/account/unblockAgent");
+const sendfile = require("../controller/admn/sendfile");
 
 AdminRouter.get("/get-all-agent", isAdmin, getAllAgent);
 AdminRouter.get("/get-status", isAdmin, getStatus);
@@ -52,5 +53,7 @@ AdminRouter.post(
   isAdmin,
   unblockAgent
 );
+
+AdminRouter.get("/get-file/:filename", sendfile);
 
 module.exports = AdminRouter;

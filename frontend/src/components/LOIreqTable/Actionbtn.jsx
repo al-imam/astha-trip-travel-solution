@@ -116,17 +116,30 @@ function CardMenu(props) {
                 {/* TODO: complete url for pasport_copy */}
                 <a
                   className="text-blue-500 underline"
-                  href={`${prop.pasport_copy}`}
+                  target="_blank"
+                  href={`/api/admin/get-file${prop.pasport_copy}`}
                 >
                   Pasport_copy
                 </a>
-                <a className="text-blue-500 underline" href={prop.visa_copy}>
+                <a
+                  className="text-blue-500 underline"
+                  target="_blank"
+                  href={`/api/admin/get-file${prop.visa_copy}`}
+                >
                   Visa_copy
                 </a>
-                <a className="text-blue-500 underline" href={prop.tiket_copy}>
+                <a
+                  className="text-blue-500 underline"
+                  target="_blank"
+                  href={`/api/admin/get-file${prop.tiket_copy}`}
+                >
                   Tiket_copy
                 </a>
-                <a className="text-blue-500 underline" href={prop.hotel_copy}>
+                <a
+                  className="text-blue-500 underline"
+                  target="_blank"
+                  href={`/api/admin/get-file${prop.hotel_copy}`}
+                >
                   Hotel_copy
                 </a>
               </div>
