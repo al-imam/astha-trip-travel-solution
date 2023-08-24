@@ -385,6 +385,9 @@ const Entry = () => {
                   value={Hotelname}
                   className="w-full rounded-sm border-2 border-brand-100 p-2 outline-none"
                 >
+                  <option selected disabled value="">
+                    Choose your hotel
+                  </option>
                   <option value="Hilton singapore orchard">
                     Hilton singapore orchard
                   </option>
@@ -633,6 +636,7 @@ const Entry = () => {
                 type="text"
                 name="from"
                 required
+                disabled={!Hotelname}
                 className="w-full rounded-sm border-2 border-brand-100 p-2 outline-none"
               >
                 {
@@ -660,6 +664,7 @@ const Entry = () => {
                 type="text"
                 name="to"
                 required
+                disabled={!Hotelname}
                 className="w-full rounded-sm border-2 border-brand-100 p-2 outline-none"
               >
                 {
