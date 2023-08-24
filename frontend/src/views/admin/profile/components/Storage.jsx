@@ -39,9 +39,22 @@ const Storage = () => {
   }
 
   useEffect(() => {
+    const local = JSON.parse(localStorage.getItem("astha-storage-info"));
+
+    if (local && local.expire > Date.now()) {
+      return setStorageInfo(local.data);
+    }
+
     (async () => {
       try {
         const { data } = await axios.get("/api/admin/storage-info");
+        localStorage.setItem(
+          "astha-storage-info",
+          JSON.stringify({
+            expire: Date.now() + 24 * 60 * 60 * 1000,
+            data,
+          })
+        );
         setStorageInfo(data);
       } catch (error) {
         console.log(error);
