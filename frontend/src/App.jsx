@@ -19,12 +19,13 @@ const App = () => {
       <Route path="admin/*" element={<AdminLayout />} />
       <Route path="entry/*" element={<Entry />} />
       <Route path="agentEntry/*" element={<AgentEntry />} />
+      
+      <Route path="/agent/Login" element={<AgentLogin />} />
+      <Route path="/agent/registration" element={<Registration />} />
       <Route path="/agent" element={<Agent />}>
         <Route index element={<AgentHome />} />
         <Route path="/agent/agentProfile" element={<AgentProfile />} />
       </Route>
-      <Route path="/agent/Login" element={<AgentLogin />} />
-      <Route path="/agent/registration" element={<Registration />} />
       <Route path="/" element={<Navigate to="/agent" replace />} />
     </Routes>
     

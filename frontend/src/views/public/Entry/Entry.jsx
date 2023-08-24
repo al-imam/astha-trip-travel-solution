@@ -217,6 +217,12 @@ const Entry = () => {
       setload(false);
       return toast.warn("please enter tour iternary");
     }
+    if(!dataList.length){
+      setload(false);
+      return toast.warn("please Add user First",{
+        delay:"4000",
+      });
+    }
 
     try {
       // eslint-disable-next-line no-unused-vars

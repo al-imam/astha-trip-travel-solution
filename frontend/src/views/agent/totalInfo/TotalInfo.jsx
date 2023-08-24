@@ -20,7 +20,7 @@ function TotalInfo() {
   }, []);
 
   return (
-    <>
+    <div>
       {typeof openGuest === "object" && (
         <div className="fixed top-0 left-0 z-10 h-screen  w-full overflow-auto bg-white/60 pt-48 backdrop-blur-md">
           <div className="mx-2 w-full rounded-md bg-brand-100 p-3 pb-20 shadow-md md:mx-auto md:w-11/12">
@@ -323,7 +323,7 @@ function TotalInfo() {
           tableData={loiData}
         />
       </div>
-    </>
+    </div>
   );
 }
 
