@@ -68,9 +68,7 @@ const AgentProfile = () => {
         success: "Password change successfully!",
         error: "Something went wrong, try again!",
       });
-
-      passRe();
-      setIsPassOpen(false);
+      window.location.reload();
     } catch (e) {
       console.log(e);
     }
