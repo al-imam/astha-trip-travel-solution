@@ -32,22 +32,35 @@ const Entry = () => {
   useEffect(() => {
     setReferench({
       fromdata: [
-        "From AirPort",
+        "AirPort",
         `${Hotelname} to Market`,
-        `${Hotelname} to Universal`,
-        `${Hotelname} to Merrina`,
-        ` ${Hotelname} to AirPort`,
+        `${Hotelname} to Marina Bay Sands`,
         `${Hotelname} to Sentosa Theme Park`,
-        ` ${Hotelname}`,
+        `${Hotelname} to Universal Studios`,
+        `${Hotelname} to Hop-On Hop-Off Sightseeing Bus Tour`,
+        `${Hotelname} to S.E.A. Aquarium Entrance`,
+        `${Hotelname} to Art Science Museum`,
+        `${Hotelname} to Flyer & Gardens by the Bay`,
+        `${Hotelname} to Sentosa Mega Adventure Park`,
+        `${Hotelname} to National Gallery`,
+        `${Hotelname} to Full-Day City Tour`,
+        `${Hotelname}`,
       ],
       todata: [
         `Hotel ${Hotelname}`,
-        "To AirPort",
-        `Market to ${Hotelname}`,
-        `Universal to ${Hotelname}`,
-        `Merrina to ${Hotelname}`,
+        "AirPort",
         `City Tour`,
+        `Market to ${Hotelname}`,
+        `Marina Bay Sands to ${Hotelname}`,
+        `Universal Studios to ${Hotelname}`,
         `Sentosa Theme Park to ${Hotelname}`,
+        `Hop-On Hop-Off Sightseeing Bus Tour to ${Hotelname}`,
+        `S.E.A. Aquarium Entrance to ${Hotelname}`,
+        `Art Science Museum to ${Hotelname}`,
+        `Flyer & Gardens by the Bay to ${Hotelname}`,
+        `Sentosa Mega Adventure Park to ${Hotelname}`,
+        `National Gallery to ${Hotelname}`,
+        `Full-Day City Tour to ${Hotelname}`,
       ],
     });
   }, [Hotelname]);
@@ -640,9 +653,9 @@ const Entry = () => {
                 className="w-full rounded-sm border-2 border-brand-100 p-2 outline-none"
               >
                 {
-                  referench.fromdata.map((e) => {
+                  referench.fromdata.map((e, i) => {
                     return (
-                      <option key={e} value={e}>
+                      <option key={e} selected={i === 0} value={e}>
                         {e}
                       </option>
                     );
@@ -668,8 +681,8 @@ const Entry = () => {
                 className="w-full rounded-sm border-2 border-brand-100 p-2 outline-none"
               >
                 {
-                  referench.todata.map((e) => (
-                    <option key={e} value={e}>
+                  referench.todata.map((e, i) => (
+                    <option key={e} selected={i === 0} value={e}>
                       {e}
                     </option>
                   ))
