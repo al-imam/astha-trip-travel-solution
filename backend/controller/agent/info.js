@@ -19,7 +19,13 @@ async function getInfo(req, res, next) {
     }
     const [user] = await Agent.findById(values.id);
 
-    if (user.session !== values.dict) {
+    if (user?.session !== values.dict) {
+      return res.status(401).json({
+        message: "Permission denied!",
+        code: "verify-failed",
+      });
+    }
+    if (user?.status === 403){
       return res.status(401).json({
         message: "Permission denied!",
         code: "verify-failed",

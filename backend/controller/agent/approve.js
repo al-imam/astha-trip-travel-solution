@@ -31,7 +31,6 @@ async function approve(req, res, next) {
   try {
     const password = generatePassword(6);
    
-    console.log("🚀 ~ file: approve.js:34 ~ approve ~ req.ADMIN:", req.ADMIN)
     await Agent.findByIdAndUpdate(req.body.id, {
       status: 1,
       admin: req.ADMIN.username,
@@ -41,8 +40,6 @@ async function approve(req, res, next) {
     });
 
     const [dbAgent] = await Agent.findById(req.body.id);
-    console.log("🚀 ~ file: approve.js:43 ~ approve ~ dbAgent:", dbAgent.email)
-
     await SendMail(
       [dbAgent.email],
       [],
@@ -54,6 +51,7 @@ async function approve(req, res, next) {
 
     res.json({ success: true });
   } catch (e) {
+    console.log("🚀 ~ file: approve.js:54 ~ approve ~ e:", e)
     next(e);
   }
 }

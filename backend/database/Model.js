@@ -101,9 +101,10 @@ class Model {
 
   async findOne(where) {
     try {
-      if (!(await chackTable(this.name))) {
+       // chack is table exist if not then add the table
+       if (!(await chackTable(this.name))) {
         await new Promise(async (resolve) => {
-          await this.mygrate();
+          const resmy = await this.mygrate();
           resolve();
         });
       }
@@ -124,9 +125,10 @@ class Model {
 
   async find(where) {
     try {
+      // chack is table exist if not then add the table
       if (!(await chackTable(this.name))) {
         await new Promise(async (resolve) => {
-          await this.mygrate();
+          const resmy = await this.mygrate();
           resolve();
         });
       }
@@ -232,9 +234,10 @@ class Model {
   }
 
   async findById(id) {
-    if (!(await chackTable(this.name))) {
+     // chack is table exist if not then add the table
+     if (!(await chackTable(this.name))) {
       await new Promise(async (resolve) => {
-        await this.mygrate();
+        const resmy = await this.mygrate();
         resolve();
       });
     }
@@ -247,9 +250,10 @@ class Model {
 
   async update(q = { set: {}, where: {} }) {
     try {
+      // chack is table exist if not then add the table
       if (!(await chackTable(this.name))) {
         await new Promise(async (resolve) => {
-          await this.mygrate();
+          const resmy = await this.mygrate();
           resolve();
         });
       }
@@ -273,9 +277,10 @@ class Model {
   }
 
   async findByIdAndUpdate(id, querySet = {}) {
-    if (!(await chackTable(this.name))) {
+     // chack is table exist if not then add the table
+     if (!(await chackTable(this.name))) {
       await new Promise(async (resolve) => {
-        await this.mygrate();
+        const resmy = await this.mygrate();
         resolve();
       });
     }
@@ -304,7 +309,7 @@ class Model {
     //   return res.send(cash.res);
     // }
     try {
-      // chack if the table is exist or not
+      // chack is table exist if not then add the table
       if (!(await chackTable(this.name))) {
         await new Promise(async (resolve) => {
           const resmy = await this.mygrate();
@@ -324,7 +329,8 @@ class Model {
   // raw sql input
   async RayQuery(sql) {
     try {
-      if (!(await chackTable(this.name))) {
+       // chack is table exist if not then add the table
+       if (!(await chackTable(this.name))) {
         await new Promise(async (resolve) => {
           const resmy = await this.mygrate();
           resolve();
