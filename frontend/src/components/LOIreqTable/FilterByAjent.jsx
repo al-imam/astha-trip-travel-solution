@@ -1,43 +1,40 @@
 import React, { useState, useEffect } from "react";
-
 import Datepicker from "react-tailwindcss-datepicker";
 
 import axios from "axios";
 import { toast } from "react-toastify";
 
-const FilterByAjent = ({setData}) => {
+const FilterByAjent = ({ setData }) => {
   const [AgentList, SetAgentList] = useState([]);
+  const [Agent, SetAgent] = useState(null);
   const [value, setValue] = useState({
     startDate: null,
     endDate: null,
   });
-  console.log("🚀 ~ file: FilterByAjent.jsx:14 ~ FilterByAjent ~ value:", value)
-  const [Agent,SetAgent] = useState(null);
 
   const handleValueChange = (newValue) => {
-    console.log("newValue:", newValue);
     setValue(newValue);
   };
 
-
-  const Filter= async() =>{
+  const Filter = async () => {
     try {
-        const response = await toast.promise(axios.post('/api/admin/filter-loi-by-agent',{
-            dateBefore:value.endDate,
-            dateAfter:value.startDate,
-            email:Agent
-        }),{
-            loading: 'Loading...',
-            success: 'Success!',
-            error: 'Error!'
-        })
-        setData(response.data)
-        
+      const response = await toast.promise(
+        axios.post("/api/admin/filter-loi-by-agent", {
+          dateBefore: value.endDate,
+          dateAfter: value.startDate,
+          email: Agent,
+        }),
+        {
+          loading: "Loading...",
+          success: "Success!",
+          error: "Error!",
+        }
+      );
+      setData(response.data);
     } catch (error) {
-        console.log("🚀 ~ file: FilterByAjent.jsx:24 ~ Filter ~ error:", error)
-        
+      console.log("🚀 ~ file: FilterByAjent.jsx:24 ~ Filter ~ error:", error);
     }
-  }
+  };
 
   useEffect(() => {
     const getdata = async () => {
@@ -48,13 +45,16 @@ const FilterByAjent = ({setData}) => {
             return e.status == 1;
           })
         );
-      } catch (error) {}
+      } catch (error) {
+        console.log("🚀 ~ getdata ~ error:", error);
+      }
     };
     getdata();
   }, []);
+
   return (
-    <div className="mt-2 flex w-full flex-col items-center justify-start gap-2 md:flex-row">
-      <div className="w-96">
+    <div className="mt-4 flex w-full flex-col items-start gap-2 sm:justify-between md:flex-row md:items-center lg:justify-start">
+      <div className="w-full rounded ring-[2px] ring-brand-300 md:w-96">
         <Datepicker
           onChange={handleValueChange}
           value={value}
@@ -62,12 +62,16 @@ const FilterByAjent = ({setData}) => {
           popoverDirection="down"
         />
       </div>
-      <div>
+      <div className="w-full md:w-72">
         <select
           name="agent"
-          className="h-full w-72 rounded-md border-2 border-brand-300 p-3 outline-none"
+          onChange={(e) => SetAgent(e.target.value)}
+          value={Agent}
+          className="h-full w-full rounded-md border-2 border-brand-300 p-2 outline-none "
         >
-          <option value="">Chouse A Agent Email</option>
+          <option value="" disabled selected>
+            Chouse A Agent Email
+          </option>
           {AgentList.map((agent, key) => {
             return (
               <option key={key} value={agent.email}>
@@ -78,18 +82,19 @@ const FilterByAjent = ({setData}) => {
         </select>
       </div>
       <div>
-        <button onClick={Filter} className="flex items-center justify-center rounded-md border-2 border-brand-200 bg-white px-5 py-3">
+        <button
+          onClick={Filter}
+          className="ml-0 flex items-center justify-center rounded-md border-2 border-brand-200 bg-white px-6 py-2 sm:ml-auto"
+        >
           <span className="text-2xl text-brand-400">
             <IcRoundFilterAlt />
-          </span>{" "}
+          </span>
           Filter
         </button>
       </div>
     </div>
   );
 };
-
-export default FilterByAjent;
 
 export function IcRoundFilterAlt(props) {
   return (
@@ -107,3 +112,5 @@ export function IcRoundFilterAlt(props) {
     </svg>
   );
 }
+
+export default FilterByAjent;
