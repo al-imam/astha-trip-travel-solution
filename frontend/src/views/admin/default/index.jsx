@@ -49,8 +49,6 @@ const Dashboard = () => {
     })();
   }, [reload]);
 
-
-
   return (
     <div>
       {/* Card widget */}
@@ -143,6 +141,7 @@ const Dashboard = () => {
           selectedOption={selectedOption}
           search={search}
           relaod={[reload, setReload]}
+          setSelect={setSelectedOption}
         />
       </div>
 

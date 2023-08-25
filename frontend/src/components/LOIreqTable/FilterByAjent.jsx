@@ -4,7 +4,7 @@ import Datepicker from "react-tailwindcss-datepicker";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-const FilterByAjent = ({ setData }) => {
+const FilterByAjent = ({ setData, goBack, removeFilter }) => {
   const [AgentList, SetAgentList] = useState([]);
   const [Agent, SetAgent] = useState(null);
   const [value, setValue] = useState({
@@ -49,7 +49,13 @@ const FilterByAjent = ({ setData }) => {
         console.log("🚀 ~ getdata ~ error:", error);
       }
     };
+
     getdata();
+
+    return () => {
+      goBack();
+      removeFilter();
+    };
   }, []);
 
   return (
