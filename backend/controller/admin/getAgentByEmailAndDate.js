@@ -1,8 +1,8 @@
 const LOI = require("../../model/LOI");
 
 function getDateObject(time) {
+  if (!time) return null;
   const date = new Date(time);
-  if (isNaN(date.getDay())) throw "Enter valid date!";
   return {
     year: date.getFullYear(),
     month: date.getMonth() + 1,
@@ -11,6 +11,7 @@ function getDateObject(time) {
 }
 
 function timeQuery(before, after) {
+  if (!before || !after) return "";
   return `DATE(createdAt) <= CAST('${before.year}-${before.month}-${before.day}' AS DATE) AND DATE(createdAt) >= CAST('${after.year}-${after.month}-${after.day}' AS DATE)`;
 }
 
@@ -23,8 +24,10 @@ function agentQuery(email) {
 }
 
 function combineQuery(agent, date) {
-  if (!agent) return date;
-  return `${agent} AND ${date}`;
+  if (agent && date) return `WHERE ${agent} AND ${date}`;
+  if (agent) return "WHERE " + agent;
+  if (date) return "WHERE " + date;
+  return "";
 }
 
 async function getAgentByEmailAndDate(req, res, next) {
@@ -32,12 +35,10 @@ async function getAgentByEmailAndDate(req, res, next) {
     const dateBefore = getDateObject(req.body.dateBefore);
     const dateAfter = getDateObject(req.body.dateAfter);
 
-    const query = `SELECT * FROM loi_data WHERE ${combineQuery(
+    const query = `SELECT * FROM loi_data ${combineQuery(
       agentQuery(req.body.email),
       timeQuery(dateBefore, dateAfter)
     )}`;
-
-    console.log(query);
 
     const [dbRes] = await LOI.RayQuery(query);
 
