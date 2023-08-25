@@ -54,8 +54,8 @@ const ComplexTable = (props) => {
         <div className="flex items-center text-xl font-bold text-navy-700 dark:text-white">
           <span className="r-2 text-2xl text-brand-500">
             <MaterialSymbolsAccountBoxOutlineSharp />
-          </span>{" "}
-          List of user
+          </span>
+          List of Guest
         </div>
         {/* <CardMenu /> */}
       </div>
