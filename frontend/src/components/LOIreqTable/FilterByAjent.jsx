@@ -18,7 +18,6 @@ const FilterByAjent = ({ setData }) => {
 
   const Filter = async () => {
     try {
-      alert(Agent);
       const response = await toast.promise(
         axios.post("/api/admin/filter-loi-by-agent", {
           dateBefore: value.endDate,
@@ -46,14 +45,16 @@ const FilterByAjent = ({ setData }) => {
             return e.status == 1;
           })
         );
-      } catch (error) {}
+      } catch (error) {
+        console.log("🚀 ~ getdata ~ error:", error);
+      }
     };
     getdata();
   }, []);
 
   return (
-    <div className="mt-2 flex w-full flex-col items-center justify-start gap-2 md:flex-row">
-      <div className="w-96">
+    <div className="mt-4 flex w-full flex-col items-start gap-2 sm:justify-between md:flex-row md:items-center lg:justify-start">
+      <div className="w-full rounded ring-[2px] ring-brand-300 md:w-96">
         <Datepicker
           onChange={handleValueChange}
           value={value}
@@ -61,12 +62,12 @@ const FilterByAjent = ({ setData }) => {
           popoverDirection="down"
         />
       </div>
-      <div>
+      <div className="w-full md:w-72">
         <select
           name="agent"
           onChange={(e) => SetAgent(e.target.value)}
           value={Agent}
-          className="h-full w-72 rounded-md border-2 border-brand-300 p-3 outline-none"
+          className="h-full w-full rounded-md border-2 border-brand-300 p-2 outline-none "
         >
           <option value="" disabled selected>
             Chouse A Agent Email
@@ -83,11 +84,11 @@ const FilterByAjent = ({ setData }) => {
       <div>
         <button
           onClick={Filter}
-          className="flex items-center justify-center rounded-md border-2 border-brand-200 bg-white px-5 py-3"
+          className="ml-0 flex items-center justify-center rounded-md border-2 border-brand-200 bg-white px-6 py-2 sm:ml-auto"
         >
           <span className="text-2xl text-brand-400">
             <IcRoundFilterAlt />
-          </span>{" "}
+          </span>
           Filter
         </button>
       </div>

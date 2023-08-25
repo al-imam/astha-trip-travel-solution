@@ -237,13 +237,13 @@ const REqu = ({ selectedOption, search, relaod }) => {
                   <p>
                     {prop.row.original?.agent ? (
                       JSON.parse(prop.row.original?.agent)?.type === "admin" ? (
-                        <p className="text-green-500">
+                        <span className="text-green-500">
                           {JSON.parse(prop.row.original?.agent)?.username}
-                        </p>
+                        </span>
                       ) : (
-                        <p className="text-red-500">
+                        <span className="text-red-500">
                           {JSON.parse(prop.row.original?.agent)?.username}
-                        </p>
+                        </span>
                       )
                     ) : (
                       ""
