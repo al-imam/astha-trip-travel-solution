@@ -17,7 +17,7 @@ function timeQuery(before, after) {
 function agentQuery(email) {
   if (!email) return "";
   return `agent='${JSON.stringify({
-    type: "admin",
+    type: "agent",
     username: email,
   })}'`;
 }

@@ -49,20 +49,7 @@ const Dashboard = () => {
     })();
   }, [reload]);
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const { data } = await axios.post("/api/admin/filter-loi-by-agent", {
-          email: "nahid",
-          dateBefore: new Date("2023-08-26"),
-          dateAfter: new Date("2023-08-20"),
-        });
-        console.log(data);
-      } catch (error) {
-        console.log(error);
-      }
-    })();
-  }, [reload]);
+
 
   return (
     <div>

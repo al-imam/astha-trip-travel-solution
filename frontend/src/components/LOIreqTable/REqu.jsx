@@ -3,7 +3,7 @@ import Table from "../../views/public/Entry/ComplexTable";
 import Actionbtn from "./Actionbtn";
 import axios from "axios";
 import exportFromJSON from "export-from-json";
-import Datepicker from "react-tailwindcss-datepicker";
+import FilterByAjent from "./FilterByAjent";
 
 const REqu = ({ selectedOption, search, relaod }) => {
   const [datas, setDatas] = useState([]);
@@ -75,35 +75,33 @@ const REqu = ({ selectedOption, search, relaod }) => {
     });
   };
 
-  const [value, setValue] = useState({
-    startDate: null,
-    endDate: null,
-  });
-
-  const handleValueChange = (newValue) => {
-    console.log("newValue:", newValue);
-    setValue(newValue);
-  };
-
+  const [ advanced,setAdvanced ] = useState(false);
+  
   return (
     <div className="relative w-full">
-      <div className="flex">
-        <div className="w-80">
-          <Datepicker
-            value={value}
-            onChange={handleValueChange}
-            showShortcuts={true}
-            popoverDirection="down"
-          />
-        </div>
+      <div className="w-full flex justify-between">
         <button
           type="button"
-          className="ml-auto rounded-md bg-brand-100 py-2 px-4 shadow-md"
+          className=" rounded-md  px-4 py-2 text-brand-500 flex font-bold shadow-md"
+          onClick={()=>setAdvanced((e)=> !e)}
+        >
+          <span className={`text-3xl ${advanced?"-rotate-180":""} transition-all duration-300`}><MaterialSymbolsKeyboardArrowDownRounded /></span>
+          Advanced Filter
+        </button>
+        <button
+          type="button"
+          className=" rounded-md bg-green-500 px-4 py-2 text-white font-bold shadow-md"
           onClick={ExportToExcel}
         >
           Export To Excel
         </button>
       </div>
+     {
+      advanced?(<div>
+        <FilterByAjent setData={setShowDetails}/>
+      </div>):""
+     }
+      
       <div className="py-2">
         <Table
           columnsData={[
@@ -388,4 +386,12 @@ export function MaterialSymbolsArrowLeftAltRounded(props) {
       ></path>
     </svg>
   );
+}
+
+
+
+export function MaterialSymbolsKeyboardArrowDownRounded(props) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" {...props}><path fill="currentColor" d="M12 14.975q-.2 0-.375-.062T11.3 14.7l-4.6-4.6q-.275-.275-.275-.7t.275-.7q.275-.275.7-.275t.7.275l3.9 3.9l3.9-3.9q.275-.275.7-.275t.7.275q.275.275.275.7t-.275.7l-4.6 4.6q-.15.15-.325.213t-.375.062Z"></path></svg>
+  )
 }
