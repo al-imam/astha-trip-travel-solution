@@ -117,28 +117,28 @@ function CardMenu(props) {
                 <a
                   className="text-blue-500 underline"
                   target="_blank"
-                  href={`/api/admin/get-file${prop.pasport_copy}`}
+                  href={`/api/admin/get-file/${prop.pasport_copy}`}
                 >
                   Pasport_copy
                 </a>
                 <a
                   className="text-blue-500 underline"
                   target="_blank"
-                  href={`/api/admin/get-file${prop.visa_copy}`}
+                  href={`/api/admin/get-file/${prop.visa_copy}`}
                 >
                   Visa_copy
                 </a>
                 <a
                   className="text-blue-500 underline"
                   target="_blank"
-                  href={`/api/admin/get-file${prop.tiket_copy}`}
+                  href={`/api/admin/get-file/${prop.tiket_copy}`}
                 >
                   Tiket_copy
                 </a>
                 <a
                   className="text-blue-500 underline"
                   target="_blank"
-                  href={`/api/admin/get-file${prop.hotel_copy}`}
+                  href={`/api/admin/get-file/${prop.hotel_copy}`}
                 >
                   Hotel_copy
                 </a>
@@ -172,7 +172,7 @@ function CardMenu(props) {
         animation={"origin-top-right transition-all duration-300 ease-in-out"}
         classNames={`${transparent ? "top-8" : "top-11"} right-0 w-max`}
         children={
-          <div className="z-50 flex w-max flex-col gap-2 rounded-xl bg-white py-3 px-4 text-sm shadow-xl shadow-shadow-500 dark:!bg-navy-700 dark:shadow-none">
+          <div className="z-50 flex w-max flex-col gap-2 rounded-xl bg-white px-4 py-3 text-sm shadow-xl shadow-shadow-500 dark:!bg-navy-700 dark:shadow-none">
             {prop.status === "pending" && (
               <>
                 <p
