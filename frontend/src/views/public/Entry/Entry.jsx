@@ -379,6 +379,8 @@ const Entry = () => {
                       required
                       onChange={(e) => {
                         if (dataList.length > parseInt(e.target.value)) {
+                          if (dataList.length >= 2)
+                            setNumberOfGuest(dataList.length);
                           return toast.warn(
                             `More then ${e.target.value} guest is alredy added!`
                           );
