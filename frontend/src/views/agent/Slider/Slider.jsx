@@ -27,6 +27,11 @@ const Slider = () => {
                 <img src="/astha2.jpg" className='w-full relative h-full object-contain' alt="" />
             </div>
         </SwiperSlide>
+        <SwiperSlide>
+            <div className='relative w-full h-full'>
+                <img src="/singapor1.jpg" className='w-full relative h-full object-contain' alt="" />
+            </div>
+        </SwiperSlide>
       </Swiper>
     </>
   )
