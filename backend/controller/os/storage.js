@@ -3,8 +3,6 @@ const { normalize, join } = require("path");
 
 const dir = normalize(join(__dirname, "../../../"));
 
-console.log(dir);
-
 function round(num) {
   const strNum = num.toString();
   const int = parseInt(num);
