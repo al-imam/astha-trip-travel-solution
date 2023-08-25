@@ -37,22 +37,22 @@ function AgentNavbar({ agent }) {
                 className="h-12 w-12 cursor-pointer rounded-full ring-2 ring-offset-brand-800"
               />
               {open && (
-                <div className="absolute right-0 z-10 mt-2 w-[300px] rounded bg-white py-2 px-4 text-gray-800 shadow-lg">
+                <div className="absolute right-0 z-10 mt-2 w-[300px] rounded bg-white py-2 px-4 text-sm text-gray-800 shadow-lg">
                   <div className="border-b py-3">
-                    <p className="text-sm font-bold text-navy-700 dark:text-white">
+                    <p className=" font-bold text-navy-700 dark:text-white">
                       👋 Hey, {agent.name}
                     </p>
                   </div>
-                  <div className="flex flex-col justify-start gap-2 py-2">
+                  <div className="flex flex-col gap-2 py-2">
                     <Link
                       to="/agent/agentProfile"
-                      className="text-sm text-gray-800 hover:text-[#000] dark:text-white hover:dark:text-white"
+                      className="rounded bg-brand-500 px-4 py-2 font-medium text-white transition duration-200 hover:bg-brand-600 active:bg-brand-700 dark:bg-brand-400 dark:text-white dark:hover:bg-brand-300 dark:active:bg-brand-200"
                     >
                       Profile Settings
                     </Link>
                     <button
                       onClick={logout}
-                      className="text-start text-sm text-blue-500 hover:underline"
+                      className="rounded bg-red-500 px-4 py-2 text-left font-medium text-white transition duration-200 hover:bg-red-600 active:bg-red-700"
                     >
                       Logout
                     </button>

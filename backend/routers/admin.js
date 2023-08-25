@@ -16,6 +16,7 @@ const blockAgent = require("../controller/account/blockAgent");
 const unblockAgent = require("../controller/account/unblockAgent");
 const sendfile = require("../controller/admin/sendfile");
 const getAgentByEmailAndDate = require("../controller/admin/getAgentByEmailAndDate");
+const resetPassword = require("../controller/admin/resetPassword");
 
 AdminRouter.get("/get-all-agent", isAdmin, getAllAgent);
 AdminRouter.get("/get-status", isAdmin, getStatus);
@@ -58,5 +59,12 @@ AdminRouter.post(
 AdminRouter.get("/get-file/:filename", sendfile);
 
 AdminRouter.post("/filter-loi-by-agent", getAgentByEmailAndDate);
+
+AdminRouter.post(
+  "/reset-agent-password",
+  validateBody([isNumber("id", true)]),
+  isAdmin,
+  resetPassword
+);
 
 module.exports = AdminRouter;

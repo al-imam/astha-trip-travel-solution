@@ -170,9 +170,9 @@ function CardMenu(props) {
           </button>
         }
         animation={"origin-top-right transition-all duration-300 ease-in-out"}
-        classNames={`${transparent ? "top-8" : "top-11"} right-0 w-max`}
+        classNames={`top-0 right-0 left-auto w-max`}
         children={
-          <div className="z-50 flex w-max flex-col gap-2 rounded-xl bg-white px-4 py-3 text-sm shadow-xl shadow-shadow-500 dark:!bg-navy-700 dark:shadow-none">
+          <div className="z-50 flex w-max flex-col gap-2 rounded-xl bg-white px-4 py-3 text-sm shadow-xl  shadow-shadow-500 dark:!bg-navy-700 dark:shadow-none">
             {prop.status === "pending" && (
               <>
                 <p

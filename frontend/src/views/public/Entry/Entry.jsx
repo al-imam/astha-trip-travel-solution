@@ -14,6 +14,7 @@ const Entry = () => {
   const [hotelbokking, sethotelbokking] = useState(null);
   const [tiketCopy, settiketCopy] = useState(null);
   const [type, setType] = useState("");
+  const [numberOfguest, setNumberOfGuest] = useState("2");
 
   const [country, setCountry] = useState("Singapor");
 
@@ -230,10 +231,10 @@ const Entry = () => {
       setload(false);
       return toast.warn("please enter tour iternary");
     }
-    if(!dataList.length){
+    if (!dataList.length) {
       setload(false);
-      return toast.warn("please Add user First",{
-        delay:"4000",
+      return toast.warn("please Add user First", {
+        delay: "4000",
       });
     }
 
@@ -331,9 +332,9 @@ const Entry = () => {
         {/* form  */}
         <div className="relative p-2">
           <form onSubmit={onsubmit}>
-            <div className="relative mt-5 grid w-full grid-cols-3 gap-3 p-3">
+            <div className="relative mt-5 grid w-full gap-3 p-3 md:grid-cols-2">
               {/* name start */}
-              <div className="relative col-span-2 w-full">
+              <div className="relative w-full">
                 <label className="pl-px text-brand-900">Guest Name *</label>
                 <input
                   type="text"
@@ -343,29 +344,63 @@ const Entry = () => {
                   className="w-full rounded-sm border-2 border-brand-100 p-2 outline-none"
                 />
               </div>
-              <div className="relative w-full ">
-                <label className="pl-px text-brand-900">Guest Type *</label>
-                <select
-                  name="guesttype"
-                  required
-                  onChange={(e) => {
-                    if (e.target.value === "singel") {
-                      if (dataList.length > 1) {
-                        return toast.warn("you add multipale guest already !");
+              <div className={type === "family" && "grid grid-cols-3 gap-4"}>
+                <div className="relative col-span-2 w-full">
+                  <label className="pl-px text-brand-900">Guest Type *</label>
+                  <select
+                    name="guesttype"
+                    required
+                    onChange={(e) => {
+                      if (e.target.value === "singel") {
+                        if (dataList.length > 1) {
+                          return toast.warn(
+                            "you add multipale guest already !"
+                          );
+                        }
                       }
-                    }
-                    setType(e.target.value);
-                  }}
-                  value={type}
-                  placeholder="Type Guest Name Here"
-                  className="w-full rounded-sm border-2 border-brand-100 p-2 outline-none"
-                >
-                  <option selected disabled value="">
-                    Choose Guest Type
-                  </option>
-                  <option value="singel">Singel</option>
-                  <option value="family">Family</option>
-                </select>
+                      setType(e.target.value);
+                    }}
+                    value={type}
+                    placeholder="Type Guest Name Here"
+                    className="w-full rounded-sm border-2 border-brand-100 p-2 outline-none"
+                  >
+                    <option selected disabled value="">
+                      Choose Guest Type
+                    </option>
+                    <option value="singel">Singel</option>
+                    <option value="family">Family</option>
+                  </select>
+                </div>
+                {type === "family" && (
+                  <div className="relative w-full ">
+                    <label className="pl-px text-brand-900">Guests</label>
+                    <select
+                      name="guest-count"
+                      required
+                      onChange={(e) => {
+                        if (dataList.length > parseInt(e.target.value)) {
+                          if (dataList.length >= 2)
+                            setNumberOfGuest(dataList.length);
+                          return toast.warn(
+                            `More then ${e.target.value} guest is alredy added!`
+                          );
+                        }
+                        setNumberOfGuest(e.target.value);
+                      }}
+                      value={numberOfguest}
+                      placeholder="Number of guest"
+                      className="w-full rounded-sm border-2 border-brand-100 p-2 outline-none"
+                    >
+                      {Array(8)
+                        .fill(null)
+                        .map((a, i) => (
+                          <option selected={i === 0} value={i + 2}>
+                            {i + 2}
+                          </option>
+                        ))}
+                    </select>
+                  </div>
+                )}
               </div>
             </div>
             <div className="relative grid w-full grid-cols-1 gap-3 px-3 md:grid-cols-3">
@@ -436,7 +471,7 @@ const Entry = () => {
               </div>
             </div>
             {/* file input  */}
-            <div className="relative grid w-full grid-cols-2 gap-3 p-2">
+            <div className="relative grid w-full gap-3 p-2 sm:grid-cols-2">
               {/* Passport photo */}
               <div className="relative w-full">
                 <label className="pl-px text-brand-900">
@@ -446,7 +481,6 @@ const Entry = () => {
                   type="file"
                   required
                   name="passportPhoto"
-                  // passport copy dataset in state
                   onChange={(e) => {
                     setpasportCopy(e.target.files[0]);
                   }}
@@ -457,7 +491,7 @@ const Entry = () => {
               {/* visa photo */}
               <div className="relative w-full">
                 <label className="pl-px text-brand-900">
-                  Visa Photo ( jpg, pdf ){" "}
+                  Visa Photo ( jpg, pdf )
                   <span className="text-sm font-extralight italic">
                     {country === "Vietnem" ? "*" : "*"}
                   </span>
@@ -515,10 +549,10 @@ const Entry = () => {
               </div>
             </div>
             {!hide ? (
-              <div className="relative mt-3 flex w-full justify-between p-2 pl-5">
+              <div className="relative flex w-full justify-between p-3">
                 <button
                   type="submit"
-                  className="rounded-xl border-2 border-brand-300 bg-white/10 px-3 py-2 shadow-lg dark:text-brand-200"
+                  className=/* "rounded-xl border-2 border-brand-300 bg-white/10 px-3 py-2 shadow-lg dark:text-brand-200" */ "inline-block rounded-lg border-2 border-brand-900/30 bg-white/10  p-2 px-8 text-xl font-bold text-brand-600 shadow-xl hover:scale-105 dark:border-brand-200 dark:text-brand-100"
                 >
                   Add New Guest
                 </button>
@@ -738,12 +772,12 @@ const Entry = () => {
               tableData={fromdata}
             />
 
-            <div className="relative w-full p-3 pl-5">
+            <div className="relative w-full py-3">
               <button
                 onClick={submitFullList}
-                className="rounded-xl border-2 border-brand-300 bg-white/10 px-3 py-2 shadow-lg dark:text-brand-200"
+                className=/*"rounded-xl border-2 border-brand-300 bg-white/10 px-3 py-2 shadow-lg dark:text-brand-200"*/ "font-boldshadow-xl inline-block rounded-lg border-2 bg-red-500 px-12 py-2 text-xl text-white hover:scale-105 dark:border-brand-200"
               >
-                Submit
+                SUBMIT
               </button>
             </div>
           </div>
