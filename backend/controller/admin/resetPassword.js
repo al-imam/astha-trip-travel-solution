@@ -9,7 +9,7 @@ function mail(pass) {
       <a href="" style="font-size:1.4em;color: #00466a;text-decoration:none;font-weight:600">Astha trip</a>
     </div>
     <p style="font-size:1.1em">Hi,</p>
-    <p>You are now approved agent of astha trip, login your loi dashboard with this password.</p>
+    <p>Your password is rested by admin. New Password is - </p>
     <h2 style="background: #00466a;margin: 0 auto;width: max-content;padding: 0 10px;color: #fff;border-radius: 4px;">${pass}</h2>
     <p>Change your password after login</p>
     <p style="font-size:0.9em;">Regards,<br />Astha trip</p>
@@ -26,15 +26,11 @@ function generatePassword(length) {
   return retVal;
 }
 
-async function approve(req, res, next) {
+async function resetPassword(req, res, next) {
   try {
     const password = generatePassword(6);
 
     await Agent.findByIdAndUpdate(req.body.id, {
-      status: 1,
-      admin: req.ADMIN.username,
-      rate: 100,
-      balance: 0,
       password: bcrypt.hashSync(password, 10),
     });
 
@@ -42,17 +38,17 @@ async function approve(req, res, next) {
     await SendMail(
       [dbAgent.email],
       [],
-      "Astha trip approve email",
-      `you're approved by astha trip, login with this password - ${password}`,
+      "Astha trip - password reset",
+      `Your password was reset by astha trip, login with this new password - ${password}`,
       mail(password),
       []
     );
 
     res.json({ success: true });
   } catch (e) {
-    console.log("🚀 ~ file: approve.js:54 ~ approve ~ e:", e);
+    console.log("🚀 ~ resetPassword ~ e:", e);
     next(e);
   }
 }
 
-module.exports = approve;
+module.exports = resetPassword;

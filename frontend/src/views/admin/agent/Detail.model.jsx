@@ -90,6 +90,40 @@ const DetailAgentmodule = ({ dataraw, close, reload }) => {
       });
   }
 
+  function resetAgentPassword() {
+    swalWithBootstrapButtons
+      .fire({
+        title: "Are you sure?",
+        text: `You want to reset ${data.name}'s password?`,
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Yes, Reset!",
+        cancelButtonText: "No, cancel!",
+        reverseButtons: true,
+        confirmButtonColor: "#ff0000db",
+      })
+      .then(async (result) => {
+        if (result.isConfirmed) {
+          try {
+            await axios.post("/api/admin/reset-agent-password", {
+              id: data.id,
+            });
+            Swal.fire({
+              position: "top-end",
+              icon: "success",
+              title: "Agent password reset successful.",
+              showConfirmButton: false,
+              timer: 1500,
+            });
+
+            close(false);
+          } catch (error) {
+            console.log(error);
+          }
+        }
+      });
+  }
+
   function unblockAgent() {
     swalWithBootstrapButtons
       .fire({
@@ -120,8 +154,6 @@ const DetailAgentmodule = ({ dataraw, close, reload }) => {
         }
       });
   }
-
-  console.log(data);
 
   if (data) {
     document.body.style.overflow = "hidden";
@@ -239,28 +271,37 @@ const DetailAgentmodule = ({ dataraw, close, reload }) => {
                   </div>
                 </div>
                 <div className="mt-2 p-2 sm:mt-0">
-                  <div className="relative w-full space-y-2">
-                    <h1>
-                      Agent is currently
-                      <span className="font-bold">
-                        {data.status === 403 ? " Blocked" : " Active"}
-                      </span>
-                    </h1>
-                    {data.status === 403 ? (
-                      <button
-                        onClick={unblockAgent}
-                        className="rounded bg-green-500 px-4 py-2 text-left font-medium text-white transition duration-200 hover:bg-green-600 active:bg-green-700 "
-                      >
-                        Unlock Agent
-                      </button>
-                    ) : (
-                      <button
-                        onClick={blockAgent}
-                        className="rounded bg-red-500 px-4 py-2 text-left font-medium text-white transition duration-200 hover:bg-red-600 active:bg-red-700 "
-                      >
-                        Block Agent
-                      </button>
-                    )}
+                  <div className="flex flex-col gap-4">
+                    <div className="relative space-y-2">
+                      <p>
+                        Agent is currently
+                        <span className="font-bold">
+                          {data.status === 403 ? " Blocked" : " Active"}
+                        </span>
+                      </p>
+                      {data.status === 403 ? (
+                        <button
+                          onClick={unblockAgent}
+                          className="rounded bg-green-500 px-4 py-2 text-left font-medium text-white transition duration-200 hover:bg-green-600 active:bg-green-700 "
+                        >
+                          Unlock Agent
+                        </button>
+                      ) : (
+                        <button
+                          onClick={blockAgent}
+                          className="rounded bg-red-500 px-4 py-2 text-left font-medium text-white transition duration-200 hover:bg-red-600 active:bg-red-700 "
+                        >
+                          Block Agent
+                        </button>
+                      )}
+                    </div>
+
+                    <button
+                      onClick={resetAgentPassword}
+                      className="mr-auto  block rounded bg-red-500 px-4 py-2 text-left font-medium text-white transition duration-200 hover:bg-red-600 active:bg-red-700 "
+                    >
+                      Reset Agent Password
+                    </button>
                   </div>
                 </div>
               </div>
