@@ -18,8 +18,7 @@ function mail(pass) {
 }
 
 function generatePassword(length) {
-  const charset =
-    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  const charset = "abcdefghijklmnopqrstuvwxyz0123456789";
   let retVal = "";
   for (let i = 0, n = charset.length; i < length; ++i) {
     retVal += charset.charAt(Math.floor(Math.random() * n));
@@ -30,7 +29,7 @@ function generatePassword(length) {
 async function approve(req, res, next) {
   try {
     const password = generatePassword(6);
-   
+
     await Agent.findByIdAndUpdate(req.body.id, {
       status: 1,
       admin: req.ADMIN.username,
@@ -51,7 +50,7 @@ async function approve(req, res, next) {
 
     res.json({ success: true });
   } catch (e) {
-    console.log("🚀 ~ file: approve.js:54 ~ approve ~ e:", e)
+    console.log("🚀 ~ file: approve.js:54 ~ approve ~ e:", e);
     next(e);
   }
 }
