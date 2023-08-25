@@ -1,26 +1,47 @@
 const LOI = require("../../model/LOI");
 
+function getDateObject(time) {
+  const date = new Date(time);
+  if (isNaN(date.getDay())) throw "Enter valid date!";
+  return {
+    year: date.getFullYear(),
+    month: date.getMonth() + 1,
+    day: date.getDate(),
+  };
+}
+
+function timeQuery(before, after) {
+  return `DATE(createdAt) <= CAST('${before.year}-${before.month}-${before.day}' AS DATE) AND DATE(createdAt) >= CAST('${after.year}-${after.month}-${after.day}' AS DATE)`;
+}
+
+function agentQuery(email) {
+  if (!email) return "";
+  return `agent='${JSON.stringify({
+    type: "admin",
+    username: email,
+  })}'`;
+}
+
+function combineQuery(agent, date) {
+  if (!agent) return date;
+  return `${agent} AND ${date}`;
+}
+
 async function getAgentByEmailAndDate(req, res, next) {
   try {
-    const jsonAgent = JSON.stringify({
-      type: "admin",
-      username: req.body.email,
-    });
+    const dateBefore = getDateObject(req.body.dateBefore);
+    const dateAfter = getDateObject(req.body.dateAfter);
 
-    const date = new Date(req.body.date);
-    const year = date.getFullYear();
-    const month = date.getMonth();
-    const day = date.getDate();
+    const query = `SELECT * FROM loi_data WHERE ${combineQuery(
+      agentQuery(req.body.email),
+      timeQuery(dateBefore, dateAfter)
+    )}`;
 
-    console.log(jsonAgent, req.body.date);
+    console.log(query);
 
-    const res = await LOI.RayQuery(
-      `SELECT * FROM loi_data WHERE agent='${jsonAgent}' AND DATE(createdAt)=CAST('${year}-${month}-${day}' AS DATE)`
-    );
+    const [dbRes] = await LOI.RayQuery(query);
 
-    console.log(jsonAgent, req.body.date, res);
-
-    res.send(req.body.date);
+    res.json(dbRes);
   } catch (error) {
     console.log("🚀 ~ getAgentByEmailAndDate ~ error:", error);
     next(error);
