@@ -14,21 +14,20 @@ import Registration from "./views/agent/Rgistration/Registration";
 const App = () => {
   return (
     <>
-    <Routes>
-      <Route path="auth/*" element={<AuthLayout />} />
-      <Route path="admin/*" element={<AdminLayout />} />
-      <Route path="entry/*" element={<Entry />} />
-      <Route path="agentEntry/*" element={<AgentEntry />} />
-      
-      <Route path="/agent/Login" element={<AgentLogin />} />
-      <Route path="/agent/registration" element={<Registration />} />
-      <Route path="/agent" element={<Agent />}>
-        <Route index element={<AgentHome />} />
-        <Route path="/agent/agentProfile" element={<AgentProfile />} />
-      </Route>
-      <Route path="/" element={<Navigate to="/agent" replace />} />
-    </Routes>
-    
+      <Routes>
+        <Route path="auth/*" element={<AuthLayout />} />
+        <Route path="admin/*" element={<AdminLayout />} />
+        <Route path="entry/*" element={<Entry />} />
+        <Route path="agentEntry/*" element={<AgentEntry />} />
+
+        <Route path="/agent/Login" element={<AgentLogin />} />
+        <Route path="/agent/registration" element={<Registration />} />
+        <Route path="/agent" element={<Agent />}>
+          <Route index element={<AgentHome />} />
+          <Route path="/agent/agentProfile" element={<AgentProfile />} />
+        </Route>
+        <Route path="/" element={<Navigate to="/agent" replace />} />
+      </Routes>
     </>
   );
 };

@@ -49,6 +49,21 @@ const Dashboard = () => {
     })();
   }, [reload]);
 
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data } = await axios.post("/api/admin/filter-loi-by-agent", {
+          email: "nahid",
+          dateBefore: new Date("2023-08-26"),
+          dateAfter: new Date("2023-08-20"),
+        });
+        console.log(data);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }, [reload]);
+
   return (
     <div>
       {/* Card widget */}
@@ -86,7 +101,7 @@ const Dashboard = () => {
         />
       </div>
 
-      <div className="grid w-full grid-cols-1 items-center justify-start gap-3 p-5 md:grid-cols-3">
+      <div className="grid w-full grid-cols-1 items-center justify-start gap-3 py-5 md:grid-cols-3">
         <Link
           to="/entry"
           className="inline-block rounded-lg border-2 border-brand-900/30 bg-white/10  p-3 text-xl font-bold text-brand-600 shadow-xl hover:scale-105 dark:border-brand-200 dark:text-brand-100"

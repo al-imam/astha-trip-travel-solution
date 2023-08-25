@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import Table from "../../views/public/Entry/ComplexTable";
 import Actionbtn from "./Actionbtn";
 import axios from "axios";
-import { data } from "autoprefixer";
 import exportFromJSON from "export-from-json";
+import Datepicker from "react-tailwindcss-datepicker";
 
 const REqu = ({ selectedOption, search, relaod }) => {
   const [datas, setDatas] = useState([]);
@@ -75,15 +75,35 @@ const REqu = ({ selectedOption, search, relaod }) => {
     });
   };
 
+  const [value, setValue] = useState({
+    startDate: null,
+    endDate: null,
+  });
+
+  const handleValueChange = (newValue) => {
+    console.log("newValue:", newValue);
+    setValue(newValue);
+  };
+
   return (
     <div className="relative w-full">
-      <button
-        type="button"
-        className="rounded-md bg-brand-100 py-2 px-4 shadow-md"
-        onClick={ExportToExcel}
-      >
-        Export To Excel
-      </button>
+      <div className="flex">
+        <div className="w-80">
+          <Datepicker
+            value={value}
+            onChange={handleValueChange}
+            showShortcuts={true}
+            popoverDirection="down"
+          />
+        </div>
+        <button
+          type="button"
+          className="ml-auto rounded-md bg-brand-100 py-2 px-4 shadow-md"
+          onClick={ExportToExcel}
+        >
+          Export To Excel
+        </button>
+      </div>
       <div className="py-2">
         <Table
           columnsData={[
