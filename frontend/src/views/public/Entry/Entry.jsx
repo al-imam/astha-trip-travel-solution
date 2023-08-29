@@ -5,6 +5,19 @@ import ComplexTable from "./ComplexTable";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router";
+import CreatableSelect from 'react-select/creatable';
+
+const creatableSelectOptions = [
+  { value: 'Hilton singapore orchard', label: 'Hilton singapore orchard' },
+  { value: 'Galaxy pods @ chinatown', label: 'Galaxy pods @ chinatown' },
+  { value: 'Holiday inn express singapore', label: 'Holiday inn express singapore' },
+  { value: 'Ibis singapore on bencoolen', label: 'Ibis singapore on bencoolen' },
+  { value: 'Swissotel the stamford', label: 'Swissotel the stamford' },
+  { value: 'V hotel bencoolen', label: 'V hotel bencoolen' },
+  { value: 'Parkroyal collection marina bay, singapore', label: 'Parkroyal collection marina bay, singapore' },
+  { value: 'Sofitel singapore sentosa resort & spa', label: 'Sofitel singapore sentosa resort & spa' },
+  { value: 'Sofitel singapore city centre', label: 'Sofitel singapore city centre' },
+]
 
 const Entry = () => {
   const Navigate = useNavigate();
@@ -152,7 +165,7 @@ const Entry = () => {
   // from data submit
   const onsubmit = async (e) => {
     e.preventDefault();
-
+    
     if (!Admin) {
       let length = dataList.length;
       if (+Agent.balance <= +Agent.rate * length) {
@@ -194,7 +207,7 @@ const Entry = () => {
           },
         }
       );
-      // console.log(fromdata);
+   
 
       const data = {
         guestName: e.target.name.value || null,
@@ -245,7 +258,7 @@ const Entry = () => {
 
     try {
       // eslint-disable-next-line no-unused-vars
-      const respons = await toast.promise(
+      await toast.promise(
         axios.post("/api/loi/entry", {
           datas: [...dataList],
           iternary: JSON.stringify(fromdata),
@@ -435,44 +448,8 @@ const Entry = () => {
               {/* Hotel Name */}
               <div className="relative w-full">
                 <label className="pl-px text-brand-900">Hotel Name *</label>
-                <select
-                  name="hotelName"
-                  required
-                  onChange={(e) => {
-                    SetHotelname(e.target.value);
-                  }}
-                  value={Hotelname}
-                  className="w-full rounded-sm border-2 border-brand-100 p-2 outline-none"
-                >
-                  <option selected disabled value="">
-                    Choose your hotel
-                  </option>
-                  <option value="Hilton singapore orchard">
-                    Hilton singapore orchard
-                  </option>
-                  <option value="Galaxy pods @ chinatown">
-                    Galaxy pods @ chinatown
-                  </option>
-                  <option value="Holiday inn express singapor">
-                    Holiday inn express singapor
-                  </option>
-                  <option value="Ibis singapore on bencoolen">
-                    Ibis singapore on bencoolen
-                  </option>
-                  <option value="Swissotel the stamford">
-                    Swissotel the stamford
-                  </option>
-                  <option value="V hotel bencoolen">V hotel bencoolen</option>
-                  <option value="Parkroyal collection marina bay, singapore">
-                    Parkroyal collection marina bay, singapore
-                  </option>
-                  <option value="Sofitel singapore sentosa resort & spa">
-                    Sofitel singapore sentosa resort & spa
-                  </option>
-                  <option value="Sofitel singapore city centre">
-                    Sofitel singapore city centre
-                  </option>
-                </select>
+                <CreatableSelect name="hotelName" options={creatableSelectOptions} onChange={(s) => SetHotelname(s.value)} />
+               
               </div>
             </div>
             {/* file input  */}
