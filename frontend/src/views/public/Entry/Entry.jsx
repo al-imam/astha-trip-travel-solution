@@ -1,5 +1,5 @@
 /* eslint-disable no-unreachable */
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import ComplexTable from "./ComplexTable";
 import axios from "axios";
@@ -68,7 +68,6 @@ const Entry = () => {
 
   useEffect(() => {
     const getData = async () => {
-      console.log("helo");
       let ad = false;
       try {
         //get admin data
@@ -118,22 +117,28 @@ const Entry = () => {
     const remain = fromdata.filter((data) => data.id !== id);
     setFromdata(remain);
   };
+  const teb = useRef(null);
 
   // hidefrom add gust
-  const guestchack = (length, types) => {
-    if (length >= 9 && types === "family") {
+  const guestchack = (length, types, GuestFamalyNumber) => {
+    if (length >= GuestFamalyNumber && types === "family") {
       sethide(true);
     } else if (length > 0 && types === "singel") {
       sethide(true);
+      console.log("test");
+      window.scrollTo({
+        top: teb.current.offsetTop,
+        behavior: "smooth",
+      });
     } else {
       sethide(false);
     }
   };
 
   useEffect(() => {
-    guestchack(dataList.length, type);
+    guestchack(dataList.length, type, numberOfguest);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dataList, type]);
+  }, [dataList, type, numberOfguest]);
 
   // delet guest from list
   const deleteList = (id) => {
@@ -141,7 +146,7 @@ const Entry = () => {
       return e.id !== id;
     });
     setDataList(temp);
-    guestchack(type);
+    guestchack(dataList.length, type, numberOfguest);
   };
 
   // from data submit
@@ -281,7 +286,7 @@ const Entry = () => {
       <div className="relative w-full p-3">
         <button
           onClick={backtoboard}
-          className="flex items-center rounded-md bg-brand-500 py-2 px-3 text-white"
+          className="flex items-center rounded-md bg-brand-500 px-3 py-2 text-white"
         >
           <span className="pr-2 text-2xl">
             <MaterialSymbolsArrowLeftAltRounded />
@@ -561,7 +566,15 @@ const Entry = () => {
                 </button>
               </div>
             ) : (
-              ""
+              <div>
+                <h1 className="flex items-start p-3 py-3 text-3xl text-red-600">
+                  Please Setup the Tour Iternary{" "}
+                  <span>
+                    <IcSharpArrowDownward />
+                  </span>{" "}
+                  Then Submit
+                </h1>
+              </div>
             )}
           </form>
         </div>
@@ -772,7 +785,7 @@ const Entry = () => {
               tableData={fromdata}
             />
 
-            <div className="relative w-full py-3">
+            <div className="relative w-full py-3" ref={teb}>
               <button
                 onClick={submitFullList}
                 className=/*"rounded-xl border-2 border-brand-300 bg-white/10 px-3 py-2 shadow-lg dark:text-brand-200"*/ "font-boldshadow-xl inline-block rounded-lg border-2 bg-red-500 px-12 py-2 text-xl text-white hover:scale-105 dark:border-brand-200"
@@ -886,6 +899,23 @@ export function MaterialSymbolsArrowLeftAltRounded(props) {
       <path
         fill="currentColor"
         d="m7.85 13l2.85 2.85q.3.3.288.7t-.288.7q-.3.3-.712.313t-.713-.288L4.7 12.7q-.3-.3-.3-.7t.3-.7l4.575-4.575q.3-.3.713-.287t.712.312q.275.3.288.7t-.288.7L7.85 11H19q.425 0 .713.288T20 12q0 .425-.288.713T19 13H7.85Z"
+      ></path>
+    </svg>
+  );
+}
+
+export function IcSharpArrowDownward(props) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="1em"
+      height="1em"
+      viewBox="0 0 24 24"
+      {...props}
+    >
+      <path
+        fill="currentColor"
+        d="m20 12l-1.41-1.41L13 16.17V4h-2v12.17l-5.58-5.59L4 12l8 8l8-8z"
       ></path>
     </svg>
   );
