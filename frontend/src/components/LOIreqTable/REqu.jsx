@@ -5,23 +5,10 @@ import axios from "axios";
 import exportFromJSON from "export-from-json";
 import FilterByAjent from "./FilterByAjent";
 
-const REqu = ({ selectedOption, search, relaod }) => {
+const REqu = ({ selectedOption, search, relaod, setSelect }) => {
   const [datas, setDatas] = useState([]);
   const [show, setShow] = useState([]);
   const [reloads, setreload] = relaod;
-  const [showDetails, setShowDetails] = useState(false);
-
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        const res = await axios.get("/api/loi/getall");
-        setDatas(res.data);
-      } catch (err) {
-        console.log(err.message);
-      }
-    };
-    getData();
-  }, []);
 
   useEffect(() => {
     const getData = async () => {
@@ -104,7 +91,11 @@ const REqu = ({ selectedOption, search, relaod }) => {
       </div>
       {advanced ? (
         <div>
-          <FilterByAjent setData={setShow} />
+          <FilterByAjent
+            setData={setShow}
+            goBack={() => setShow(datas)}
+            removeFilter={() => setSelect("")}
+          />
         </div>
       ) : (
         ""
