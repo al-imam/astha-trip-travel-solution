@@ -5,6 +5,50 @@ import ComplexTable from "./ComplexTable";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router";
+import CreatableSelect from "react-select/creatable";
+
+const creatableSelectOptions = [
+  { value: "Hilton singapore orchard", label: "Hilton singapore orchard" },
+  { value: "Galaxy pods @ chinatown", label: "Galaxy pods @ chinatown" },
+  {
+    value: "Holiday inn express singapore",
+    label: "Holiday inn express singapore",
+  },
+  {
+    value: "Ibis singapore on bencoolen",
+    label: "Ibis singapore on bencoolen",
+  },
+  { value: "Swissotel the stamford", label: "Swissotel the stamford" },
+  { value: "V hotel bencoolen", label: "V hotel bencoolen" },
+  {
+    value: "Parkroyal collection marina bay, singapore",
+    label: "Parkroyal collection marina bay, singapore",
+  },
+  {
+    value: "Sofitel singapore sentosa resort & spa",
+    label: "Sofitel singapore sentosa resort & spa",
+  },
+  {
+    value: "Sofitel singapore city centre",
+    label: "Sofitel singapore city centre",
+  },
+  {
+    value: "Strand hotel singapore",
+    label: "Strand hotel singapore",
+  },
+  {
+    value: "AM hotel",
+    label: "AM hotel",
+  },
+  {
+    value: "Pan pacific orchard",
+    label: "Pan pacific orchard",
+  },
+  {
+    value: "Value hotel thomson",
+    label: "Value hotel thomson",
+  }
+];
 
 const Entry = () => {
   const Navigate = useNavigate();
@@ -30,6 +74,7 @@ const Entry = () => {
     fromdata: [],
     todata: [],
   });
+
   useEffect(() => {
     setReferench({
       fromdata: [
@@ -70,7 +115,7 @@ const Entry = () => {
     const getData = async () => {
       let ad = false;
       try {
-        //get admin data
+ 
         try {
           const resAdmin = await axios("/api/auth/info");
           setAdmin(resAdmin.data);
@@ -78,7 +123,9 @@ const Entry = () => {
         } catch (error) {
           setAdmin(false);
         }
+
         let resAgent;
+
         try {
           resAgent = await axios("/api/agent/info");
         } catch (error) {
@@ -98,8 +145,9 @@ const Entry = () => {
     getData();
   }, []);
 
-  // handleFromData itenery from
+
   const [fromdata, setFromdata] = useState([]);
+
   const handleFromData = (e) => {
     e.preventDefault();
     const form = e.target;
@@ -107,19 +155,20 @@ const Entry = () => {
     const from = form.from.value;
     const to = form.to.value;
     const data = { id: uuidv4(), date, from, to };
+
     setFromdata((old) => {
       return [...old, data];
     });
   };
-  // utility function
-  //itenery  handleDeleteToFrom
+
   const handleDeleteToFrom = (id) => {
     const remain = fromdata.filter((data) => data.id !== id);
     setFromdata(remain);
   };
+
   const teb = useRef(null);
 
-  // hidefrom add gust
+  
   const guestchack = (length, types, GuestFamalyNumber) => {
     if (length >= GuestFamalyNumber && types === "family") {
       sethide(true);
@@ -140,7 +189,7 @@ const Entry = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataList, type, numberOfguest]);
 
-  // delet guest from list
+ 
   const deleteList = (id) => {
     const temp = dataList.filter((e) => {
       return e.id !== id;
@@ -149,7 +198,7 @@ const Entry = () => {
     guestchack(dataList.length, type, numberOfguest);
   };
 
-  // from data submit
+  
   const onsubmit = async (e) => {
     e.preventDefault();
 
@@ -159,21 +208,26 @@ const Entry = () => {
         return toast.warn("Your balance is Low please add balance");
       }
     }
+
     if (load) {
       return toast.warn("wait for pending job !");
     }
+
     if (!type) {
       return toast.warn("please choose the type", {
         icon: "⛔",
       });
     }
+
     setload(true);
+
     try {
       let formData = new FormData();
       formData.append("imgpasport", passportCopy);
       formData.append("imgvisa", visacopy);
       formData.append("hotel", hotelbokking);
       formData.append("ticket", tiketCopy);
+
       let response = await toast.promise(
         axios.post("/temp/guestlist/photoupload", formData, {
           headers: {
@@ -194,7 +248,6 @@ const Entry = () => {
           },
         }
       );
-      // console.log(fromdata);
 
       const data = {
         guestName: e.target.name.value || null,
@@ -208,6 +261,7 @@ const Entry = () => {
         country: country,
         id: uuidv4(),
       };
+
       setDataList((old) => [...old, data]);
       e.target.querySelector("#reset").click();
       setload(false);
@@ -217,7 +271,7 @@ const Entry = () => {
     }
   };
 
-  // submit all data
+
   const submitFullList = async () => {
     if (!Admin) {
       let length = dataList.length;
@@ -236,6 +290,7 @@ const Entry = () => {
       setload(false);
       return toast.warn("please enter tour iternary");
     }
+    
     if (!dataList.length) {
       setload(false);
       return toast.warn("please Add user First", {
@@ -245,7 +300,7 @@ const Entry = () => {
 
     try {
       // eslint-disable-next-line no-unused-vars
-      const respons = await toast.promise(
+      await toast.promise(
         axios.post("/api/loi/entry", {
           datas: [...dataList],
           iternary: JSON.stringify(fromdata),
@@ -435,44 +490,11 @@ const Entry = () => {
               {/* Hotel Name */}
               <div className="relative w-full">
                 <label className="pl-px text-brand-900">Hotel Name *</label>
-                <select
+                <CreatableSelect
                   name="hotelName"
-                  required
-                  onChange={(e) => {
-                    SetHotelname(e.target.value);
-                  }}
-                  value={Hotelname}
-                  className="w-full rounded-sm border-2 border-brand-100 p-2 outline-none"
-                >
-                  <option selected disabled value="">
-                    Choose your hotel
-                  </option>
-                  <option value="Hilton singapore orchard">
-                    Hilton singapore orchard
-                  </option>
-                  <option value="Galaxy pods @ chinatown">
-                    Galaxy pods @ chinatown
-                  </option>
-                  <option value="Holiday inn express singapor">
-                    Holiday inn express singapor
-                  </option>
-                  <option value="Ibis singapore on bencoolen">
-                    Ibis singapore on bencoolen
-                  </option>
-                  <option value="Swissotel the stamford">
-                    Swissotel the stamford
-                  </option>
-                  <option value="V hotel bencoolen">V hotel bencoolen</option>
-                  <option value="Parkroyal collection marina bay, singapore">
-                    Parkroyal collection marina bay, singapore
-                  </option>
-                  <option value="Sofitel singapore sentosa resort & spa">
-                    Sofitel singapore sentosa resort & spa
-                  </option>
-                  <option value="Sofitel singapore city centre">
-                    Sofitel singapore city centre
-                  </option>
-                </select>
+                  options={creatableSelectOptions}
+                  onChange={(s) => SetHotelname(s.value)}
+                />
               </div>
             </div>
             {/* file input  */}
