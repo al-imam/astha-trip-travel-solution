@@ -16,6 +16,7 @@ test.js
 build
 upload
 pdf
+generated-pdf
 static
 # misc
 .DS_Store
