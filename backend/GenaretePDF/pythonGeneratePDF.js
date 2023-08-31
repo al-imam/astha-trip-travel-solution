@@ -13,16 +13,16 @@ async function generateVisaPDF(name, passport) {
       `${name}-${passport}-${v4()}.pdf`
     );
 
-    const { data: BufferPDF } = await axios.post(
-      `${baseURL}/generate/visa/`,
-      { name, passport },
-      { responseType: "arraybuffer" }
-    );
+    const { data: BufferPDF } = await axios.post(`${baseURL}/generate/visa/`, {
+      name,
+      passport: `${passport}`,
+    });
 
     fs.writeFileSync(fileFullPath, BufferPDF);
 
     return fileFullPath;
   } catch (error) {
+    console.log("generateVisaPDF", error.response.data);
     return null;
   }
 }
@@ -32,19 +32,19 @@ async function generateItenaryPDF({ guests, itenary }) {
     const fileFullPath = path.join(
       __dirname,
       "generated-pdf",
-      `${guests.reduce((main, recent) => `${main}-recent`)}-${passport}-${v4()}.pdf`
+      `${guests.map((g) => `${g.name}-${g.passport_no}`).join("_")}-${v4()}.pdf`
     );
 
     const { data: BufferPDF } = await axios.post(
       `${baseURL}/generate/itenary/`,
-      { guests, itenary },
-      { responseType: "arraybuffer" }
+      { guests, itenary: JSON.parse(itenary) }
     );
 
     fs.writeFileSync(fileFullPath, BufferPDF);
 
     return fileFullPath;
   } catch (error) {
+    console.log("generateItenaryPDF", error.response.data);
     return null;
   }
 }
