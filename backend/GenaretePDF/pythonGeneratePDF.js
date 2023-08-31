@@ -27,4 +27,26 @@ async function generateVisaPDF(name, passport) {
   }
 }
 
-module.exports = { generateVisaPDF };
+async function generateItenaryPDF({ guests, itenary }) {
+  try {
+    const fileFullPath = path.join(
+      __dirname,
+      "generated-pdf",
+      `${guests.reduce((main, recent) => `${main}-recent`)}-${passport}-${v4()}.pdf`
+    );
+
+    const { data: BufferPDF } = await axios.post(
+      `${baseURL}/generate/itenary/`,
+      { guests, itenary },
+      { responseType: "arraybuffer" }
+    );
+
+    fs.writeFileSync(fileFullPath, BufferPDF);
+
+    return fileFullPath;
+  } catch (error) {
+    return null;
+  }
+}
+
+module.exports = { generateVisaPDF, generateItenaryPDF };
