@@ -33,7 +33,7 @@ function CardMenu(props) {
       if (result.isConfirmed) {
         try {
           const res = await toast.promise(
-            axios.post("/api/loi/approved", { id: prop?.id }),
+            axios.post("/api/loi/approved" /* /api/loi/approved-python  */, { id: prop.id }),
             {
               pending: "Please wait",
               error: "Something went wrong",
