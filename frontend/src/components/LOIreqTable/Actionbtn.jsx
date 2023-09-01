@@ -32,15 +32,19 @@ function CardMenu(props) {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const res = await toast.promise(
-            axios.post("/api/loi/approved" /* /api/loi/approved-python  */, { id: prop.id }),
+          await toast.promise(
+            axios.post("/api/loi/approved" /* /api/loi/approved-python  */, {
+              id: prop.id,
+            }),
             {
               pending: "Please wait",
               error: "Something went wrong",
               success: "Approved Successfully",
             }
           );
+
           const filter = data.filter((d) => d.status === selectedOption);
+
           setShow(filter);
           setreload((old) => old + 1);
         } catch (err) {

@@ -18,8 +18,6 @@ async function SendMailWithAttachment(loiReqData, guests) {
       itenary: loiReqData.iternary,
     });
 
-    console.log(visaFullPathPDF, itenaryFullPathPDF);
-
     const fileList = [
       loiReqData.pasport_copy,
       loiReqData.visa_copy,
