@@ -1,6 +1,6 @@
 const LOI = require("../../model/LOI");
 const PDF = require("../../GenaretePDF/pythonGeneratePDF");
-const SendMail = require("../../util/SendMail");
+const SendEmail = require("../../util/SendEmail");
 const path = require("path");
 
 async function SendMailWithAttachment(loiReqData, guests) {
@@ -18,8 +18,7 @@ async function SendMailWithAttachment(loiReqData, guests) {
       itenary: loiReqData.iternary,
     });
 
-    console.log(visaFullPathPDF, itenaryFullPathPDF)
-
+    console.log(visaFullPathPDF, itenaryFullPathPDF);
 
     const fileList = [
       loiReqData.pasport_copy,
@@ -33,6 +32,17 @@ async function SendMailWithAttachment(loiReqData, guests) {
       path: path.join(__dirname, "../../upload/loireqfile", file),
     }));
 
+    attachments.push(
+      {
+        filename: `${loiReqData.guest_name}-letter.pdf`,
+        path: visaFullPathPDF,
+      },
+      {
+        filename: `${loiReqData.guest_name}-itenary.pdf`,
+        path: itenaryFullPathPDF,
+      }
+    );
+
     const mails = [];
 
     if (loiReqData.agent) {
@@ -40,34 +50,17 @@ async function SendMailWithAttachment(loiReqData, guests) {
       mails.push(agent.username);
     }
 
-    const mailRes = await SendMail(
-      ["alimam01828@gmail.com"],
-      ["nahidhasan.opt@gmail.com", ...mails],
-      `${loiReqData.pasport_number}-${loiReqData.guest_name}`,
-      "",
-      `
-        <p style="font-size:20px">Dear Sir,</p></br>
-        <p>Greetings from Astha trip.</p></br>
-        <p>Please Find The Attached File.
-        If you have any query please do not hesitate to contact with me</p></br>
-
-      `,
-      [
-        ...attachments,
-        {
-          filename: `${loiReqData.guest_name}-letter.pdf`,
-          path: visaFullPathPDF,
-        },
-        {
-          filename: `${loiReqData.guest_name}-itenary.pdf`,
-          path: itenaryFullPathPDF,
-        },
-      ]
-    );
+    const mailRes = await SendEmail({
+      to: ["i3371595@gmail.com"],
+      bcc: mails,
+      subject: `${loiReqData.pasport_number}-${loiReqData.guest_name}`,
+      attachments,
+      html: " <p style='font-size:20px'>Dear Sir,</p></br> <p>Greetings from Astha trip.</p></br><p>Please Find The Attached File. If you have any query please do not hesitate to contact with me</p></br> ",
+    });
 
     if (!mailRes.send) {
       throw new Error({
-        message: SendMail.message,
+        message: mailRes.message,
         instanceof: "loi-approve",
       });
     }
