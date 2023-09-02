@@ -111,7 +111,7 @@ const Dashboard = () => {
               Approved
             </option>
             <option value="pending">Pending</option>
-            <option value="cencle">Cencle</option>
+            <option value="cancel">Cancel</option>
           </select>
         </div>
         <div className="flex items-center space-x-2">
