@@ -11,10 +11,11 @@ async function SendMailWithAttachment(loiReqData, guests) {
     );
 
     const itenaryFullPathPDF = await PDF.generateItenaryPDF({
-      guests: guests.map((guest) => ({
-        name: guest.guest_name,
-        passport_no: `${guest.pasport_number}`,
-      })),
+      guest: {
+        name: loiReqData.guest_name,
+        passport: loiReqData.pasport_number,
+        family: `${guests.length}`,
+      },
       itenary: loiReqData.iternary,
     });
 
@@ -70,6 +71,7 @@ async function SendMailWithAttachment(loiReqData, guests) {
 
     return false;
   } catch (error) {
+    console.log(error);
     return error;
   }
 }
@@ -83,8 +85,6 @@ async function approveLoiRequest(req, res, next) {
     const sendRes = allGuest.map((loi) => {
       return SendMailWithAttachment(loi, allGuest);
     });
-
-    console.log({ "mail-promise": sendRes });
 
     const datas = await Promise.all(sendRes);
     const result = datas.filter((e) => e);

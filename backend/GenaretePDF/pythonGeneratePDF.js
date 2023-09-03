@@ -3,14 +3,14 @@ const axios = require("axios");
 const fs = require("fs");
 const { v4 } = require("uuid");
 
-const baseURL = process.env.FAST_API_BASE_URL ?? "http://127.0.0.1:8000";
+const baseURL = process.env.FLASK_BASE_URL ?? "http://127.0.0.1:8000";
 
 async function generateVisaPDF(name, passport) {
   try {
     const fileFullPath = path.join(
       __dirname,
       "generated-pdf",
-      `${name}-${passport}-${v4()}.pdf`
+      `${name}-${passport}-${v4()}-visa.pdf`
     );
 
     const { data: BufferPDF } = await axios.post(`${baseURL}/generate/visa/`, {
@@ -22,29 +22,29 @@ async function generateVisaPDF(name, passport) {
 
     return fileFullPath;
   } catch (error) {
-    console.log("generateVisaPDF", error.response.data);
+    console.log("generateVisaPDF", error.response);
     return null;
   }
 }
 
-async function generateItenaryPDF({ guests, itenary }) {
+async function generateItenaryPDF({ guest, itenary }) {
   try {
     const fileFullPath = path.join(
       __dirname,
       "generated-pdf",
-      `${guests.map((g) => `${g.name}-${g.passport_no}`).join("_")}-${v4()}.pdf`
+      `${guest.name}-${guest.passport}-${v4()}-itenary.pdf`
     );
 
     const { data: BufferPDF } = await axios.post(
       `${baseURL}/generate/itenary/`,
-      { guests, itenary: JSON.parse(itenary) }
+      { guest, itenary: JSON.parse(itenary) }
     );
 
     fs.writeFileSync(fileFullPath, BufferPDF);
 
     return fileFullPath;
   } catch (error) {
-    console.log("generateItenaryPDF", error.response.data);
+    console.log("generateItenaryPDF", error.response);
     return null;
   }
 }

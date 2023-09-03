@@ -33,7 +33,7 @@ function CardMenu(props) {
       if (result.isConfirmed) {
         try {
           await toast.promise(
-            axios.post("/api/loi/approved" /* /api/loi/approved-python  */, {
+            axios.post("/api/loi/approved-python", {
               id: prop.id,
             }),
             {
@@ -48,7 +48,7 @@ function CardMenu(props) {
           setShow(filter);
           setreload((old) => old + 1);
         } catch (err) {
-          console.log(err.message);
+          console.log(err);
         }
       }
     });
