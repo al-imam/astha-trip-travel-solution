@@ -160,9 +160,9 @@ const DetailAgentmodule = ({ dataraw, close, reload }) => {
   }
 
   return (
-    <div className=" fixed top-0 left-0 z-10 h-screen  w-full overflow-auto bg-white/60 pt-48 backdrop-blur-md ">
+    <div className=" fixed top-0 left-0 z-10 h-screen  w-full overflow-auto bg-white/60 pt-48 pr-4 backdrop-blur-md md:pr-0">
       {data ? (
-        <div className="mx-2 mb-8 w-full rounded-md bg-brand-100 p-3 shadow-md md:mx-auto md:w-11/12">
+        <div className="mx-2 mb-8 w-full rounded-md bg-brand-100 p-4 pb-20 shadow-md md:mx-auto md:w-11/12 md:pb-8">
           <div className="relative flex w-full items-center justify-between border-b-2 border-brand-600 p-3 text-xl font-bold text-white">
             <div className="flex items-center">
               <span className="pr-2 text-2xl text-brand-700">
