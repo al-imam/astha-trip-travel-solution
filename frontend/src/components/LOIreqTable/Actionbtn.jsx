@@ -70,20 +70,11 @@ function CardMenu(props) {
   };
 
   const handleCancel = () => {
-    let family = 1;
-
-    const filterData = data.filter(
-      (data) => data.reference === prop?.reference
-    );
-    if (filterData.length > 1) {
-      family = filterData.length;
-    }
+    const filterData = data.filter((data) => data.reference === prop.reference);
 
     Swal.fire({
       title: "Are you sure to cancel?",
-      text: `Name: ${prop?.guest_name}, Passport Number: ${
-        prop?.pasport_number
-      }, Family: ${"family"}`,
+      text: `Name: ${prop?.guest_name}, Passport Number: ${prop?.pasport_number}, Family: ${filterData.length}`,
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#422AFB",
@@ -110,6 +101,41 @@ function CardMenu(props) {
       }
     });
   };
+
+  function handleDelete(ref) {
+    const filterData = data.filter((data) => data.reference === prop.reference);
+
+    Swal.fire({
+      title: "Are you sure to delete?",
+      text: `Name: ${prop?.guest_name}, Reference: ${prop.reference}, Family: ${filterData.length}`,
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#422AFB",
+      cancelButtonColor: "#d33",
+      cancelButtonText: "close",
+      confirmButtonText: "Yes, Delete It!",
+      scrollbarPadding: false,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await toast.promise(
+            axios.post("/api/loi/delete-after-cancel", {
+              reference: prop?.reference,
+            }),
+            {
+              pending: "Please wait",
+              error: "Something went wrong",
+              success: "Delete Successfully",
+            }
+          );
+
+          setreload((old) => old + 1);
+        } catch (err) {
+          console.log(err.message);
+        }
+      }
+    });
+  }
 
   return (
     <>
@@ -200,52 +226,83 @@ function CardMenu(props) {
         classNames={`top-0 right-0 left-auto w-max`}
         children={
           <div className="z-50 flex w-max flex-col gap-2 rounded-xl bg-white px-4 py-3 text-sm shadow-xl  shadow-shadow-500 dark:!bg-navy-700 dark:shadow-none">
-            {prop.status === "pending" && (
+            {prop.status === "pending" ? (
               <>
                 <p
                   onClick={handleApproved}
-                  className="hover:text-black flex cursor-pointer items-center gap-1 text-gray-600 hover:font-medium"
+                  className="hover:text-black flex cursor-pointer items-center gap-1 text-gray-600  hover:text-gray-900 dark:hover:text-gray-200 "
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      fill="currentColor"
-                      d="m9.55 18l-5.7-5.7l1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4L9.55 18Z"
-                    />
-                  </svg>
+                  <div className="flex aspect-square w-[20px] items-center justify-center">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      className="w-full"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="m9.55 18l-5.7-5.7l1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4L9.55 18Z"
+                      />
+                    </svg>
+                  </div>
                   Approved
                 </p>
 
                 <p
                   onClick={handleCancel}
-                  className="hover:text-black  flex cursor-pointer items-center gap-1 pt-1 text-gray-600 hover:font-medium"
+                  className="hover:text-black  flex cursor-pointer items-center gap-1 pt-1 text-gray-600  hover:text-gray-900 dark:hover:text-gray-200 "
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      fill="currentColor"
-                      d="M1 21h22L12 2L1 21zm3.47-2L12 5.99L19.53 19H4.47zM11 16h2v2h-2zm0-6h2v4h-2z"
-                    />
-                  </svg>
+                  <div className="flex aspect-square w-[20px] items-center justify-center">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="1.3em"
+                      height="1.3em"
+                      viewBox="0 0 24 24"
+                      className="w-full"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="m12 13.4l-4.9 4.9q-.275.275-.7.275t-.7-.275q-.275-.275-.275-.7t.275-.7l4.9-4.9l-4.9-4.9q-.275-.275-.275-.7t.275-.7q.275-.275.7-.275t.7.275l4.9 4.9l4.9-4.9q.275-.275.7-.275t.7.275q.275.275.275.7t-.275.7L13.4 12l4.9 4.9q.275.275.275.7t-.275.7q-.275.275-.7.275t-.7-.275L12 13.4Z"
+                      ></path>
+                    </svg>
+                  </div>
                   Cancel
                 </p>
               </>
+            ) : (
+              <p
+                onClick={handleDelete}
+                className="flex cursor-pointer items-center gap-2 pt-1 text-gray-600 hover:text-gray-900 dark:hover:text-gray-200 "
+              >
+                <div className="flex aspect-square w-[20px] items-center justify-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1em"
+                    height="1em"
+                    viewBox="0 0 24 24"
+                    className="w-full"
+                  >
+                    <path
+                      fill="currentColor"
+                      d="M16 1.75V3h5.25a.75.75 0 0 1 0 1.5H2.75a.75.75 0 0 1 0-1.5H8V1.75C8 .784 8.784 0 9.75 0h4.5C15.216 0 16 .784 16 1.75Zm-6.5 0V3h5V1.75a.25.25 0 0 0-.25-.25h-4.5a.25.25 0 0 0-.25.25ZM4.997 6.178a.75.75 0 1 0-1.493.144L4.916 20.92a1.75 1.75 0 0 0 1.742 1.58h10.684a1.75 1.75 0 0 0 1.742-1.581l1.413-14.597a.75.75 0 0 0-1.494-.144l-1.412 14.596a.25.25 0 0 1-.249.226H6.658a.25.25 0 0 1-.249-.226L4.997 6.178Z"
+                    ></path>
+                    <path
+                      fill="currentColor"
+                      d="M9.206 7.501a.75.75 0 0 1 .793.705l.5 8.5A.75.75 0 1 1 9 16.794l-.5-8.5a.75.75 0 0 1 .705-.793Zm6.293.793A.75.75 0 1 0 14 8.206l-.5 8.5a.75.75 0 0 0 1.498.088l.5-8.5Z"
+                    ></path>
+                  </svg>
+                </div>
+                Delete
+              </p>
             )}
             <p
               onClick={() => setShowDetails(true)}
-              className="hover:text-black flex cursor-pointer items-center gap-2 pt-1 text-gray-600 hover:font-medium"
+              className="flex cursor-pointer items-center gap-1 pt-1 text-gray-600  hover:text-gray-900 dark:hover:text-gray-200 "
             >
-              <span>
-                <AiOutlineShop />
-              </span>
+              <div className="flex aspect-square w-[20px] items-center justify-center">
+                <AiOutlineShop className="w-full" />
+              </div>
               Details
             </p>
           </div>

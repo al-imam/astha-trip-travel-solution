@@ -8,6 +8,7 @@ const { isString, isNumber } = require("nested-object-validate");
 const isAdmin = require("../middleware/Auth/isAdmin");
 const isAuthenticate = require("../middleware/Auth/isAuthenticate");
 const approveLoiRequest = require("../controller/LOI/approveLoiRequest");
+const deleteController = require("../controller/LOI/deleteAfterCancel");
 
 LOIRoute.post("/entry", isAuthenticate, LOIEntry);
 LOIRoute.get("/getall", isAdmin, GetAll);
@@ -24,6 +25,13 @@ LOIRoute.post(
   isAdmin,
   validateBody([isString("reference")]),
   CancelController
+);
+
+LOIRoute.post(
+  "/delete-after-cancel",
+  isAdmin,
+  validateBody([isString("reference")]),
+  deleteController
 );
 
 module.exports = LOIRoute;
