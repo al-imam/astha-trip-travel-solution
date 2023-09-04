@@ -10,6 +10,7 @@ function CardMenu(props) {
   const { transparent, data, prop, setreload, selectedOption, setShow } = props;
   const [open, setOpen] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleApproved = () => {
     let family = 1;
@@ -29,23 +30,40 @@ function CardMenu(props) {
       confirmButtonColor: "#422AFB",
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, Approved It!",
+      scrollbarPadding: false,
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await toast.promise(
-            axios.post("/api/loi/approved-python", {
-              id: prop.id,
-            }),
-            {
-              pending: "Please wait",
-              error: "Something went wrong",
-              success: "Approved Successfully",
-            }
-          );
+          document.body.style.overflow = "hidden";
+          setIsLoading(true);
+          await axios.post("/api/loi/approved-python", {
+            id: prop.id,
+          });
+
+          Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "Successfully approved",
+            showConfirmButton: false,
+            timer: 1500,
+            scrollbarPadding: false,
+          });
 
           setreload((old) => old + 1);
         } catch (err) {
+          Swal.fire({
+            position: "top-end",
+            icon: "error",
+            title: "Something went wrong!",
+            showConfirmButton: false,
+            timer: 1500,
+            scrollbarPadding: false,
+          });
+
           console.log(err);
+        } finally {
+          document.body.style.overflow = "unset";
+          setIsLoading(false);
         }
       }
     });
@@ -72,10 +90,11 @@ function CardMenu(props) {
       cancelButtonColor: "#d33",
       cancelButtonText: "close",
       confirmButtonText: "Yes, Cancel It!",
+      scrollbarPadding: false,
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const res = await toast.promise(
+          await toast.promise(
             axios.post("/api/loi/cancel", { reference: prop?.reference }),
             {
               pending: "Please wait",
@@ -83,8 +102,7 @@ function CardMenu(props) {
               success: "Cancel Successfully",
             }
           );
-          const filter = data.filter((d) => d.status === selectedOption);
-          setShow(filter);
+
           setreload((old) => old + 1);
         } catch (err) {
           console.log(err.message);
@@ -95,6 +113,14 @@ function CardMenu(props) {
 
   return (
     <>
+      {isLoading && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-[2px]">
+          <div className="flex flex-col items-center gap-2 rounded-sm bg-white py-10 px-14 text-center text-gray-900 shadow">
+            <Spinner className="text-center text-4xl" />
+            <p className="text-xl">Please wait</p>
+          </div>
+        </div>
+      )}
       {showDetails && (
         <div className="bg-black/10 fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm">
           <div className="dark:bg- relative mx-6 w-[720px] space-y-6 rounded-lg bg-white p-8 shadow-md dark:!bg-navy-900 md:mx-0">
@@ -230,3 +256,33 @@ function CardMenu(props) {
 }
 
 export default CardMenu;
+
+export function Spinner(props) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="1em"
+      height="1em"
+      viewBox="0 0 24 24"
+      {...props}
+    >
+      <path
+        fill="currentColor"
+        d="M12,1A11,11,0,1,0,23,12,11,11,0,0,0,12,1Zm0,19a8,8,0,1,1,8-8A8,8,0,0,1,12,20Z"
+        opacity=".25"
+      ></path>
+      <path
+        fill="currentColor"
+        d="M10.72,19.9a8,8,0,0,1-6.5-9.79A7.77,7.77,0,0,1,10.4,4.16a8,8,0,0,1,9.49,6.52A1.54,1.54,0,0,0,21.38,12h.13a1.37,1.37,0,0,0,1.38-1.54,11,11,0,1,0-12.7,12.39A1.54,1.54,0,0,0,12,21.34h0A1.47,1.47,0,0,0,10.72,19.9Z"
+      >
+        <animateTransform
+          attributeName="transform"
+          dur="0.75s"
+          repeatCount="indefinite"
+          type="rotate"
+          values="0 12 12;360 12 12"
+        ></animateTransform>
+      </path>
+    </svg>
+  );
+}
