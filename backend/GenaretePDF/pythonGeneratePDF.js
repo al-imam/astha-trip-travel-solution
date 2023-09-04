@@ -5,12 +5,16 @@ const { v4 } = require("uuid");
 
 const baseURL = process.env.FLASK_BASE_URL ?? "http://127.0.0.1:8000";
 
+function fix(str) {
+  return `${str}`.trim().replace(/\s+/g, "-").toLowerCase();
+}
+
 async function generateVisaPDF(name, passport) {
   try {
     const fileFullPath = path.join(
       __dirname,
       "generated-pdf",
-      `${name}-${passport}-${v4()}-visa.pdf`
+      `${fix(name)}-${fix(passport)}-${v4()}-visa.pdf`
     );
 
     const { data: BufferPDF } = await axios.post(`${baseURL}/generate/visa/`, {
@@ -32,7 +36,7 @@ async function generateItenaryPDF({ guest, itenary }) {
     const fileFullPath = path.join(
       __dirname,
       "generated-pdf",
-      `${guest.name}-${guest.passport}-${v4()}-itenary.pdf`
+      `${fix(guest.name)}-${fix(guest.passport)}-${v4()}-itenary.pdf`
     );
 
     const { data: BufferPDF } = await axios.post(

@@ -47,7 +47,7 @@ const creatableSelectOptions = [
   {
     value: "Value hotel thomson",
     label: "Value hotel thomson",
-  }
+  },
 ];
 
 const Entry = () => {
@@ -115,7 +115,6 @@ const Entry = () => {
     const getData = async () => {
       let ad = false;
       try {
- 
         try {
           const resAdmin = await axios("/api/auth/info");
           setAdmin(resAdmin.data);
@@ -145,7 +144,6 @@ const Entry = () => {
     getData();
   }, []);
 
-
   const [fromdata, setFromdata] = useState([]);
 
   const handleFromData = (e) => {
@@ -168,7 +166,6 @@ const Entry = () => {
 
   const teb = useRef(null);
 
-  
   const guestchack = (length, types, GuestFamalyNumber) => {
     if (length >= GuestFamalyNumber && types === "family") {
       sethide(true);
@@ -189,7 +186,6 @@ const Entry = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataList, type, numberOfguest]);
 
- 
   const deleteList = (id) => {
     const temp = dataList.filter((e) => {
       return e.id !== id;
@@ -198,7 +194,6 @@ const Entry = () => {
     guestchack(dataList.length, type, numberOfguest);
   };
 
-  
   const onsubmit = async (e) => {
     e.preventDefault();
 
@@ -271,7 +266,6 @@ const Entry = () => {
     }
   };
 
-
   const submitFullList = async () => {
     if (!Admin) {
       let length = dataList.length;
@@ -290,7 +284,7 @@ const Entry = () => {
       setload(false);
       return toast.warn("please enter tour iternary");
     }
-    
+
     if (!dataList.length) {
       setload(false);
       return toast.warn("please Add user First", {
