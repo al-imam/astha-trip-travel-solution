@@ -226,52 +226,53 @@ function CardMenu(props) {
         classNames={`top-0 right-0 left-auto w-max`}
         children={
           <div className="z-50 flex w-max flex-col gap-2 rounded-xl bg-white px-4 py-3 text-sm shadow-xl  shadow-shadow-500 dark:!bg-navy-700 dark:shadow-none">
-            {prop.status === "pending" ? (
-              <>
-                <p
-                  onClick={handleApproved}
-                  className="hover:text-black flex cursor-pointer items-center gap-1 text-gray-600  hover:text-gray-900 dark:hover:text-gray-200 "
-                >
-                  <div className="flex aspect-square w-[20px] items-center justify-center">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      className="w-full"
-                    >
-                      <path
-                        fill="currentColor"
-                        d="m9.55 18l-5.7-5.7l1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4L9.55 18Z"
-                      />
-                    </svg>
-                  </div>
-                  Approved
-                </p>
+            {
+              prop.status === "pending" ? (
+                <>
+                  <p
+                    onClick={handleApproved}
+                    className="hover:text-black flex cursor-pointer items-center gap-1 text-gray-600  hover:text-gray-900 dark:hover:text-gray-200 "
+                  >
+                    <div className="flex aspect-square w-[20px] items-center justify-center">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        className="w-full"
+                      >
+                        <path
+                          fill="currentColor"
+                          d="m9.55 18l-5.7-5.7l1.425-1.425L9.55 15.15l9.175-9.175L20.15 7.4L9.55 18Z"
+                        />
+                      </svg>
+                    </div>
+                    Approved
+                  </p>
 
-                <p
-                  onClick={handleCancel}
-                  className="hover:text-black  flex cursor-pointer items-center gap-1 pt-1 text-gray-600  hover:text-gray-900 dark:hover:text-gray-200 "
-                >
-                  <div className="flex aspect-square w-[20px] items-center justify-center">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="1.3em"
-                      height="1.3em"
-                      viewBox="0 0 24 24"
-                      className="w-full"
-                    >
-                      <path
-                        fill="currentColor"
-                        d="m12 13.4l-4.9 4.9q-.275.275-.7.275t-.7-.275q-.275-.275-.275-.7t.275-.7l4.9-4.9l-4.9-4.9q-.275-.275-.275-.7t.275-.7q.275-.275.7-.275t.7.275l4.9 4.9l4.9-4.9q.275-.275.7-.275t.7.275q.275.275.275.7t-.275.7L13.4 12l4.9 4.9q.275.275.275.7t-.275.7q-.275.275-.7.275t-.7-.275L12 13.4Z"
-                      ></path>
-                    </svg>
-                  </div>
-                  Cancel
-                </p>
-              </>
-            ) : (
-              <p
+                  <p
+                    onClick={handleCancel}
+                    className="hover:text-black  flex cursor-pointer items-center gap-1 pt-1 text-gray-600  hover:text-gray-900 dark:hover:text-gray-200 "
+                  >
+                    <div className="flex aspect-square w-[20px] items-center justify-center">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="1.3em"
+                        height="1.3em"
+                        viewBox="0 0 24 24"
+                        className="w-full"
+                      >
+                        <path
+                          fill="currentColor"
+                          d="m12 13.4l-4.9 4.9q-.275.275-.7.275t-.7-.275q-.275-.275-.275-.7t.275-.7l4.9-4.9l-4.9-4.9q-.275-.275-.275-.7t.275-.7q.275-.275.7-.275t.7.275l4.9 4.9l4.9-4.9q.275-.275.7-.275t.7.275q.275.275.275.7t-.275.7L13.4 12l4.9 4.9q.275.275.275.7t-.275.7q-.275.275-.7.275t-.7-.275L12 13.4Z"
+                        ></path>
+                      </svg>
+                    </div>
+                    Cancel
+                  </p>
+                </>
+              ) : null
+              /* ( <p
                 onClick={handleDelete}
                 className="flex cursor-pointer items-center gap-2 pt-1 text-gray-600 hover:text-gray-900 dark:hover:text-gray-200 "
               >
@@ -294,8 +295,9 @@ function CardMenu(props) {
                   </svg>
                 </div>
                 Delete
-              </p>
-            )}
+              </p> ) */
+            }
+
             <p
               onClick={() => setShowDetails(true)}
               className="flex cursor-pointer items-center gap-1 pt-1 text-gray-600  hover:text-gray-900 dark:hover:text-gray-200 "
