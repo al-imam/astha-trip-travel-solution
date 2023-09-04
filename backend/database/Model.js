@@ -101,8 +101,8 @@ class Model {
 
   async findOne(where) {
     try {
-       // chack is table exist if not then add the table
-       if (!(await chackTable(this.name))) {
+      // chack is table exist if not then add the table
+      if (!(await chackTable(this.name))) {
         await new Promise(async (resolve) => {
           const resmy = await this.mygrate();
           resolve();
@@ -234,8 +234,8 @@ class Model {
   }
 
   async findById(id) {
-     // chack is table exist if not then add the table
-     if (!(await chackTable(this.name))) {
+    // chack is table exist if not then add the table
+    if (!(await chackTable(this.name))) {
       await new Promise(async (resolve) => {
         const resmy = await this.mygrate();
         resolve();
@@ -276,9 +276,31 @@ class Model {
     }
   }
 
+  async deleteAll(q = {}) {
+    try {
+      // chack is table exist if not then add the table
+      if (!(await chackTable(this.name))) {
+        await new Promise(async (resolve) => {
+          await this.mygrate();
+          resolve();
+        });
+      }
+
+      const where = Object.entries(q)
+        .map(([key, value]) => `${key}='${value}'`)
+        .join(" AND ");
+
+      const DB = await DataBase();
+      const sql = await DB.execute(`DELETE FROM ${this.name} WHERE ${where}`);
+      return sql;
+    } catch (error) {
+      console.log("🚀 ~ deleteAll ~ error:", error);
+    }
+  }
+
   async findByIdAndUpdate(id, querySet = {}) {
-     // chack is table exist if not then add the table
-     if (!(await chackTable(this.name))) {
+    // chack is table exist if not then add the table
+    if (!(await chackTable(this.name))) {
       await new Promise(async (resolve) => {
         const resmy = await this.mygrate();
         resolve();
@@ -329,8 +351,8 @@ class Model {
   // raw sql input
   async RayQuery(sql) {
     try {
-       // chack is table exist if not then add the table
-       if (!(await chackTable(this.name))) {
+      // chack is table exist if not then add the table
+      if (!(await chackTable(this.name))) {
         await new Promise(async (resolve) => {
           const resmy = await this.mygrate();
           resolve();
