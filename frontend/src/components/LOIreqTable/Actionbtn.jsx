@@ -43,9 +43,6 @@ function CardMenu(props) {
             }
           );
 
-          const filter = data.filter((d) => d.status === selectedOption);
-
-          setShow(filter);
           setreload((old) => old + 1);
         } catch (err) {
           console.log(err);

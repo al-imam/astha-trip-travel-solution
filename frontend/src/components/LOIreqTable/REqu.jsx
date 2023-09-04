@@ -23,22 +23,16 @@ const REqu = ({ selectedOption, search, relaod, setSelect }) => {
   }, [reloads]);
 
   useEffect(() => {
-    if (!selectedOption) {
-      return setShow(datas);
-    }
-    const filter = datas.filter((data) => data.status === selectedOption);
-    setShow(filter);
-  }, [selectedOption, datas]);
+    const filter = datas
+      .filter((data) =>
+        data.status.toLowerCase().includes(selectedOption.toLowerCase())
+      )
+      .filter((data) =>
+        data.pasport_number.toLowerCase().includes(search.toLowerCase())
+      );
 
-  useEffect(() => {
-    if (!search) {
-      return setShow(datas);
-    }
-    const filter = datas.filter(
-      (data) => data.pasport_number.indexOf(search) !== -1
-    );
     setShow(filter);
-  }, [search, datas]);
+  }, [selectedOption, datas, search]);
 
   let ExportToExcel = () => {
     const dats = show.map((e) => {
