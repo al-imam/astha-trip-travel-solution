@@ -1,4 +1,3 @@
-import React from "react";
 import { useNavigate } from "react-router-dom";
 
 const AgentEntry = () => {
@@ -80,9 +79,7 @@ const AgentEntry = () => {
               <div className="relative grid w-full grid-cols-1 gap-3 px-3 md:grid-cols-3">
                 {/* pasport number  */}
                 <div className="relative w-full">
-                  <label className="pl-px text-brand-900">
-                    Passport Number *
-                  </label>
+                  <label className="pl-px text-brand-900">Passport Number *</label>
                   <input
                     type="text"
                     name="passport"
@@ -117,9 +114,7 @@ const AgentEntry = () => {
               <div className="relative grid w-full grid-cols-2 gap-3 p-2">
                 {/* Passport photo */}
                 <div className="relative w-full">
-                  <label className="pl-px text-brand-900">
-                    Pasport Photo ( jpg, pdf ) *
-                  </label>
+                  <label className="pl-px text-brand-900">Pasport Photo ( jpg, pdf ) *</label>
                   <input
                     type="file"
                     required
@@ -129,9 +124,7 @@ const AgentEntry = () => {
                   />
                 </div>
                 <div className="relative w-full">
-                  <label className="pl-px text-brand-900">
-                    Visa Photo ( jpg, pdf ){" "}
-                  </label>
+                  <label className="pl-px text-brand-900">Visa Photo ( jpg, pdf ) </label>
                   <input
                     type="file"
                     name="visaPhoto"
@@ -142,8 +135,7 @@ const AgentEntry = () => {
                 {/* hotel booking docs photo */}
                 <div className="relative w-full">
                   <label className="pl-px text-brand-900">
-                    Hotel bokking copy ( jpg, pdf ){" "}
-                    <span className="text-sm font-extralight italic"></span>
+                    Hotel bokking copy ( jpg, pdf ) <span className="text-sm font-extralight italic"></span>
                   </label>
 
                   <input
@@ -155,9 +147,7 @@ const AgentEntry = () => {
                 </div>
                 {/*  Plane ticket photo */}
                 <div className="relative w-full">
-                  <label className="pl-px text-brand-900">
-                    Plane ticket copy ( jpg, pdf ){" "}
-                  </label>
+                  <label className="pl-px text-brand-900">Plane ticket copy ( jpg, pdf ) </label>
                   <input
                     type="file"
                     name="visaPhoto"
@@ -189,13 +179,7 @@ export default AgentEntry;
 
 export function MaterialSymbolsArrowLeftAltRounded(props) {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="1em"
-      height="1em"
-      viewBox="0 0 24 24"
-      {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" {...props}>
       <path
         fill="currentColor"
         d="m7.85 13l2.85 2.85q.3.3.288.7t-.288.7q-.3.3-.712.313t-.713-.288L4.7 12.7q-.3-.3-.3-.7t.3-.7l4.575-4.575q.3-.3.713-.287t.712.312q.275.3.288.7t-.288.7L7.85 11H19q.425 0 .713.288T20 12q0 .425-.288.713T19 13H7.85Z"
@@ -206,13 +190,7 @@ export function MaterialSymbolsArrowLeftAltRounded(props) {
 
 export function MaterialSymbolsAddNotesOutline(props) {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="1em"
-      height="1em"
-      viewBox="0 0 24 24"
-      {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" {...props}>
       <path
         fill="currentColor"
         d="M5 21q-.825 0-1.413-.588T3 19V5q0-.825.588-1.413T5 3h14q.825 0 1.413.588T21 5v6.7q-.475-.225-.975-.388T19 11.075V5H5v14h6.05q.075.55.238 1.05t.387.95H5Zm0-3v1V5v6.075V11v7Zm2-1h4.075q.075-.525.238-1.025t.362-.975H7v2Zm0-4h6.1q.8-.75 1.788-1.25T17 11.075V11H7v2Zm0-4h10V7H7v2Zm11 14q-2.075 0-3.538-1.463T13 18q0-2.075 1.463-3.538T18 13q2.075 0 3.538 1.463T23 18q0 2.075-1.463 3.538T18 23Zm-.5-2h1v-2.5H21v-1h-2.5V15h-1v2.5H15v1h2.5V21Z"

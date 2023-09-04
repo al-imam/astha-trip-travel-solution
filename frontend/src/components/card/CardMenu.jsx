@@ -1,9 +1,8 @@
-import React from "react";
 import Dropdown from "components/dropdown";
-import { AiOutlineUser } from "react-icons/ai";
+import React from "react";
+import { AiOutlineShop, AiOutlineUser } from "react-icons/ai";
 import { BsThreeDots } from "react-icons/bs";
 import { FiSettings } from "react-icons/fi";
-import { AiOutlineShop } from "react-icons/ai";
 import { TiLightbulb } from "react-icons/ti";
 
 function CardMenu(props) {

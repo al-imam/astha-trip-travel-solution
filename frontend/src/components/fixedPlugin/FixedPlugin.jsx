@@ -5,9 +5,7 @@ import React from "react";
 import { RiMoonFill, RiSunFill } from "react-icons/ri";
 export default function FixedPlugin(props) {
   const { ...rest } = props;
-  const [darkmode, setDarkmode] = React.useState(
-    document.body.classList.contains("dark")
-  );
+  const [darkmode, setDarkmode] = React.useState(document.body.classList.contains("dark"));
 
   return (
     <button
@@ -26,11 +24,7 @@ export default function FixedPlugin(props) {
       {/* // left={document.documentElement.dir === "rtl" ? "35px" : ""}
       // right={document.documentElement.dir === "rtl" ? "" : "35px"} */}
       <div className="cursor-pointer text-gray-600">
-        {darkmode ? (
-          <RiSunFill className="h-4 w-4 text-white" />
-        ) : (
-          <RiMoonFill className="h-4 w-4 text-white" />
-        )}
+        {darkmode ? <RiSunFill className="h-4 w-4 text-white" /> : <RiMoonFill className="h-4 w-4 text-white" />}
       </div>
     </button>
   );

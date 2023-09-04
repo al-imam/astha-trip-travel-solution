@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import Datepicker from "react-tailwindcss-datepicker";
 
 import axios from "axios";
@@ -61,12 +61,7 @@ const FilterByAjent = ({ setData, goBack, removeFilter }) => {
   return (
     <div className="mt-4 flex w-full flex-col items-start gap-2 sm:justify-between md:flex-row md:items-center lg:justify-start">
       <div className="w-full rounded ring-[2px] ring-brand-300 md:w-96">
-        <Datepicker
-          onChange={handleValueChange}
-          value={value}
-          showShortcuts={true}
-          popoverDirection="down"
-        />
+        <Datepicker onChange={handleValueChange} value={value} showShortcuts={true} popoverDirection="down" />
       </div>
       <div className="w-full md:w-72">
         <select
@@ -104,13 +99,7 @@ const FilterByAjent = ({ setData, goBack, removeFilter }) => {
 
 export function IcRoundFilterAlt(props) {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="1em"
-      height="1em"
-      viewBox="0 0 24 24"
-      {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" {...props}>
       <path
         fill="currentColor"
         d="M4.25 5.61C6.57 8.59 10 13 10 13v5c0 1.1.9 2 2 2s2-.9 2-2v-5s3.43-4.41 5.75-7.39c.51-.66.04-1.61-.8-1.61H5.04c-.83 0-1.3.95-.79 1.61z"

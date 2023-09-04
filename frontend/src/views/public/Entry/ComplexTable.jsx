@@ -1,16 +1,9 @@
 // import CardMenu from "components/card/CardMenu";
 import Card from "components/card";
-import {
-  useGlobalFilter,
-  usePagination,
-  useSortBy,
-  useTable,
-} from "react-table";
+import { useGlobalFilter, usePagination, useSortBy, useTable } from "react-table";
 
-import { MdCheckCircle, MdCancel, MdOutlineError } from "react-icons/md";
 import { useMemo } from "react";
 
-import Progress from "components/progress";
 const ComplexTable = (props) => {
   const { columnsData, tableData } = props;
 
@@ -61,10 +54,7 @@ const ComplexTable = (props) => {
       </div>
 
       <div className="mt-8 overflow-x-scroll xl:overflow-hidden">
-        <table
-          {...getTableProps()}
-          className="w-full table-auto [&_*]:whitespace-nowrap"
-        >
+        <table {...getTableProps()} className="w-full table-auto [&_*]:whitespace-nowrap">
           <thead>
             {headerGroups.map((headerGroup, index) => (
               <tr {...headerGroup.getHeaderGroupProps()} key={index}>
@@ -74,9 +64,7 @@ const ComplexTable = (props) => {
                     key={index}
                     className="border-b border-gray-200 px-3 pb-[10px] text-start first:px-0 last:px-8 dark:!border-navy-700 md:last:px-0"
                   >
-                    <p className="text-xs tracking-wide text-gray-600">
-                      {column.render("Header")}
-                    </p>
+                    <p className="text-xs tracking-wide text-gray-600">{column.render("Header")}</p>
                   </th>
                 ))}
               </tr>
@@ -243,13 +231,7 @@ export default ComplexTable;
 
 export function IcRoundKeyboardDoubleArrowRight(props) {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="1em"
-      height="1em"
-      viewBox="0 0 24 24"
-      {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" {...props}>
       <path
         fill="currentColor"
         d="M5.7 6.71a.996.996 0 0 0 0 1.41L9.58 12L5.7 15.88a.996.996 0 1 0 1.41 1.41l4.59-4.59a.996.996 0 0 0 0-1.41L7.12 6.71c-.39-.39-1.03-.39-1.42 0z"
@@ -264,13 +246,7 @@ export function IcRoundKeyboardDoubleArrowRight(props) {
 
 export function IcRoundKeyboardArrowRight(props) {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="1em"
-      height="1em"
-      viewBox="0 0 24 24"
-      {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" {...props}>
       <path
         fill="currentColor"
         d="M9.29 15.88L13.17 12L9.29 8.12a.996.996 0 1 1 1.41-1.41l4.59 4.59c.39.39.39 1.02 0 1.41L10.7 17.3a.996.996 0 0 1-1.41 0c-.38-.39-.39-1.03 0-1.42z"
@@ -281,51 +257,24 @@ export function IcRoundKeyboardArrowRight(props) {
 
 export function IcOutlineKeyboardArrowLeft(props) {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="1em"
-      height="1em"
-      viewBox="0 0 24 24"
-      {...props}
-    >
-      <path
-        fill="currentColor"
-        d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6l6 6l1.41-1.41z"
-      ></path>
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" {...props}>
+      <path fill="currentColor" d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6l6 6l1.41-1.41z"></path>
     </svg>
   );
 }
 
 export function IcBaselineKeyboardDoubleArrowLeft(props) {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="1em"
-      height="1em"
-      viewBox="0 0 24 24"
-      {...props}
-    >
-      <path
-        fill="currentColor"
-        d="M17.59 18L19 16.59L14.42 12L19 7.41L17.59 6l-6 6z"
-      ></path>
-      <path
-        fill="currentColor"
-        d="m11 18l1.41-1.41L7.83 12l4.58-4.59L11 6l-6 6z"
-      ></path>
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" {...props}>
+      <path fill="currentColor" d="M17.59 18L19 16.59L14.42 12L19 7.41L17.59 6l-6 6z"></path>
+      <path fill="currentColor" d="m11 18l1.41-1.41L7.83 12l4.58-4.59L11 6l-6 6z"></path>
     </svg>
   );
 }
 
 export function MaterialSymbolsAccountBoxOutlineSharp(props) {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="1em"
-      height="1em"
-      viewBox="0 0 24 24"
-      {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" {...props}>
       <path
         fill="currentColor"
         d="M5 17.85q1.35-1.325 3.138-2.087T12 15q2.075 0 3.863.763T19 17.85V5H5v12.85ZM12 13q1.45 0 2.475-1.025T15.5 9.5q0-1.45-1.025-2.475T12 6q-1.45 0-2.475 1.025T8.5 9.5q0 1.45 1.025 2.475T12 13Zm-9 8V3h18v18H3Zm4-2h10v-.25q-1.05-.875-2.325-1.313T12 17q-1.4 0-2.675.438T7 18.75V19Zm5-8q-.625 0-1.063-.438T10.5 9.5q0-.625.438-1.063T12 8q.625 0 1.063.438T13.5 9.5q0 .625-.438 1.063T12 11Zm0-1.5Z"

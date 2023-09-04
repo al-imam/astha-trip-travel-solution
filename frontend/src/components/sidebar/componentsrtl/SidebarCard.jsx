@@ -2,17 +2,8 @@ const FreeCard = () => {
   return (
     <div className="relative mt-14 flex w-[256px] justify-center rounded-[20px] bg-gradient-to-br from-[#868CFF] via-[#432CF3] to-brand-500 pb-4">
       <div className="absolute -top-12 flex h-24 w-24 items-center justify-center rounded-full border-[4px] border-white bg-gradient-to-b from-[#868CFF] to-brand-500 dark:!border-navy-800">
-        <svg
-          width="41"
-          height="41"
-          viewBox="0 0 41 41"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M10.0923 27.3033H30.8176V36.3143H10.0923V27.3033Z"
-            fill="white"
-          />
+        <svg width="41" height="41" viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10.0923 27.3033H30.8176V36.3143H10.0923V27.3033Z" fill="white" />
           <path
             d="M31.5385 29.1956C31.5385 26.2322 30.3707 23.3901 28.2922 21.2947C26.2136 19.1992 23.3945 18.022 20.4549 18.022C17.5154 18.022 14.6963 19.1992 12.6177 21.2947C10.5392 23.3901 9.37143 26.2322 9.37143 29.1956L20.4549 29.1956H31.5385Z"
             fill="white"
@@ -29,8 +20,7 @@ const FreeCard = () => {
       <div className="mt-16 flex h-fit flex-col items-center">
         <p className="text-lg font-bold text-white">Upgrade to PRO</p>
         <p className="mt-1 px-4 text-center text-sm text-white">
-          Improve your development process and start doing more with Horizon UI
-          PRO!
+          Improve your development process and start doing more with Horizon UI PRO!
         </p>
 
         <a

@@ -1,12 +1,7 @@
-import CardMenu from "components/card/CardMenu";
 import Card from "components/card";
-import React, { useMemo } from "react";
-import {
-  useGlobalFilter,
-  usePagination,
-  useSortBy,
-  useTable,
-} from "react-table";
+import CardMenu from "components/card/CardMenu";
+import { useMemo } from "react";
+import { useGlobalFilter, usePagination, useSortBy, useTable } from "react-table";
 
 const ColumnsTable = (props) => {
   const { columnsData, tableData } = props;
@@ -24,22 +19,13 @@ const ColumnsTable = (props) => {
     usePagination
   );
 
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    page,
-    prepareRow,
-    initialState,
-  } = tableInstance;
+  const { getTableProps, getTableBodyProps, headerGroups, page, prepareRow, initialState } = tableInstance;
   initialState.pageSize = 5;
 
   return (
     <Card extra={"w-full pb-10 p-4 h-full"}>
       <header className="relative flex items-center justify-between">
-        <div className="text-xl font-bold text-navy-700 dark:text-white">
-          4-Columns Table
-        </div>
+        <div className="text-xl font-bold text-navy-700 dark:text-white">4-Columns Table</div>
         <CardMenu />
       </header>
 
@@ -70,36 +56,18 @@ const ColumnsTable = (props) => {
                   {row.cells.map((cell, index) => {
                     let data;
                     if (cell.column.Header === "NAME") {
-                      data = (
-                        <p className="text-sm font-bold text-navy-700 dark:text-white">
-                          {cell.value}
-                        </p>
-                      );
+                      data = <p className="text-sm font-bold text-navy-700 dark:text-white">{cell.value}</p>;
                     } else if (cell.column.Header === "PROGRESS") {
                       data = (
-                        <p className="mr-[10px] text-sm font-semibold text-navy-700 dark:text-white">
-                          {cell.value}%
-                        </p>
+                        <p className="mr-[10px] text-sm font-semibold text-navy-700 dark:text-white">{cell.value}%</p>
                       );
                     } else if (cell.column.Header === "QUANTITY") {
-                      data = (
-                        <p className="text-sm font-bold text-navy-700 dark:text-white">
-                          {cell.value}
-                        </p>
-                      );
+                      data = <p className="text-sm font-bold text-navy-700 dark:text-white">{cell.value}</p>;
                     } else if (cell.column.Header === "DATE") {
-                      data = (
-                        <p className="text-sm font-bold text-navy-700 dark:text-white">
-                          {cell.value}
-                        </p>
-                      );
+                      data = <p className="text-sm font-bold text-navy-700 dark:text-white">{cell.value}</p>;
                     }
                     return (
-                      <td
-                        className="pt-[14px] pb-[20px] sm:text-[14px]"
-                        {...cell.getCellProps()}
-                        key={index}
-                      >
+                      <td className="pt-[14px] pb-[20px] sm:text-[14px]" {...cell.getCellProps()} key={index}>
                         {data}
                       </td>
                     );

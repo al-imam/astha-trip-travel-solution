@@ -1,8 +1,6 @@
-import React from 'react'
-import { Swiper, SwiperSlide } from 'swiper/react';
-import 'swiper/css';
-import { Autoplay } from 'swiper/modules';
-
+import "swiper/css";
+import { Autoplay } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
 
 const Slider = () => {
   return (
@@ -18,23 +16,23 @@ const Slider = () => {
         className="mySwiper"
       >
         <SwiperSlide>
-            <div className='relative w-full h-full'>
-                <img src="/post1.jpg" className='w-full relative h-full object-contain' alt="" />
-            </div>
+          <div className="relative h-full w-full">
+            <img src="/post1.jpg" className="relative h-full w-full object-contain" alt="" />
+          </div>
         </SwiperSlide>
         <SwiperSlide>
-            <div className='relative w-full h-full'>
-                <img src="/astha2.jpg" className='w-full relative h-full object-contain' alt="" />
-            </div>
+          <div className="relative h-full w-full">
+            <img src="/astha2.jpg" className="relative h-full w-full object-contain" alt="" />
+          </div>
         </SwiperSlide>
         <SwiperSlide>
-            <div className='relative w-full h-full'>
-                <img src="/singapor1.jpg" className='w-full relative h-full object-contain' alt="" />
-            </div>
+          <div className="relative h-full w-full">
+            <img src="/singapor1.jpg" className="relative h-full w-full object-contain" alt="" />
+          </div>
         </SwiperSlide>
       </Swiper>
     </>
-  )
-}
+  );
+};
 
-export default Slider
+export default Slider;

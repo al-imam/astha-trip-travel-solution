@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
-import Table from "./table";
 import axios from "axios";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import Table from "./table";
 
 const Index = () => {
   const [reqList, setReqList] = useState([]);

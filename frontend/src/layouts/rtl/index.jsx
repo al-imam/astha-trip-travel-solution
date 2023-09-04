@@ -1,8 +1,8 @@
-import React from "react";
-import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import Footer from "components/footer/Footer";
 import Navbar from "components/navbar/RTL";
 import Sidebar from "components/sidebar/RTL";
-import Footer from "components/footer/Footer";
+import React from "react";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import routes from "routes.js";
 
 export default function RTL(props) {
@@ -12,9 +12,7 @@ export default function RTL(props) {
   const [currentRoute, setCurrentRoute] = React.useState("Main Dashboard");
 
   React.useEffect(() => {
-    window.addEventListener("resize", () =>
-      window.innerWidth < 1200 ? setOpen(false) : setOpen(true)
-    );
+    window.addEventListener("resize", () => (window.innerWidth < 1200 ? setOpen(false) : setOpen(true)));
   }, []);
   React.useEffect(() => {
     getActiveRoute(routes);
@@ -23,11 +21,7 @@ export default function RTL(props) {
   const getActiveRoute = (routes) => {
     let activeRoute = "RTL";
     for (let i = 0; i < routes.length; i++) {
-      if (
-        window.location.href.indexOf(
-          routes[i].layout + "/" + routes[i].path
-        ) !== -1
-      ) {
+      if (window.location.href.indexOf(routes[i].layout + "/" + routes[i].path) !== -1) {
         setCurrentRoute(routes[i].name);
       }
     }
@@ -36,9 +30,7 @@ export default function RTL(props) {
   const getActiveNavbar = (routes) => {
     let activeNavbar = false;
     for (let i = 0; i < routes.length; i++) {
-      if (
-        window.location.href.indexOf(routes[i].layout + routes[i].path) !== -1
-      ) {
+      if (window.location.href.indexOf(routes[i].layout + routes[i].path) !== -1) {
         return routes[i].secondary;
       }
     }
@@ -47,9 +39,7 @@ export default function RTL(props) {
   const getRoutes = (routes) => {
     return routes.map((prop, key) => {
       if (prop.layout === "/rtl") {
-        return (
-          <Route path={`/${prop.path}`} element={prop.component} key={key} />
-        );
+        return <Route path={`/${prop.path}`} element={prop.component} key={key} />;
       } else {
         return null;
       }
@@ -63,9 +53,7 @@ export default function RTL(props) {
       {/* Navbar & Main Content */}
       <div className="h-full w-full bg-lightPrimary dark:!bg-navy-900">
         {/* Main Content */}
-        <main
-          className={`mx-[12px] h-full flex-none transition-all md:pe-2 xl:mr-[313px]`}
-        >
+        <main className={`mx-[12px] h-full flex-none transition-all md:pe-2 xl:mr-[313px]`}>
           {/* Routes */}
           <div className="h-full">
             <Navbar
@@ -79,10 +67,7 @@ export default function RTL(props) {
               <Routes>
                 {getRoutes(routes)}
 
-                <Route
-                  path="/"
-                  element={<Navigate to="/admin/default" replace />}
-                />
+                <Route path="/" element={<Navigate to="/admin/default" replace />} />
               </Routes>
             </div>
             <div className="p-3">

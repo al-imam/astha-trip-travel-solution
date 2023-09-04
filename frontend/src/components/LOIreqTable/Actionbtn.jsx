@@ -1,6 +1,6 @@
 import axios from "axios";
 import Dropdown from "components/dropdown";
-import React, { useState } from "react";
+import { useState } from "react";
 import { AiOutlineShop } from "react-icons/ai";
 import { BsThreeDots } from "react-icons/bs";
 import { toast } from "react-toastify";
@@ -15,9 +15,7 @@ function CardMenu(props) {
   const handleApproved = () => {
     let family = 1;
 
-    const filterData = data.filter(
-      (data) => data.reference === prop?.reference
-    );
+    const filterData = data.filter((data) => data.reference === prop?.reference);
     if (filterData.length > 1) {
       family = filterData.length;
     }
@@ -85,14 +83,11 @@ function CardMenu(props) {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await toast.promise(
-            axios.post("/api/loi/cancel", { reference: prop?.reference }),
-            {
-              pending: "Please wait",
-              error: "Something went wrong",
-              success: "Cancel Successfully",
-            }
-          );
+          await toast.promise(axios.post("/api/loi/cancel", { reference: prop?.reference }), {
+            pending: "Please wait",
+            error: "Something went wrong",
+            success: "Cancel Successfully",
+          });
 
           setreload((old) => old + 1);
         } catch (err) {
@@ -159,10 +154,7 @@ function CardMenu(props) {
                 <p>Hotel name: {prop.hotel_name}</p>
                 <p>Travel date: {prop.travel_date}</p>
                 <p>
-                  Status:{" "}
-                  <span className={prop.status === "cancel" && "text-red-500"}>
-                    {prop.status}
-                  </span>
+                  Status: <span className={prop.status === "cancel" && "text-red-500"}>{prop.status}</span>
                 </p>
               </div>
               <div className="flex flex-col">
@@ -174,34 +166,19 @@ function CardMenu(props) {
                 >
                   Pasport_copy
                 </a>
-                <a
-                  className="text-blue-500 underline"
-                  target="_blank"
-                  href={`/api/admin/get-file/${prop.visa_copy}`}
-                >
+                <a className="text-blue-500 underline" target="_blank" href={`/api/admin/get-file/${prop.visa_copy}`}>
                   Visa_copy
                 </a>
-                <a
-                  className="text-blue-500 underline"
-                  target="_blank"
-                  href={`/api/admin/get-file/${prop.tiket_copy}`}
-                >
+                <a className="text-blue-500 underline" target="_blank" href={`/api/admin/get-file/${prop.tiket_copy}`}>
                   Tiket_copy
                 </a>
-                <a
-                  className="text-blue-500 underline"
-                  target="_blank"
-                  href={`/api/admin/get-file/${prop.hotel_copy}`}
-                >
+                <a className="text-blue-500 underline" target="_blank" href={`/api/admin/get-file/${prop.hotel_copy}`}>
                   Hotel_copy
                 </a>
               </div>
             </div>
             <div className="flex justify-end">
-              <button
-                onClick={() => setShowDetails(false)}
-                className="rounded px-6 py-1 text-lg ring ring-brandLinear"
-              >
+              <button onClick={() => setShowDetails(false)} className="rounded px-6 py-1 text-lg ring ring-brandLinear">
                 close
               </button>
             </div>
@@ -318,13 +295,7 @@ export default CardMenu;
 
 export function Spinner(props) {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="1em"
-      height="1em"
-      viewBox="0 0 24 24"
-      {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" {...props}>
       <path
         fill="currentColor"
         d="M12,1A11,11,0,1,0,23,12,11,11,0,0,0,12,1Zm0,19a8,8,0,1,1,8-8A8,8,0,0,1,12,20Z"

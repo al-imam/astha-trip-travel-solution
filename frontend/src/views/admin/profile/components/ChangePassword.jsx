@@ -31,14 +31,9 @@ export default function () {
 
   return (
     <div className="h-full rounded-[20px] bg-white bg-clip-border shadow-3xl shadow-shadow-500 dark:!bg-navy-800 dark:text-white dark:shadow-none ">
-      <form
-        onSubmit={handleSubmit(onSubmit, onInvalid)}
-        className="flex w-full flex-col gap-6 px-4 py-6"
-      >
+      <form onSubmit={handleSubmit(onSubmit, onInvalid)} className="flex w-full flex-col gap-6 px-4 py-6">
         <div className="flex flex-1 flex-col gap-2">
-          <label className="text-sm font-medium text-navy-700 dark:text-white">
-            Current Password*
-          </label>
+          <label className="text-sm font-medium text-navy-700 dark:text-white">Current Password*</label>
           <input
             type="password"
             placeholder="Current Password"
@@ -47,9 +42,7 @@ export default function () {
           />
         </div>
         <div className="flex flex-1 flex-col gap-2">
-          <label className="text-sm font-medium text-navy-700 dark:text-white">
-            New Password*
-          </label>
+          <label className="text-sm font-medium text-navy-700 dark:text-white">New Password*</label>
           <input
             type="password"
             placeholder="New Password"

@@ -1,7 +1,6 @@
-import React, { useState } from "react";
-import { useForm } from "react-hook-form";
 import axios from "axios";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
 const AgentProfile = () => {
@@ -11,21 +10,14 @@ const AgentProfile = () => {
   const [invoices, setInvoices] = useState([]);
 
   const { register, handleSubmit, reset } = useForm();
-  const {
-    register: passReg,
-    handleSubmit: passHS,
-    reset: passRe,
-    getValues,
-  } = useForm();
+  const { register: passReg, handleSubmit: passHS, reset: passRe, getValues } = useForm();
 
   useEffect(() => {
     const getAuth = async () => {
       try {
         const { data: agentRes } = await axios.get("/api/agent/info");
         setAgent(agentRes);
-        const { data: invoiceRes } = await axios.get(
-          `/api/agent/balance-invoice/${agentRes.id}`
-        );
+        const { data: invoiceRes } = await axios.get(`/api/agent/balance-invoice/${agentRes.id}`);
         setInvoices(invoiceRes);
       } catch (e) {
         console.log(e);
@@ -38,17 +30,11 @@ const AgentProfile = () => {
   async function onSubmit(data) {
     data.amount = parseFloat(data.amount);
     try {
-      await toast.promise(
-        axios.post(
-          "/api/agent/add-balance",
-          Object.assign(data, { agent_id: agent.id })
-        ),
-        {
-          pending: "Please wait loading..",
-          success: "Balance request sent",
-          error: "Something went wrong, try again!",
-        }
-      );
+      await toast.promise(axios.post("/api/agent/add-balance", Object.assign(data, { agent_id: agent.id })), {
+        pending: "Please wait loading..",
+        success: "Balance request sent",
+        error: "Something went wrong, try again!",
+      });
 
       reset();
       setIsOpen(false);
@@ -87,33 +73,19 @@ const AgentProfile = () => {
       <div className="container mx-auto flex flex-col gap-5 md:flex-row">
         <div>
           <div className="flex w-full items-center justify-center md:w-[300px]">
-            <img
-              className="h-40 w-40 rounded-full"
-              src="/logoastha.png"
-              alt="img"
-            />
+            <img className="h-40 w-40 rounded-full" src="/logoastha.png" alt="img" />
           </div>
           <div className="flex w-full flex-col justify-center lg:w-[500px]">
             <div className="flex flex-col items-center gap-y-[.5] md:items-start">
-              <p className=" mb-2 rounded-lg py-1 text-2xl font-bold text-gray-800">
-                {agent.name ?? ""}
-              </p>
+              <p className=" mb-2 rounded-lg py-1 text-2xl font-bold text-gray-800">{agent.name ?? ""}</p>
 
-              <p className="rounded-lg font-bold text-gray-800">
-                {agent.email ?? ""}
-              </p>
-              <p className=" rounded-lg font-bold text-gray-800">
-                {agent.phone ?? ""}
-              </p>
+              <p className="rounded-lg font-bold text-gray-800">{agent.email ?? ""}</p>
+              <p className=" rounded-lg font-bold text-gray-800">{agent.phone ?? ""}</p>
             </div>
           </div>
         </div>
         <div className="my-10 w-full">
-          <img
-            className="h-[200px] w-full object-contain"
-            src="/asthatripbaner.jpg"
-            alt="img"
-          />
+          <img className="h-[200px] w-full object-contain" src="/asthatripbaner.jpg" alt="img" />
         </div>
       </div>
       <div>
@@ -145,9 +117,7 @@ const AgentProfile = () => {
               <h2 className="mb-4 text-lg font-semibold">Add Amount</h2>
               <form onSubmit={handleSubmit(onSubmit, onInvalid)} noValidate>
                 <div className="mb-3 ">
-                  <label className="ml-1.5 text-sm font-medium text-navy-700 dark:text-white">
-                    Amount*
-                  </label>
+                  <label className="ml-1.5 text-sm font-medium text-navy-700 dark:text-white">Amount*</label>
                   <input
                     type="number"
                     placeholder="Enter your amount"
@@ -156,9 +126,7 @@ const AgentProfile = () => {
                   />
                 </div>
                 <div className="mb-3 ">
-                  <label className="ml-1.5 text-sm font-medium text-navy-700 dark:text-white">
-                    Transition ID*
-                  </label>
+                  <label className="ml-1.5 text-sm font-medium text-navy-700 dark:text-white">Transition ID*</label>
                   <input
                     type="text"
                     placeholder="Enter your transition ID"
@@ -167,9 +135,7 @@ const AgentProfile = () => {
                   />
                 </div>
                 <div className="mb-3 ">
-                  <label className="ml-1.5 text-sm font-medium text-navy-700 dark:text-white">
-                    Message
-                  </label>
+                  <label className="ml-1.5 text-sm font-medium text-navy-700 dark:text-white">Message</label>
                   <textarea
                     type="text"
                     placeholder="Enter your Message Here..."
@@ -203,9 +169,7 @@ const AgentProfile = () => {
               <h2 className="mb-4 text-lg font-semibold">Change Password</h2>
               <form onSubmit={passHS(onPassSubmit, onPassInvalid)} noValidate>
                 <div className="mb-3 ">
-                  <label className="ml-1.5 text-sm font-medium text-navy-700 dark:text-white">
-                    Current Password*
-                  </label>
+                  <label className="ml-1.5 text-sm font-medium text-navy-700 dark:text-white">Current Password*</label>
                   <input
                     type="password"
                     placeholder="Current Password"
@@ -214,9 +178,7 @@ const AgentProfile = () => {
                   />
                 </div>
                 <div className="mb-3 ">
-                  <label className="ml-1.5 text-sm font-medium text-navy-700 dark:text-white">
-                    New Password*
-                  </label>
+                  <label className="ml-1.5 text-sm font-medium text-navy-700 dark:text-white">New Password*</label>
                   <input
                     type="password"
                     placeholder="New Password"
@@ -226,9 +188,7 @@ const AgentProfile = () => {
                 </div>
 
                 <div className="mb-3 ">
-                  <label className="ml-1.5 text-sm font-medium text-navy-700 dark:text-white">
-                    Confirm Password*
-                  </label>
+                  <label className="ml-1.5 text-sm font-medium text-navy-700 dark:text-white">Confirm Password*</label>
                   <input
                     type="password"
                     placeholder="Confirm Password"
@@ -236,9 +196,7 @@ const AgentProfile = () => {
                     {...passReg("password", {
                       required: true,
                       validate: () => {
-                        if (
-                          getValues("new-password") !== getValues("password")
-                        ) {
+                        if (getValues("new-password") !== getValues("password")) {
                           return "password and confirm password not match!";
                         }
                       },
@@ -269,9 +227,7 @@ const AgentProfile = () => {
           <table className="border-collapse">
             <thead className="rounded-xl text-[#A3AED0]">
               <tr className="rounded-md">
-                <th className="py-3 px-4 text-left font-semibold">
-                  Invoice Number
-                </th>
+                <th className="py-3 px-4 text-left font-semibold">Invoice Number</th>
                 <th className="py-3 px-4 text-left font-semibold">Amount</th>
                 <th className="py-3 px-4 text-left font-semibold">Date</th>
                 <th className="py-3 px-4 text-left font-semibold">Status</th>
@@ -283,11 +239,7 @@ const AgentProfile = () => {
                 <tr className="even:bg-[#F7F4FE] hover:bg-[#F7F4FE]">
                   <td className="py-3 px-4">{invoice.id}</td>
                   <td className="py-3 px-4">{invoice.amount}</td>
-                  <td className="py-3 px-4">
-                    {new Date(invoice.createdAt)
-                      .toLocaleString()
-                      .replaceAll("/", "-")}
-                  </td>
+                  <td className="py-3 px-4">{new Date(invoice.createdAt).toLocaleString().replaceAll("/", "-")}</td>
                   <td className="py-3 px-4">{invoice.status}</td>
                   {/* <td className="py-3 px-4">
                     <button className="text-blue-500 hover:underline">
