@@ -23,7 +23,7 @@ function CardMenu(props) {
     Swal.fire({
       title: "Are you sure to Approved?",
       text: `Name: ${prop?.guest_name}, Passport Number: ${prop?.pasport_number}, Family: ${family}`,
-      icon: "info",
+      icon: "question",
       showCancelButton: true,
       confirmButtonColor: "#422AFB",
       cancelButtonColor: "#d33",
@@ -132,6 +132,58 @@ function CardMenu(props) {
     });
   }
 
+  async function handleResendEmail() {
+    const filterData = data.filter((data) => data.reference === prop?.reference);
+
+    Swal.fire({
+      title: "Are you sure to resend email?",
+      text: `Name: ${prop?.guest_name}, Passport Number: ${prop?.pasport_number}, Family: ${filterData.length}`,
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#422AFB",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, Send",
+      scrollbarPadding: false,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        setShowDetails(false);
+        try {
+          document.body.style.overflow = "hidden";
+          setIsLoading(true);
+
+          await axios.post("/api/loi/resend-email-python", {
+            id: prop.id,
+          });
+
+          Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "Email Sended Successfully!",
+            showConfirmButton: false,
+            timer: 1500,
+            scrollbarPadding: false,
+          });
+
+          setreload((old) => old + 1);
+        } catch (err) {
+          Swal.fire({
+            position: "top-end",
+            icon: "error",
+            title: "Something went wrong!",
+            showConfirmButton: false,
+            timer: 1500,
+            scrollbarPadding: false,
+          });
+
+          console.log(err);
+        } finally {
+          document.body.style.overflow = "unset";
+          setIsLoading(false);
+        }
+      }
+    });
+  }
+
   return (
     <>
       {isLoading && (
@@ -143,10 +195,10 @@ function CardMenu(props) {
         </div>
       )}
       {showDetails && (
-        <div className="bg-black/10 fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm">
-          <div className="dark:bg- relative mx-6 w-[720px] space-y-6 rounded-lg bg-white p-8 shadow-md dark:!bg-navy-900 md:mx-0">
+        <div className="bg-black/10 xsm:m-6 fixed inset-0 z-40 flex items-center justify-center backdrop-blur-sm">
+          <div className="dark:bg- relative mx-2 w-[720px] space-y-6 rounded-lg bg-white p-4 shadow-md dark:!bg-navy-900 sm:p-8">
             <h3 className="text-center text-3xl">Details</h3>
-            <div className="text-gray-950  grid grid-cols-1 text-lg sm:grid-cols-2">
+            <div className="text-gray-950 grid grid-cols-1 text-lg sm:grid-cols-2">
               <div>
                 <p>Name: {prop.guest_name}</p>
                 <p>Country: {prop.country}</p>
@@ -177,8 +229,17 @@ function CardMenu(props) {
                 </a>
               </div>
             </div>
-            <div className="flex justify-end">
-              <button onClick={() => setShowDetails(false)} className="rounded px-6 py-1 text-lg ring ring-brandLinear">
+            <div className="flex justify-between">
+              <button
+                onClick={handleResendEmail}
+                className="rounded bg-green-500 px-6 py-2 font-bold text-white shadow-md hover:bg-green-600"
+              >
+                Resend Email
+              </button>
+              <button
+                onClick={() => setShowDetails(false)}
+                className="rounded bg-red-500 px-6 py-2 font-bold text-white shadow-md hover:bg-red-600"
+              >
                 close
               </button>
             </div>
