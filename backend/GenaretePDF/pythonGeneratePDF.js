@@ -26,7 +26,6 @@ async function generateVisaPDF(name, passport) {
 
     return fileFullPath;
   } catch (error) {
-    console.log("generateVisaPDF", error);
     return null;
   }
 }
@@ -48,7 +47,6 @@ async function generateItenaryPDF({ guest, itenary }) {
 
     return fileFullPath;
   } catch (error) {
-    console.log("generateItenaryPDF", error);
     return null;
   }
 }

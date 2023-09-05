@@ -2,6 +2,7 @@ const LOI = require("../../model/LOI");
 const PDF = require("../../GenaretePDF/pythonGeneratePDF");
 const SendEmail = require("../../util/SendEmail");
 const path = require("path");
+const fs = require("fs");
 
 async function SendMailWithAttachment(loiReqData, guests) {
   try {
@@ -18,9 +19,6 @@ async function SendMailWithAttachment(loiReqData, guests) {
       },
       itenary: loiReqData.iternary,
     });
-
-    if (!visaFullPathPDF) throw new Error("visaFullPathPDF");
-    if (!itenaryFullPathPDF) throw new Error("itenaryFullPathPDF");
 
     const fileList = [
       loiReqData.pasport_copy,
@@ -44,6 +42,10 @@ async function SendMailWithAttachment(loiReqData, guests) {
         path: itenaryFullPathPDF,
       }
     );
+
+    if (attachments.some((a) => !fs.existsSync(a.path))) {
+      throw new Error("Some attachments file not exist");
+    }
 
     const mails = [];
 
@@ -74,6 +76,7 @@ async function SendMailWithAttachment(loiReqData, guests) {
 
     return false;
   } catch (error) {
+    console.log(error);
     return error;
   }
 }
