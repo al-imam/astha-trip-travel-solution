@@ -19,6 +19,9 @@ async function SendMailWithAttachment(loiReqData, guests) {
       itenary: loiReqData.iternary,
     });
 
+    if (!visaFullPathPDF) throw new Error("visaFullPathPDF");
+    if (!itenaryFullPathPDF) throw new Error("itenaryFullPathPDF");
+
     const fileList = [
       loiReqData.pasport_copy,
       loiReqData.visa_copy,
@@ -71,7 +74,6 @@ async function SendMailWithAttachment(loiReqData, guests) {
 
     return false;
   } catch (error) {
-    console.log(error);
     return error;
   }
 }
