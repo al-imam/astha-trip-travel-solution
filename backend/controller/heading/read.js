@@ -1,7 +1,7 @@
 const fs = require("fs");
 const { join } = require("path");
 
-const location = join(__dirname, "store.txt");
+const location = join(__dirname, "__store.txt");
 
 async function read(req, res) {
   try {

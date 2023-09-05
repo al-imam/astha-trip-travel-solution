@@ -30,14 +30,14 @@ export default function () {
   }
 
   return (
-    <div className="h-full rounded-[20px] bg-white bg-clip-border shadow-3xl shadow-shadow-500 dark:!bg-navy-800 dark:text-white dark:shadow-none ">
+    <div className="h-full rounded-[20px] bg-white bg-clip-border shadow-3xl shadow-shadow-500 dark:!bg-navy-800 dark:shadow-none ">
       <form onSubmit={handleSubmit(onSubmit, onInvalid)} className="flex w-full flex-col gap-6 px-4 py-6">
         <div className="flex flex-1 flex-col gap-2">
           <label className="text-sm font-medium text-navy-700 dark:text-white">Current Password*</label>
           <input
             type="password"
             placeholder="Current Password"
-            className="rounded-md border border-gray-200 bg-[#E8F0FE] bg-white/0 p-3 text-sm outline-none ring-brandLinear focus:ring dark:!border-white/10 dark:text-white"
+            className="rounded-md border border-gray-200 bg-[#E8F0FE] bg-white/0 p-3 text-sm outline-none ring-brandLinear focus:ring dark:!border-white/10 "
             {...register("current-password", { required: true, minLength: 6 })}
           />
         </div>
@@ -46,7 +46,7 @@ export default function () {
           <input
             type="password"
             placeholder="New Password"
-            className="rounded-md border border-gray-200 bg-[#E8F0FE] bg-white/0 p-3 text-sm outline-none ring-brandLinear focus:ring dark:!border-white/10 dark:text-white"
+            className="rounded-md border border-gray-200 bg-[#E8F0FE] bg-white/0 p-3 text-sm outline-none ring-brandLinear focus:ring dark:!border-white/10 "
             {...register("password", { required: true, minLength: 6 })}
           />
         </div>
