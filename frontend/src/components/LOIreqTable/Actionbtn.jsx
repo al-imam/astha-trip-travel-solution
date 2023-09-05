@@ -229,13 +229,16 @@ function CardMenu(props) {
                 </a>
               </div>
             </div>
-            <div className="flex justify-between">
-              <button
-                onClick={handleResendEmail}
-                className="rounded bg-green-500 px-6 py-2 font-bold text-white shadow-md hover:bg-green-600"
-              >
-                Resend Email
-              </button>
+            <div className={`flex ${prop.status === "approved" ? "justify-between" : "justify-end"} `}>
+              {prop.status === "approved" && (
+                <button
+                  onClick={handleResendEmail}
+                  className="rounded bg-green-500 px-6 py-2 font-bold text-white shadow-md hover:bg-green-600"
+                >
+                  Resend Email
+                </button>
+              )}
+
               <button
                 onClick={() => setShowDetails(false)}
                 className="rounded bg-red-500 px-6 py-2 font-bold text-white shadow-md hover:bg-red-600"

@@ -240,7 +240,7 @@ const AgentProfile = () => {
                   <td className="py-3 px-4">{invoice.id}</td>
                   <td className="py-3 px-4">{invoice.amount}</td>
                   <td className="py-3 px-4">{new Date(invoice.createdAt).toLocaleString().replaceAll("/", "-")}</td>
-                  <td className="py-3 px-4">{invoice.status}</td>
+                  <td className="py-3 px-4">{invoice.status === "submitted" ? "approved" : invoice.status}</td>
                   {/* <td className="py-3 px-4">
                     <button className="text-blue-500 hover:underline">
                       Details

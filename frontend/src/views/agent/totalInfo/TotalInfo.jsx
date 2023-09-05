@@ -61,7 +61,8 @@ function TotalInfo() {
                   <span>Status</span>: <span>{openGuest.status}</span>
                 </div>
                 <div className="px-2 text-lg font-light">
-                  <span>Submitted On</span>: <span>{openGuest.createdAt}</span>
+                  <span>Submitted On</span>:{" "}
+                  <span>{new Date(openGuest.createdAt).toLocaleString().replaceAll("/", "-")}</span>
                 </div>
               </div>
             </div>
