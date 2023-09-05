@@ -323,6 +323,17 @@ module.exports = {
         500: "rgba(112, 144, 176, 0.08)",
       },
     }),
+
+    keyframes: {
+      loop: {
+        "0%": { transform: "translateX(100%)" },
+        "100%": { transform: "translateX(0%)" },
+      },
+    },
+
+    animation: {
+      "loop-text": "loop 10s linear infinite",
+    },
   },
   plugins: [require("tailwindcss-rtl")],
 };

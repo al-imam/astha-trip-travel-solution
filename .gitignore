@@ -11,6 +11,7 @@ test.js
 # testing
 /coverage
 /__test__
+__store.txt
 
 # production
 build

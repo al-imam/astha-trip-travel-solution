@@ -26,6 +26,13 @@
   .remove-scroll-bar::-webkit-scrollbar {
     display: none;
   }
+
+  .full-width-div {
+    width: 100vw;
+    position: relative;
+    margin-left: -50vw;
+    left: 50%;
+  }
 }
 
 input.defaultCheckbox::before {
@@ -45,11 +52,7 @@ input:checked.defaultCheckbox::before {
 
 .cbg {
   background-color: hsla(227, 100%, 71%, 1);
-  background-image: radial-gradient(
-      at 29% 13%,
-      hsla(240, 100%, 78%, 1) 0px,
-      transparent 50%
-    ),
+  background-image: radial-gradient(at 29% 13%, hsla(240, 100%, 78%, 1) 0px, transparent 50%),
     radial-gradient(at 9% 43%, rgba(255, 229, 219, 0.476) 0px, transparent 50%),
     radial-gradient(at 39% 78%, hsla(231, 97%, 54%, 1) 0px, transparent 50%);
   background-attachment: fixed;

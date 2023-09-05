@@ -6,12 +6,24 @@ import Table from "../../public/Entry/ComplexTable";
 function TotalInfo() {
   const [loiData, setLoiData] = useState([]);
   const [openGuest, setOpenGuest] = useState(false);
+  const [heading, setHeading] = useState("");
 
   useEffect(() => {
     (async () => {
       try {
         const { data } = await axios.get("/api/agent/agent-loi-by-id");
         setLoiData(data);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data } = await axios.get("/api/admin/heading");
+        setHeading(data.text);
       } catch (error) {
         console.log(error);
       }
@@ -42,7 +54,6 @@ function TotalInfo() {
             <div className="grid w-full grid-cols-2">
               <div className="relative col-span-2 w-full md:col-span-1">
                 <div className="px-2 pt-2 text-xl font-bold">
-                  {console.log(openGuest)}
                   <span>Name</span>: <span>{openGuest.guest_name}</span>
                 </div>
                 <div className="px-2 text-lg font-light">
@@ -70,7 +81,15 @@ function TotalInfo() {
         </div>
       )}
 
-      <div className="mt-14 flex flex-wrap gap-5">
+      {heading !== "" && (
+        <div className="full-width-div my-4 flex justify-center overflow-hidden bg-white bg-clip-border py-4 text-lg shadow-3xl shadow-shadow-500 dark:!bg-navy-800 dark:text-white dark:shadow-none">
+          <marquee direction="left" behavior="scroll" scrollamount="5">
+            {heading}
+          </marquee>
+        </div>
+      )}
+
+      {/*       <div className="mt-14 flex flex-wrap gap-5">
         <div className="!z-5 relative flex flex-grow items-center rounded-[20px] bg-white bg-clip-border shadow-3xl shadow-shadow-500 dark:!bg-navy-800 dark:text-white dark:shadow-none">
           <div className="ml-[18px] flex h-[90px] w-auto flex-row items-center">
             <div className="flex h-[52px] w-[52px] items-center justify-center rounded-full  bg-[#F4F7FE] text-brand-500 shadow-sm dark:text-white">
@@ -115,7 +134,7 @@ function TotalInfo() {
             <h4 className="text-xl font-bold text-navy-700 dark:text-white">200</h4>
           </div>
         </div>
-      </div>
+      </div> */}
       <div className="mt-4">
         <Link
           className="inline-block rounded-lg border-2 border-brand-900/30 bg-white/10  p-3 text-xl font-bold text-brand-600 shadow-xl hover:scale-105 dark:border-brand-200 dark:text-brand-100"
