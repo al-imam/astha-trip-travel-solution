@@ -82,7 +82,7 @@ function TotalInfo() {
       )}
 
       {heading !== "" && (
-        <div className="full-width-div my-4 flex justify-center overflow-hidden bg-white bg-clip-border py-4 text-lg shadow-3xl shadow-shadow-500 dark:!bg-navy-800 dark:text-white dark:shadow-none">
+        <div className="full-width-div my-4 flex justify-center overflow-hidden bg-white bg-clip-border py-4 text-2xl shadow-3xl shadow-shadow-500 dark:!bg-navy-800 dark:text-white dark:shadow-none">
           <marquee direction="left" behavior="scroll" scrollamount="5">
             {heading}
           </marquee>
