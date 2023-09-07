@@ -1,14 +1,9 @@
-import CardMenu from "components/card/CardMenu";
 import Card from "components/card";
-import {
-  useGlobalFilter,
-  usePagination,
-  useSortBy,
-  useTable,
-} from "react-table";
-import { MdCheckCircle, MdCancel, MdOutlineError } from "react-icons/md";
-import { useMemo } from "react";
+import CardMenu from "components/card/CardMenu";
 import Progress from "components/progress";
+import { useMemo } from "react";
+import { MdCancel, MdCheckCircle, MdOutlineError } from "react-icons/md";
+import { useGlobalFilter, usePagination, useSortBy, useTable } from "react-table";
 const ComplexTable = (props) => {
   const { columnsData, tableData } = props;
 
@@ -25,22 +20,13 @@ const ComplexTable = (props) => {
     usePagination
   );
 
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    page,
-    prepareRow,
-    initialState,
-  } = tableInstance;
+  const { getTableProps, getTableBodyProps, headerGroups, page, prepareRow, initialState } = tableInstance;
   initialState.pageSize = 5;
 
   return (
     <Card extra={"w-full h-full px-6 pb-6 sm:overflow-x-auto"}>
       <div className="relative flex items-center justify-between pt-4">
-        <div className="text-xl font-bold text-navy-700 dark:text-white">
-          Complex Table
-        </div>
+        <div className="text-xl font-bold text-navy-700 dark:text-white">Complex Table</div>
         <CardMenu />
       </div>
 
@@ -55,9 +41,7 @@ const ComplexTable = (props) => {
                     key={index}
                     className="border-b border-gray-200 pb-[10px] text-start pe-28 dark:!border-navy-700"
                   >
-                    <p className="text-xs tracking-wide text-gray-600">
-                      {column.render("Header")}
-                    </p>
+                    <p className="text-xs tracking-wide text-gray-600">{column.render("Header")}</p>
                   </th>
                 ))}
               </tr>
@@ -71,11 +55,7 @@ const ComplexTable = (props) => {
                   {row.cells.map((cell, index) => {
                     let data = "";
                     if (cell.column.Header === "NAME") {
-                      data = (
-                        <p className="text-sm font-bold text-navy-700 dark:text-white">
-                          {cell.value}
-                        </p>
-                      );
+                      data = <p className="text-sm font-bold text-navy-700 dark:text-white">{cell.value}</p>;
                     } else if (cell.column.Header === "STATUS") {
                       data = (
                         <div className="flex items-center gap-2">
@@ -88,26 +68,16 @@ const ComplexTable = (props) => {
                               <MdOutlineError className="text-orange-500" />
                             ) : null}
                           </div>
-                          <p className="text-sm font-bold text-navy-700 dark:text-white">
-                            {cell.value}
-                          </p>
+                          <p className="text-sm font-bold text-navy-700 dark:text-white">{cell.value}</p>
                         </div>
                       );
                     } else if (cell.column.Header === "DATE") {
-                      data = (
-                        <p className="text-sm font-bold text-navy-700 dark:text-white">
-                          {cell.value}
-                        </p>
-                      );
+                      data = <p className="text-sm font-bold text-navy-700 dark:text-white">{cell.value}</p>;
                     } else if (cell.column.Header === "PROGRESS") {
                       data = <Progress width="w-[108px]" value={cell.value} />;
                     }
                     return (
-                      <td
-                        className="pt-[14px] pb-[18px] sm:text-[14px]"
-                        {...cell.getCellProps()}
-                        key={index}
-                      >
+                      <td className="pt-[14px] pb-[18px] sm:text-[14px]" {...cell.getCellProps()} key={index}>
                         {data}
                       </td>
                     );

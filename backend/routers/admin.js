@@ -17,6 +17,8 @@ const unblockAgent = require("../controller/account/unblockAgent");
 const sendfile = require("../controller/admin/sendfile");
 const getAgentByEmailAndDate = require("../controller/admin/getAgentByEmailAndDate");
 const resetPassword = require("../controller/admin/resetPassword");
+const write = require("../controller/heading/write");
+const read = require("../controller/heading/read");
 
 AdminRouter.get("/get-all-agent", isAdmin, getAllAgent);
 AdminRouter.get("/get-status", isAdmin, getStatus);
@@ -66,5 +68,9 @@ AdminRouter.post(
   isAdmin,
   resetPassword
 );
+
+AdminRouter.put("/heading", validateBody([isString("text")]), write);
+
+AdminRouter.get("/heading", read);
 
 module.exports = AdminRouter;

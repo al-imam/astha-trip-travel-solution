@@ -13,10 +13,7 @@ const Sidebar = ({ open, onClose }) => {
         open ? "translate-x-0" : "-translate-x-96"
       }`}
     >
-      <span
-        className="absolute top-4 block cursor-pointer end-4 xl:hidden"
-        onClick={onClose}
-      >
+      <span className="absolute top-4 block cursor-pointer end-4 xl:hidden" onClick={onClose}>
         <HiX />
       </span>
 

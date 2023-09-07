@@ -42,10 +42,7 @@
     "rating": 30
   },
   {
-    "name": [
-      "@venus.sys",
-      "https://pbs.twimg.com/profile_images/1404161552635371526/251mudeO_400x400.jpg"
-    ],
+    "name": ["@venus.sys", "https://pbs.twimg.com/profile_images/1404161552635371526/251mudeO_400x400.jpg"],
     "artworks": "2907",
     "rating": 30
   }

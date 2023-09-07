@@ -1,12 +1,7 @@
 import React from "react";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { MdFirstPage, MdOutlineLastPage } from "react-icons/md";
-import {
-  useGlobalFilter,
-  usePagination,
-  useSortBy,
-  useTable,
-} from "react-table";
+import { useGlobalFilter, usePagination, useSortBy, useTable } from "react-table";
 import style from "./Style.module.css";
 
 // const Person = [
@@ -154,21 +149,10 @@ const Table = ({ datas, colunm, nav = true }) => {
                     // Loop over the headers in each row
                     headerGroup.headers.map((column, i) => (
                       // Apply the header cell props
-                      <th
-                        key={i}
-                        {...column.getHeaderProps(
-                          column.getSortByToggleProps()
-                        )}
-                      >
+                      <th key={i} {...column.getHeaderProps(column.getSortByToggleProps())}>
                         {column.render("Header")}
                         {/* Add a sort direction indicator */}
-                        <span>
-                          {column.isSorted
-                            ? column.isSortedDesc
-                              ? " 🔽"
-                              : " 🔼"
-                            : ""}
-                        </span>
+                        <span>{column.isSorted ? (column.isSortedDesc ? " 🔽" : " 🔼") : ""}</span>
                       </th>
                     ))
                   }

@@ -1,8 +1,7 @@
-import CardMenu from "components/card/CardMenu";
-import React from "react";
-import Checkbox from "components/checkbox";
-import { MdDragIndicator, MdCheckCircle } from "react-icons/md";
 import Card from "components/card";
+import CardMenu from "components/card/CardMenu";
+import Checkbox from "components/checkbox";
+import { MdCheckCircle, MdDragIndicator } from "react-icons/md";
 
 const TaskCard = () => {
   return (
@@ -13,9 +12,7 @@ const TaskCard = () => {
           <div className="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-100 dark:bg-indigo-100 dark:bg-white/5">
             <MdCheckCircle className="h-6 w-6 text-brand-500 dark:text-white" />
           </div>
-          <h4 className="ml-4 text-xl font-bold text-navy-700 dark:text-white">
-            Tasks
-          </h4>
+          <h4 className="ml-4 text-xl font-bold text-navy-700 dark:text-white">Tasks</h4>
         </div>
         <CardMenu />
       </div>
@@ -26,9 +23,7 @@ const TaskCard = () => {
         <div className="mt-5 flex items-center justify-between p-2">
           <div className="flex items-center justify-center gap-2">
             <Checkbox />
-            <p className="text-base font-bold text-navy-700 dark:text-white">
-              Landing Page Design
-            </p>
+            <p className="text-base font-bold text-navy-700 dark:text-white">Landing Page Design</p>
           </div>
           <div>
             <MdDragIndicator className="h-6 w-6 text-navy-700 dark:text-white" />
@@ -38,9 +33,7 @@ const TaskCard = () => {
         <div className="mt-2 flex items-center justify-between p-2">
           <div className="flex items-center justify-center gap-2">
             <Checkbox />
-            <p className="text-base font-bold text-navy-700 dark:text-white">
-              Mobile App Design
-            </p>
+            <p className="text-base font-bold text-navy-700 dark:text-white">Mobile App Design</p>
           </div>
           <div>
             <MdDragIndicator className="h-6 w-6 text-navy-700 dark:text-white" />
@@ -50,9 +43,7 @@ const TaskCard = () => {
         <div className="mt-2 flex items-center justify-between p-2">
           <div className="flex items-center justify-center gap-2">
             <Checkbox />
-            <p className="text-base font-bold text-navy-700 dark:text-white">
-              Dashboard Builder
-            </p>
+            <p className="text-base font-bold text-navy-700 dark:text-white">Dashboard Builder</p>
           </div>
           <div>
             <MdDragIndicator className="h-6 w-6 text-navy-700 dark:text-white" />
@@ -62,9 +53,7 @@ const TaskCard = () => {
         <div className="mt-2 flex items-center justify-between p-2">
           <div className="flex items-center justify-center gap-2">
             <Checkbox />
-            <p className="text-base font-bold text-navy-700 dark:text-white">
-              Landing Page Design
-            </p>
+            <p className="text-base font-bold text-navy-700 dark:text-white">Landing Page Design</p>
           </div>
           <div>
             <MdDragIndicator className="h-6 w-6 text-navy-700 dark:text-white" />
@@ -74,9 +63,7 @@ const TaskCard = () => {
         <div className="mt-2 flex items-center justify-between p-2">
           <div className="flex items-center justify-center gap-2">
             <Checkbox />
-            <p className="text-base font-bold text-navy-700 dark:text-white">
-              Dashboard Builder
-            </p>
+            <p className="text-base font-bold text-navy-700 dark:text-white">Dashboard Builder</p>
           </div>
           <div>
             <MdDragIndicator className="h-6 w-6 text-navy-700 dark:text-white" />

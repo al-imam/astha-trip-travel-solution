@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
-import Table from "./table";
 import axios from "axios";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import Table from "./table";
 
 const Index = () => {
   const [reqList, setReqList] = useState([]);
@@ -81,7 +81,7 @@ const Index = () => {
               // console.log(props);
               return (
                 <div>
-                  <p className="font-bold text-brand-900">
+                  <p className="font-bold ">
                     <span>Name: </span>
                     {props.row.original?.agent?.name}
                   </p>

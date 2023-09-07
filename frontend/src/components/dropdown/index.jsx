@@ -31,10 +31,8 @@ const Dropdown = (props) => {
         {button}
       </div>
       <div
-        className={`${classNames} absolute -left-5 z-10 -top-4 ${
-          animation
-            ? animation
-            : "origin-top-right transition-all duration-300 ease-in-out"
+        className={`${classNames} absolute -left-5 -top-4 z-10 ${
+          animation ? animation : "origin-top-right transition-all duration-300 ease-in-out"
         } ${openWrapper ? "scale-100" : "scale-0"}`}
       >
         {children}

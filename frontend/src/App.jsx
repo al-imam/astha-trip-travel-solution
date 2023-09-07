@@ -1,14 +1,13 @@
-import React from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 
 import AdminLayout from "layouts/admin";
-import AuthLayout from "layouts/auth";
-import Entry from "views/public/Entry/Entry";
 import Agent from "layouts/agent/Agent";
+import AuthLayout from "layouts/auth";
 import AgentEntry from "views/agent/agentEntry/AgentEntry";
 import AgentLogin from "views/agent/agentLogin/AgentLogin";
 import AgentProfile from "views/agent/agentProfile/AgentProfile";
 import AgentHome from "views/agent/home/AgentHome";
+import Entry from "views/public/Entry/Entry";
 import Registration from "./views/agent/Rgistration/Registration";
 
 const App = () => {

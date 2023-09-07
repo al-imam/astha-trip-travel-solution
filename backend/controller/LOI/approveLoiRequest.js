@@ -2,6 +2,7 @@ const LOI = require("../../model/LOI");
 const PDF = require("../../GenaretePDF/pythonGeneratePDF");
 const SendEmail = require("../../util/SendEmail");
 const path = require("path");
+const fs = require("fs");
 
 async function SendMailWithAttachment(loiReqData, guests) {
   try {
@@ -41,6 +42,10 @@ async function SendMailWithAttachment(loiReqData, guests) {
         path: itenaryFullPathPDF,
       }
     );
+
+    if (attachments.some((a) => !fs.existsSync(a.path))) {
+      throw new Error("Some attachments file not exist");
+    }
 
     const mails = [];
 

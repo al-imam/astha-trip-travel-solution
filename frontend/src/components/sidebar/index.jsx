@@ -3,7 +3,6 @@
 import { HiX } from "react-icons/hi";
 import Links from "./components/Links";
 
-import SidebarCard from "components/sidebar/componentsrtl/SidebarCard";
 import routes from "routes.js";
 
 const Sidebar = ({ open, onClose }) => {
@@ -13,16 +12,13 @@ const Sidebar = ({ open, onClose }) => {
         open ? "translate-x-0" : "-translate-x-96"
       }`}
     >
-      <span
-        className="absolute top-4 right-4 block cursor-pointer xl:hidden"
-        onClick={onClose}
-      >
+      <span className="absolute top-4 right-4 block cursor-pointer xl:hidden" onClick={onClose}>
         <HiX />
       </span>
 
       <div className={`mx-[56px] my-5 flex items-center justify-center`}>
-        <div className="mt-1 ml-1 h-20 relative ">
-         <img src="/logoastha.png" alt="Astha trip" className="h-full" />
+        <div className="relative mt-1 ml-1 h-20 ">
+          <img src="/logoastha.png" alt="Astha trip" className="h-full" />
         </div>
       </div>
       <div className=" mb-7 h-px bg-gray-300 dark:bg-white/30" />
@@ -35,8 +31,10 @@ const Sidebar = ({ open, onClose }) => {
       {/* Free Horizon Card */}
       <div className="flex justify-center text-center">
         {/* <SidebarCard /> */}
-        <p className="text-sm font-light ">All Right Reserved to Astha Trip<br />
-        {/* <span className="w-full relative text-center">Developed by Dewan ICT</span> */}
+        <p className="text-sm font-light ">
+          All Right Reserved to Astha Trip
+          <br />
+          {/* <span className="w-full relative text-center">Developed by Dewan ICT</span> */}
         </p>
       </div>
 

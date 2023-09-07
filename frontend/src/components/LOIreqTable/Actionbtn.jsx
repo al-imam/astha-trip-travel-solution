@@ -1,6 +1,6 @@
 import axios from "axios";
 import Dropdown from "components/dropdown";
-import React, { useState } from "react";
+import { useState } from "react";
 import { AiOutlineShop } from "react-icons/ai";
 import { BsThreeDots } from "react-icons/bs";
 import { toast } from "react-toastify";
@@ -15,9 +15,7 @@ function CardMenu(props) {
   const handleApproved = () => {
     let family = 1;
 
-    const filterData = data.filter(
-      (data) => data.reference === prop?.reference
-    );
+    const filterData = data.filter((data) => data.reference === prop?.reference);
     if (filterData.length > 1) {
       family = filterData.length;
     }
@@ -25,7 +23,7 @@ function CardMenu(props) {
     Swal.fire({
       title: "Are you sure to Approved?",
       text: `Name: ${prop?.guest_name}, Passport Number: ${prop?.pasport_number}, Family: ${family}`,
-      icon: "info",
+      icon: "question",
       showCancelButton: true,
       confirmButtonColor: "#422AFB",
       cancelButtonColor: "#d33",
@@ -85,14 +83,11 @@ function CardMenu(props) {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await toast.promise(
-            axios.post("/api/loi/cancel", { reference: prop?.reference }),
-            {
-              pending: "Please wait",
-              error: "Something went wrong",
-              success: "Cancel Successfully",
-            }
-          );
+          await toast.promise(axios.post("/api/loi/cancel", { reference: prop?.reference }), {
+            pending: "Please wait",
+            error: "Something went wrong",
+            success: "Cancel Successfully",
+          });
 
           setreload((old) => old + 1);
         } catch (err) {
@@ -137,6 +132,58 @@ function CardMenu(props) {
     });
   }
 
+  async function handleResendEmail() {
+    const filterData = data.filter((data) => data.reference === prop?.reference);
+
+    Swal.fire({
+      title: "Are you sure to resend email?",
+      text: `Name: ${prop?.guest_name}, Passport Number: ${prop?.pasport_number}, Family: ${filterData.length}`,
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#422AFB",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, Send",
+      scrollbarPadding: false,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        setShowDetails(false);
+        try {
+          document.body.style.overflow = "hidden";
+          setIsLoading(true);
+
+          await axios.post("/api/loi/resend-email-python", {
+            id: prop.id,
+          });
+
+          Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "Email Sended Successfully!",
+            showConfirmButton: false,
+            timer: 1500,
+            scrollbarPadding: false,
+          });
+
+          setreload((old) => old + 1);
+        } catch (err) {
+          Swal.fire({
+            position: "top-end",
+            icon: "error",
+            title: "Something went wrong!",
+            showConfirmButton: false,
+            timer: 1500,
+            scrollbarPadding: false,
+          });
+
+          console.log(err);
+        } finally {
+          document.body.style.overflow = "unset";
+          setIsLoading(false);
+        }
+      }
+    });
+  }
+
   return (
     <>
       {isLoading && (
@@ -148,10 +195,10 @@ function CardMenu(props) {
         </div>
       )}
       {showDetails && (
-        <div className="bg-black/10 fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm">
-          <div className="dark:bg- relative mx-6 w-[720px] space-y-6 rounded-lg bg-white p-8 shadow-md dark:!bg-navy-900 md:mx-0">
+        <div className="bg-black/10 xsm:m-6 fixed inset-0 z-40 flex items-center justify-center backdrop-blur-sm">
+          <div className="dark:bg- relative mx-2 w-[720px] space-y-6 rounded-lg bg-white p-4 shadow-md dark:!bg-navy-900 sm:p-8">
             <h3 className="text-center text-3xl">Details</h3>
-            <div className="text-gray-950  grid grid-cols-1 text-lg sm:grid-cols-2">
+            <div className="text-gray-950 grid grid-cols-1 text-lg sm:grid-cols-2">
               <div>
                 <p>Name: {prop.guest_name}</p>
                 <p>Country: {prop.country}</p>
@@ -159,10 +206,7 @@ function CardMenu(props) {
                 <p>Hotel name: {prop.hotel_name}</p>
                 <p>Travel date: {prop.travel_date}</p>
                 <p>
-                  Status:{" "}
-                  <span className={prop.status === "cancel" && "text-red-500"}>
-                    {prop.status}
-                  </span>
+                  Status: <span className={prop.status === "cancel" && "text-red-500"}>{prop.status}</span>
                 </p>
               </div>
               <div className="flex flex-col">
@@ -174,33 +218,30 @@ function CardMenu(props) {
                 >
                   Pasport_copy
                 </a>
-                <a
-                  className="text-blue-500 underline"
-                  target="_blank"
-                  href={`/api/admin/get-file/${prop.visa_copy}`}
-                >
+                <a className="text-blue-500 underline" target="_blank" href={`/api/admin/get-file/${prop.visa_copy}`}>
                   Visa_copy
                 </a>
-                <a
-                  className="text-blue-500 underline"
-                  target="_blank"
-                  href={`/api/admin/get-file/${prop.tiket_copy}`}
-                >
+                <a className="text-blue-500 underline" target="_blank" href={`/api/admin/get-file/${prop.tiket_copy}`}>
                   Tiket_copy
                 </a>
-                <a
-                  className="text-blue-500 underline"
-                  target="_blank"
-                  href={`/api/admin/get-file/${prop.hotel_copy}`}
-                >
+                <a className="text-blue-500 underline" target="_blank" href={`/api/admin/get-file/${prop.hotel_copy}`}>
                   Hotel_copy
                 </a>
               </div>
             </div>
-            <div className="flex justify-end">
+            <div className={`flex ${prop.status === "approved" ? "justify-between" : "justify-end"} `}>
+              {prop.status === "approved" && (
+                <button
+                  onClick={handleResendEmail}
+                  className="rounded bg-green-500 px-6 py-2 font-bold text-white shadow-md hover:bg-green-600"
+                >
+                  Resend Email
+                </button>
+              )}
+
               <button
                 onClick={() => setShowDetails(false)}
-                className="rounded px-6 py-1 text-lg ring ring-brandLinear"
+                className="rounded bg-red-500 px-6 py-2 font-bold text-white shadow-md hover:bg-red-600"
               >
                 close
               </button>
@@ -318,13 +359,7 @@ export default CardMenu;
 
 export function Spinner(props) {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="1em"
-      height="1em"
-      viewBox="0 0 24 24"
-      {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" {...props}>
       <path
         fill="currentColor"
         d="M12,1A11,11,0,1,0,23,12,11,11,0,0,0,12,1Zm0,19a8,8,0,1,1,8-8A8,8,0,0,1,12,20Z"

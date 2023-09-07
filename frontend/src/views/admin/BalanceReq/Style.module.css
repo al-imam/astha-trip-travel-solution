@@ -1,111 +1,111 @@
 .con {
-    width: 100%;
-    position: relative;
-    overflow: scroll;
-  }
-  .con::-webkit-scrollbar {
-    width: 10px;
-    height: 13px;
-  }
-  .con::-webkit-scrollbar-button {
-    display: none;
-    width: 0;
-    height: 0;
-    background: transparent;
-  }
-  .con table {
-    min-width: 100%;
-    color: black;
-    border-collapse: collapse;
-  }
-  .con table thead {
-    background-color: white;
-    box-shadow: 0 4px 6px -5px gray;
-    position: relative;
-    color: rgb(38, 0, 255);
-    font-size: 20px;
-    font-weight: 700;
-  }
-  .con table thead tr th {
-    padding: 5px;
-    white-space: nowrap;
-    word-wrap: Keep-all;
-    min-width: auto;
-    text-align: left;
-    cursor: pointer;
-  }
-  .con table thead tr th:last-child {
-    text-align: right;
-  }
-  .con table tbody tr {
-    height: auto;
-  }
-  .con table tbody tr:nth-child(even) {
-    background-color: rgb(206, 206, 206);
-  }
-  .con table tbody tr td {
-    height: auto;
-    min-height: auto;
-    padding: 5px;
-    white-space: nowrap;
-    word-wrap: Keep-all;
-    min-width: auto;
-    font-size: 14px;
-    font-weight: 300;
-    overflow-y: auto;
-  }
-  .con table tbody tr td::-webkit-scrollbar {
-    width: 3px;
-  }
-  .con table tbody tr td::-webkit-scrollbar-thumb {
-    background: #be00df;
-  }
-  .con table tbody tr td ::-webkit-scrollbar-track {
-    background: #87c9ff;
-  }
-  .con table tbody tr td:last-child {
-    text-align: right;
-  }
-  .con .pagination {
-    display: flex;
-    margin-top: 20px;
-    justify-content: center;
-    align-items: center;
-    background-color: #edeef6;
-    padding: 10px;
-    box-shadow: 0px 10px 8px -8px rgb(118, 104, 104);
-    margin-bottom: 10px;
-  }
-  .con .pagination select {
-    outline: none;
-    padding: 3px 4px;
-    border: 1px solid rgb(0, 26, 255);
-    margin-left: 4px;
-  }
-  .con .pagination button,
-  .con .pagination .pageindex {
-    margin-left: 20px;
-  }
-  
-  .filter {
-    width: 100%;
-    background: #fff;
-    padding: 20px;
-    margin-bottom: 10px;
-    font-size: 20px;
-    display: flex;
-    align-items: center;
-  }
-  .filter span {
-    position: relative;
-    top: 1px;
-    font-size: 30px;
-    color: rgb(17, 0, 255);
-  }
-  .filter input {
-    margin-left: 10px;
-    outline: none;
-    padding: 5px;
-    font-size: 16px;
-    color: rgb(4, 0, 255);
-  }
+  width: 100%;
+  position: relative;
+  overflow: scroll;
+}
+.con::-webkit-scrollbar {
+  width: 10px;
+  height: 13px;
+}
+.con::-webkit-scrollbar-button {
+  display: none;
+  width: 0;
+  height: 0;
+  background: transparent;
+}
+.con table {
+  min-width: 100%;
+  color: black;
+  border-collapse: collapse;
+}
+.con table thead {
+  background-color: white;
+  box-shadow: 0 4px 6px -5px gray;
+  position: relative;
+  color: rgb(38, 0, 255);
+  font-size: 20px;
+  font-weight: 700;
+}
+.con table thead tr th {
+  padding: 5px;
+  white-space: nowrap;
+  word-wrap: Keep-all;
+  min-width: auto;
+  text-align: left;
+  cursor: pointer;
+}
+.con table thead tr th:last-child {
+  text-align: right;
+}
+.con table tbody tr {
+  height: auto;
+}
+.con table tbody tr:nth-child(even) {
+  background-color: rgba(186, 199, 255, 0.2);
+}
+.con table tbody tr td {
+  height: auto;
+  min-height: auto;
+  padding: 5px;
+  white-space: nowrap;
+  word-wrap: Keep-all;
+  min-width: auto;
+  font-size: 14px;
+  font-weight: 300;
+  overflow-y: auto;
+}
+.con table tbody tr td::-webkit-scrollbar {
+  width: 3px;
+}
+.con table tbody tr td::-webkit-scrollbar-thumb {
+  background: #be00df;
+}
+.con table tbody tr td ::-webkit-scrollbar-track {
+  background: #87c9ff;
+}
+.con table tbody tr td:last-child {
+  text-align: right;
+}
+.con .pagination {
+  display: flex;
+  margin-top: 20px;
+  justify-content: center;
+  align-items: center;
+  background-color: #edeef6;
+  padding: 10px;
+  box-shadow: 0px 10px 8px -8px rgb(118, 104, 104);
+  margin-bottom: 10px;
+}
+.con .pagination select {
+  outline: none;
+  padding: 3px 4px;
+  border: 1px solid rgb(0, 26, 255);
+  margin-left: 4px;
+}
+.con .pagination button,
+.con .pagination .pageindex {
+  margin-left: 20px;
+}
+
+.filter {
+  width: 100%;
+  background: #fff;
+  padding: 20px;
+  margin-bottom: 10px;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+}
+.filter span {
+  position: relative;
+  top: 1px;
+  font-size: 30px;
+  color: rgb(17, 0, 255);
+}
+.filter input {
+  margin-left: 10px;
+  outline: none;
+  padding: 5px;
+  font-size: 16px;
+  color: rgb(4, 0, 255);
+}

@@ -9,6 +9,7 @@ const isAdmin = require("../middleware/Auth/isAdmin");
 const isAuthenticate = require("../middleware/Auth/isAuthenticate");
 const approveLoiRequest = require("../controller/LOI/approveLoiRequest");
 const deleteController = require("../controller/LOI/deleteAfterCancel");
+const LOI = require("../model/LOI");
 
 LOIRoute.post("/entry", isAuthenticate, LOIEntry);
 LOIRoute.get("/getall", isAdmin, GetAll);
@@ -17,6 +18,21 @@ LOIRoute.post(
   "/approved-python",
   isAdmin,
   validateBody([isNumber("id", true)]),
+  approveLoiRequest
+);
+
+LOIRoute.post(
+  "/resend-email-python",
+  isAdmin,
+  validateBody([isNumber("id", true)]),
+  async (req, res, next) => {
+    const [loiData] = await LOI.findById(req.body.id);
+    if (loiData && loiData.status === "approved") return next();
+    return res.status(400).json({
+      message: "Loi not approved yet!",
+      code: "resend-validate-failed",
+    });
+  },
   approveLoiRequest
 );
 

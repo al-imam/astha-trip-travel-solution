@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
-import Widget from "components/widget/Widget";
-import { toast } from "react-toastify";
 import axios from "axios";
+import Widget from "components/widget/Widget";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 
 const swalWithBootstrapButtons = Swal.mixin();
@@ -262,10 +262,7 @@ const DetailAgentmodule = ({ dataraw, close, reload }) => {
                       className="rounded-md p-2 shadow-sm"
                     />
                     <br />
-                    <button
-                      onClick={setRate}
-                      className="mt-2 rounded-md  border-2 border-brand-500 px-4 py-2"
-                    >
+                    <button onClick={setRate} className="mt-2 rounded-md  border-2 border-brand-500 px-4 py-2">
                       Update
                     </button>
                   </div>
@@ -275,9 +272,7 @@ const DetailAgentmodule = ({ dataraw, close, reload }) => {
                     <div className="relative space-y-2">
                       <p>
                         Agent is currently
-                        <span className="font-bold">
-                          {data.status === 403 ? " Blocked" : " Active"}
-                        </span>
+                        <span className="font-bold">{data.status === 403 ? " Blocked" : " Active"}</span>
                       </p>
                       {data.status === 403 ? (
                         <button
@@ -319,13 +314,7 @@ export default DetailAgentmodule;
 
 export function PhUserBold(props) {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="1em"
-      height="1em"
-      viewBox="0 0 256 256"
-      {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 256 256" {...props}>
       <path
         fill="currentColor"
         d="M234.38 210a123.36 123.36 0 0 0-60.78-53.23a76 76 0 1 0-91.2 0A123.36 123.36 0 0 0 21.62 210a12 12 0 1 0 20.77 12c18.12-31.32 50.12-50 85.61-50s67.49 18.69 85.61 50a12 12 0 0 0 20.77-12ZM76 96a52 52 0 1 1 52 52a52.06 52.06 0 0 1-52-52Z"
@@ -336,13 +325,7 @@ export function PhUserBold(props) {
 
 export function PhThumbsUp(props) {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="1em"
-      height="1em"
-      viewBox="0 0 256 256"
-      {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 256 256" {...props}>
       <path
         fill="currentColor"
         d="M234 80.12A24 24 0 0 0 216 72h-56V56a40 40 0 0 0-40-40a8 8 0 0 0-7.16 4.42L75.06 96H32a16 16 0 0 0-16 16v88a16 16 0 0 0 16 16h172a24 24 0 0 0 23.82-21l12-96A24 24 0 0 0 234 80.12ZM32 112h40v88H32Zm191.94-15l-12 96a8 8 0 0 1-7.94 7H88v-94.11l36.71-73.43A24 24 0 0 1 144 56v24a8 8 0 0 0 8 8h64a8 8 0 0 1 7.94 9Z"
@@ -353,13 +336,7 @@ export function PhThumbsUp(props) {
 
 export function PhMoneyBold(props) {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="1em"
-      height="1em"
-      viewBox="0 0 256 256"
-      {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 256 256" {...props}>
       <path
         fill="currentColor"
         d="M240 52H16A12 12 0 0 0 4 64v128a12 12 0 0 0 12 12h224a12 12 0 0 0 12-12V64a12 12 0 0 0-12-12Zm-58.79 128H74.79A60.18 60.18 0 0 0 28 133.21v-10.42A60.18 60.18 0 0 0 74.79 76h106.42A60.18 60.18 0 0 0 228 122.79v10.42A60.18 60.18 0 0 0 181.21 180ZM228 97.94A36.23 36.23 0 0 1 206.06 76H228ZM49.94 76A36.23 36.23 0 0 1 28 97.94V76ZM28 158.06A36.23 36.23 0 0 1 49.94 180H28ZM206.06 180A36.23 36.23 0 0 1 228 158.06V180ZM128 88a40 40 0 1 0 40 40a40 40 0 0 0-40-40Zm0 56a16 16 0 1 1 16-16a16 16 0 0 1-16 16Z"
@@ -370,20 +347,8 @@ export function PhMoneyBold(props) {
 
 export function BytesizeSettings(props) {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="1em"
-      height="1em"
-      viewBox="0 0 32 32"
-      {...props}
-    >
-      <g
-        fill="none"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="2"
-      >
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32" {...props}>
+      <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
         <path d="M13 2v4l-2 1l-3-3l-4 4l3 3l-1 2H2v6h4l1 2l-3 3l4 4l3-3l2 1v4h6v-4l2-1l3 3l4-4l-3-3l1-2h4v-6h-4l-1-2l3-3l-4-4l-3 3l-2-1V2Z"></path>
         <circle cx="16" cy="16" r="4"></circle>
       </g>

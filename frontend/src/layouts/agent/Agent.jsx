@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { Outlet } from "react-router-dom";
-import AgentNavbar from "views/agent/navbar/AgentNavbar";
-import TotalInfo from "views/agent/totalInfo/TotalInfo";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useEffect, useState } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
+import AgentNavbar from "views/agent/navbar/AgentNavbar";
 
 function Agent() {
   const [agent, setAgent] = useState({});
