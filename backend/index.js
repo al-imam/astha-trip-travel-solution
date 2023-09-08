@@ -1,29 +1,24 @@
 const express = require("express");
-const app = express();
-var cookieParser = require("cookie-parser");
+
+const sequelize = require("./db/config");
+require("./db/models");
+
+const cookieParser = require("cookie-parser");
 const cookie = require("cookie");
 const path = require("path");
-// import main  router
 const MainRouter = require("./routers/router");
 var bodyParser = require("body-parser");
-// parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }));
 
-// setup ejs
+const app = express();
 
 app.set("view engine", "ejs");
 app.set("views", "./views");
-
-// set public
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
-
-// parse application/json
 app.use(bodyParser.json());
 app.use(cookieParser());
-// main middelware
-app.use("/", MainRouter);
 
-// if not in production use the port 5000
+app.use("/", MainRouter);
 
 app.get("*", (req, res) => {
   res.sendFile(path.resolve(__dirname, "./public", "index.html"));
@@ -63,6 +58,11 @@ app.use((err, req, res, next) => {
   // console.log("🚀 ~ file: index.js:21 ~ app.use ~ err:", err)
   // res.send(err)
 });
-const PORT = process.env.PORT || 5000;
-console.log("server started on port:", PORT);
-app.listen(PORT);
+
+const logging = (msgs) => console.log("\x1b[36m", msgs, "\x1b[0m \n");
+
+sequelize.sync({ force: true, logging }).then(() => {
+  const port = process.env.PORT ?? 5000;
+  app.listen(port);
+  console.log(`server started on port: ${port}`);
+});
