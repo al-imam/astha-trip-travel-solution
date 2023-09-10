@@ -1,35 +1,35 @@
 export function StepIndicator({ steps = [], current = 2 }) {
   return (
-    <ol className="flex w-full items-center justify-center gap-2 text-sm font-medium text-gray-500 sm:space-x-4 sm:text-base">
+    <ol className="relative isolate flex w-full items-center justify-around gap-2 text-sm font-medium text-gray-500 sm:text-base">
       {steps.map((step, index) => (
-        <li key={step} className={`flex items-center ${index + 1 < current && "text-blue-600 dark:text-blue-500"}`}>
+        <li
+          key={step}
+          className={`mt-auto flex flex-1 flex-col-reverse items-center ${
+            index + 1 < current && "text-blue-600 dark:text-blue-500"
+          }`}
+        >
           <span
-            className={`mr-2 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border text-xs ${
-              index + 1 <= current ? "border-blue-600 text-blue-600" : "border-gray-500"
+            className={`flex h-8 w-8 shrink-0 select-none items-center justify-center rounded-full text-lg transition-all duration-200 ${
+              index + 1 <= current ? "bg-green-400 text-white" : "bg-gray-300 text-gray-900"
             }`}
           >
             {index + 1}
           </span>
-          {step} <span className="hidden sm:ml-2 sm:inline-flex">Info</span>
-          {index + 1 < steps.length && (
-            <svg
-              className="ml-2 h-3 w-3 sm:ml-4"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 12 10"
-            >
-              <path
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="m7 9 4-4-4-4M1 9l4-4-4-4"
-              />
-            </svg>
-          )}
+          <p className={`hidden select-none ${steps.length > 4 ? "lg:inline-flex" : "md:inline-flex"}`}>{step}</p>
         </li>
       ))}
+      <div className="absolute bottom-0 -z-10 flex h-8 min-w-0 max-w-full items-center" style={{ width: "100%" }}>
+        <div
+          className="inline-block h-2 rounded-full bg-green-400 transition-all"
+          style={{ width: `${(current / steps.length) * 100}%` }}
+        />
+      </div>
+      <div className="absolute bottom-0 -z-20 flex h-8 min-w-0 max-w-full items-center" style={{ width: "100%" }}>
+        <div
+          className="inline-block h-2 rounded-full bg-gray-300 transition-all duration-500"
+          style={{ width: `100%` }}
+        />
+      </div>
     </ol>
   );
 }
