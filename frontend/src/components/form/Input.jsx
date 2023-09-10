@@ -3,7 +3,7 @@ import { useId } from "react";
 export function Input({ register, error, label, ...rest }) {
   const id = useId();
   return (
-    <div className="space-y-1 text-sm">
+    <div className="flex flex-col gap-1 text-sm">
       <label htmlFor={id} className="block text-base font-medium text-gray-900">
         {label}
       </label>

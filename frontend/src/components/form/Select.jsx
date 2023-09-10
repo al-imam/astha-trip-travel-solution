@@ -2,7 +2,7 @@ import CreatableSelect from "react-select/creatable";
 import { Controller } from "react-hook-form";
 import { useId } from "react";
 
-export function Select({ control, name, error, label, options, rule, ...rest }) {
+export function Select({ control, register, name, error, label, options, rule, ...rest }) {
   const id = useId();
 
   return (
@@ -14,7 +14,6 @@ export function Select({ control, name, error, label, options, rule, ...rest }) 
         name={name}
         control={control}
         defaultValue=""
-        rules={[rule]}
         render={({ field }) => (
           <CreatableSelect
             id={id}
@@ -37,6 +36,7 @@ export function Select({ control, name, error, label, options, rule, ...rest }) 
                   : "none",
               }),
             }}
+            {...register}
             {...field}
             {...rest}
           />
