@@ -2,6 +2,64 @@ import { useId, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 
+export function Schengen() {
+  const personal = useForm({ mode: "onSubmit" });
+  const [step, setStep] = useState(1);
+
+  return (
+    <main className="container mx-auto space-y-4 p-4">
+      <Link to="/agent" className="flex w-max items-center rounded-md bg-brand-500 px-3 py-2 text-white">
+        <span className="pr-2 text-2xl">
+          <LeftArrow />
+        </span>
+        Back to dashboard
+      </Link>
+
+      <div className="space-y-4 rounded-lg border border-gray-200 bg-white p-3 shadow-sm sm:p-4">
+        <StepIndicator steps={["Account", "Personal", "Location"]} current={step} />
+
+        {step === 1 && (
+          <form className="space-y-4" onSubmit={personal.handleSubmit(() => setStep(2))}>
+            <Input
+              label="Surname"
+              register={personal.register("surname", { required: "Surname is required" })}
+              error={personal.formState.errors["surname"]}
+            />
+
+            <Input
+              label="Surname at birth"
+              register={personal.register("surname-at-birth", { required: "Surname at birth is required" })}
+              error={personal.formState.errors["surname-at-birth"]}
+            />
+
+            <Input
+              label="Fist name"
+              register={personal.register("first-name", { required: "Fist name is required" })}
+              error={personal.formState.errors["first-name"]}
+            />
+
+            <Input
+              label="Date of birth"
+              register={personal.register("date-of-birth", {
+                required: "Birth date is required",
+                max: { value: new Date().toISOString().split("T")[0], message: "Birth date cannot be future date" },
+              })}
+              error={personal.formState.errors["date-of-birth"]}
+              type="date"
+            />
+
+            <div className="flex justify-end">
+              <Button>
+                Next <NextIcon />
+              </Button>
+            </div>
+          </form>
+        )}
+      </div>
+    </main>
+  );
+}
+
 function Input({ register, error, label, ...rest }) {
   const id = useId();
   return (
