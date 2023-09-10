@@ -9,6 +9,7 @@ import AgentProfile from "views/agent/agentProfile/AgentProfile";
 import AgentHome from "views/agent/home/AgentHome";
 import Entry from "views/public/Entry/Entry";
 import Registration from "./views/agent/Rgistration/Registration";
+import { Schengen } from "views/public/Entry/Schengen";
 
 const App = () => {
   return (
@@ -16,7 +17,11 @@ const App = () => {
       <Routes>
         <Route path="auth/*" element={<AuthLayout />} />
         <Route path="admin/*" element={<AdminLayout />} />
-        <Route path="entry/*" element={<Entry />} />
+        <Route path="entry">
+          <Route index element={<Entry />} />
+          <Route path="schengen" element={<Schengen />} />
+          <Route path="*" element={<Navigate to="/entry" replace />} />
+        </Route>
         <Route path="agentEntry/*" element={<AgentEntry />} />
 
         <Route path="/agent/Login" element={<AgentLogin />} />
