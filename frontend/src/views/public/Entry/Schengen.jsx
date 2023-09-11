@@ -1,6 +1,6 @@
 import { Button } from "components/form/Button";
 import { Input } from "components/form/Input";
-import { Select } from "components/form/Select";
+import { Select, SelectNotCreatable } from "components/form/Select";
 import { StepIndicator } from "components/form/StepIndicator";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -11,7 +11,24 @@ import countries from "../countries.json";
 
 const countriesOptions = countries.map((e) => ({
   label: e.name,
-  value: e.name.toUpperCase(),
+  value: e.nationality,
+}));
+
+const nationalityOptions = countries.map((e) => ({
+  label: e.nationality,
+  value: e.nationality,
+}));
+
+const civilStatusOptions = ["Single", "Married", "Registered Partnership", "Separated", "Divorced", "Widow(er)"].map(
+  (e) => ({
+    label: e,
+    value: e,
+  })
+);
+
+const sexesOption = ["Male", "Female"].map((e) => ({
+  label: e,
+  value: e,
 }));
 
 const steps = ["Personal", "Travel Document", "Contact and Occupation"];
@@ -25,7 +42,6 @@ export function Schengen() {
     watch: personal.watch,
     setValue: personal.setValue,
     storage: window.localStorage,
-    validate: true,
   });
 
   const clearTravel = useFormPersist("travel-visa-data", {
@@ -100,15 +116,70 @@ export function Schengen() {
                 label="Country of birth"
                 options={countriesOptions}
                 control={personal.control}
+                placeholder="Select country of birth"
                 name="country-of-birth"
                 register={personal.register("country-of-birth", { required: "Country of birth is required" })}
                 error={personal.formState.errors["country-of-birth"]}
+              />
+
+              <Select
+                label="Current nationality"
+                options={nationalityOptions}
+                control={personal.control}
+                name="current-nationality"
+                placeholder="Select current nationality"
+                register={personal.register("current-nationality", { required: "Current nationality is required" })}
+                error={personal.formState.errors["current-nationality"]}
+              />
+
+              <Select
+                label="Nationality at birth, if different"
+                placeholder="Select nationality at birth"
+                options={nationalityOptions}
+                control={personal.control}
+                name="nationality-at-birth"
+                isClearable
+                register={personal.register("nationality-at-birth")}
+                error={personal.formState.errors["nationality-at-birth"]}
+              />
+
+              <Select
+                label="Other nationalities, if you have"
+                placeholder="Select other nationalities "
+                options={nationalityOptions}
+                control={personal.control}
+                name="other-nationalities"
+                isClearable
+                isMulti
+                register={personal.register("other-nationalities")}
+                error={personal.formState.errors["other-nationalities"]}
+              />
+
+              <SelectNotCreatable
+                label="Sex (gender)"
+                options={sexesOption}
+                placeholder="Select your gender"
+                control={personal.control}
+                name="sex"
+                isSearchable={false}
+                register={personal.register("sex", { required: "Sex (gender) is required" })}
+                error={personal.formState.errors["sex"]}
+              />
+
+              <Select
+                label="Civil status"
+                options={civilStatusOptions}
+                control={personal.control}
+                name="civil-status"
+                placeholder="Select civil status"
+                register={personal.register("civil-status", { required: "Civil status is required" })}
+                error={personal.formState.errors["civil-status"]}
               />
             </div>
 
             <div className="flex justify-end">
               <Button>
-                Next <NextIcon />
+                Next <NextIcon className="ml-2" />
               </Button>
             </div>
           </form>
