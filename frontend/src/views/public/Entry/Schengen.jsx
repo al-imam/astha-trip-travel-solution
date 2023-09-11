@@ -143,38 +143,51 @@ export function Schengen() {
                 error={personal.formState.errors["nationality-at-birth"]}
               />
 
-              <Select
-                label="Other nationalities, if you have"
-                placeholder="Select other nationalities "
-                options={nationalityOptions}
-                control={personal.control}
-                name="other-nationalities"
-                isClearable
-                isMulti
-                register={personal.register("other-nationalities")}
-                error={personal.formState.errors["other-nationalities"]}
-              />
+              <div className="col-span-full md:col-span-1">
+                <Select
+                  label="Other nationalities, if you have"
+                  placeholder="Select other nationalities "
+                  options={nationalityOptions}
+                  control={personal.control}
+                  name="other-nationalities"
+                  isClearable
+                  isMulti
+                  register={personal.register("other-nationalities")}
+                  error={personal.formState.errors["other-nationalities"]}
+                />
+              </div>
 
-              <SelectNotCreatable
-                label="Sex (gender)"
-                options={sexesOption}
-                placeholder="Select your gender"
-                control={personal.control}
-                name="sex"
-                isSearchable={false}
-                register={personal.register("sex", { required: "Sex (gender) is required" })}
-                error={personal.formState.errors["sex"]}
-              />
-
-              <Select
-                label="Civil status"
-                options={civilStatusOptions}
-                control={personal.control}
-                name="civil-status"
-                placeholder="Select civil status"
-                register={personal.register("civil-status", { required: "Civil status is required" })}
-                error={personal.formState.errors["civil-status"]}
-              />
+              <div className=" flex flex-col gap-4 sm:col-span-2 md:col-span-3 md:row-start-auto lg:flex-row [&>*]:flex-1">
+                <div className="flex flex-col gap-4 sm:flex-row [&>*]:flex-1">
+                  <SelectNotCreatable
+                    label="Sex (gender)"
+                    options={sexesOption}
+                    placeholder="Select your gender"
+                    control={personal.control}
+                    name="sex"
+                    isSearchable={false}
+                    register={personal.register("sex", { required: "Sex (gender) is required" })}
+                    error={personal.formState.errors["sex"]}
+                  />
+                  <Select
+                    label="Civil status"
+                    options={civilStatusOptions}
+                    control={personal.control}
+                    name="civil-status"
+                    placeholder="Select civil status"
+                    register={personal.register("civil-status", { required: "Civil status is required" })}
+                    error={personal.formState.errors["civil-status"]}
+                  />
+                </div>
+                <Input
+                  label="Parental authority (in case of minors) /legal guardian (surname, first name, address, if different from applicant's, telephone no., e-mail address, and nationality)"
+                  placeholder="surname, first name, address .. etc"
+                  classNameLabel="line-clamp-2 sm:line-clamp-1"
+                  register={personal.register("parental-authority")}
+                  error={personal.formState.errors["parental-authority"]}
+                  type="text"
+                />
+              </div>
             </div>
 
             <div className="flex justify-end">

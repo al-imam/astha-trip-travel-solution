@@ -1,11 +1,11 @@
 import { useId } from "react";
 import { twMerge } from "tailwind-merge";
 
-export function Input({ register, error, label, placeholder = label, className, ...rest }) {
+export function Input({ register, error, label, placeholder = label, className, classNameLabel, ...rest }) {
   const id = useId();
   return (
     <div className="flex flex-col gap-1 text-sm">
-      <label htmlFor={id} className="block text-base font-medium text-gray-900">
+      <label htmlFor={id} className={twMerge("block text-base font-medium text-gray-900", classNameLabel)}>
         {label}
       </label>
       <input
