@@ -9,7 +9,7 @@ export function Select({ control, register, name, error, label, options, ...rest
 
   return (
     <div className="flex flex-col gap-1">
-      <label htmlFor={id} className="block text-base font-medium text-gray-900">
+      <label htmlFor={id} className="block text-base font-medium text-gray-800">
         {label}
       </label>
       <Controller
@@ -39,6 +39,12 @@ export function Select({ control, register, name, error, label, options, ...rest
                     : "0 0 0 1px rgb(59 130 246 / 0.5)"
                   : "none",
               }),
+              placeholder: (provided) => ({
+                ...provided,
+                whiteSpace: "nowrap",
+                fontSize: "0.875rem",
+                color: "#adb5bd",
+              }),
             }}
             {...register}
             {...field}
@@ -57,7 +63,7 @@ export function SelectNotCreatable({ control, register, name, error, label, opti
 
   return (
     <div className="flex flex-col gap-1">
-      <label htmlFor={id} className="block text-base font-medium text-gray-900">
+      <label htmlFor={id} className="block text-base font-medium text-gray-800">
         {label}
       </label>
       <Controller
@@ -86,6 +92,12 @@ export function SelectNotCreatable({ control, register, name, error, label, opti
                     ? "0 0 0 1px rgb(245 57 57 / 0.5)"
                     : "0 0 0 1px rgb(59 130 246 / 0.5)"
                   : "none",
+              }),
+              placeholder: (provided) => ({
+                ...provided,
+                whiteSpace: "nowrap",
+                fontSize: "0.875rem",
+                color: "#adb5bd",
               }),
             }}
             {...register}
