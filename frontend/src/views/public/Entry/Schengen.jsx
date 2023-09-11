@@ -56,7 +56,7 @@ export function Schengen() {
         <StepIndicator steps={steps} current={step} />
 
         {step === 1 && (
-          <form className="space-y-4" onSubmit={personal.handleSubmit(personalInfoSubmit)}>
+          <form name="personal" className="space-y-4" onSubmit={personal.handleSubmit(personalInfoSubmit)}>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <Input
                 label="Surname"
@@ -88,6 +88,7 @@ export function Schengen() {
                 error={personal.formState.errors["date-of-birth"]}
                 type="date"
               />
+
               <Input
                 label="Place of birth"
                 register={personal.register("place-of-birth", { required: "Place of birth is required" })}

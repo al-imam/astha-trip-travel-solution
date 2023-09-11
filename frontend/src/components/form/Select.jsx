@@ -19,6 +19,7 @@ export function Select({ control, register, name, error, label, options, rule, .
             id={id}
             options={options}
             name={name}
+            menuPosition="fixed"
             styles={{
               control: (styles, state) => ({
                 ...styles,

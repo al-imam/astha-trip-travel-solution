@@ -1,6 +1,7 @@
 import { useId } from "react";
+import { twMerge } from "tailwind-merge";
 
-export function Input({ register, error, label, ...rest }) {
+export function Input({ register, error, label, className, ...rest }) {
   const id = useId();
   return (
     <div className="flex flex-col gap-1 text-sm">
@@ -10,9 +11,11 @@ export function Input({ register, error, label, ...rest }) {
       <input
         {...register}
         id={id}
-        className={`block w-full rounded border-none bg-gray-50 p-2.5 text-gray-900 outline-none ring-1 focus:ring-2 ${
-          error ? "ring-red-500/50  focus:ring-red-500/50" : "ring-brand-100 focus:ring-blue-500/50"
-        }`}
+        className={twMerge(
+          "block w-full rounded border-none bg-gray-50 p-2.5 text-gray-900 outline-none ring-1 ring-brand-100 focus:ring-2 focus:ring-blue-500/50",
+          error && "ring-red-500/50 focus:ring-red-500/50",
+          className
+        )}
         placeholder={label}
         {...rest}
       />
