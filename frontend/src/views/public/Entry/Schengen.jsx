@@ -19,6 +19,11 @@ const nationalityOptions = countries.map((e) => ({
   value: e.nationality,
 }));
 
+const documentTypeOptions = ["Ordinary", "Diplomatic", "Service", "Official", "Special"].map((e) => ({
+  label: `${e} passport`,
+  value: `${e} passport`,
+}));
+
 const civilStatusOptions = ["Single", "Married", "Registered Partnership", "Separated", "Divorced", "Widow(er)"].map(
   (e) => ({
     label: e,
@@ -31,7 +36,7 @@ const sexesOption = ["Male", "Female"].map((e) => ({
   value: e,
 }));
 
-const steps = ["Personal", "Travel Document", "Contact and Occupation"];
+const steps = ["Personal", "Documents", "Contact and Occupation"];
 
 export function Schengen() {
   const personal = useForm();
@@ -78,21 +83,18 @@ export function Schengen() {
                 label="Surname"
                 register={personal.register("surname", { required: "Surname is required" })}
                 error={personal.formState.errors["surname"]}
-                type="text"
               />
 
               <Input
                 label="Surname at birth"
                 register={personal.register("surname-at-birth", { required: "Surname at birth is required" })}
                 error={personal.formState.errors["surname-at-birth"]}
-                type="text"
               />
 
               <Input
                 label="Fist name"
                 register={personal.register("first-name", { required: "Fist name is required" })}
                 error={personal.formState.errors["first-name"]}
-                type="text"
               />
 
               <Input
@@ -109,7 +111,6 @@ export function Schengen() {
                 label="Place of birth"
                 register={personal.register("place-of-birth", { required: "Place of birth is required" })}
                 error={personal.formState.errors["place-of-birth"]}
-                type="text"
               />
 
               <Select
@@ -182,10 +183,9 @@ export function Schengen() {
                 <Input
                   label="Parental authority (in case of minors) /legal guardian (surname, first name, address, if different from applicant's, telephone no., e-mail address, and nationality)"
                   placeholder="surname, first name, address .. etc"
-                  classNameLabel="line-clamp-2 sm:line-clamp-1"
+                  classNameLabel="line-clamp-2 md:line-clamp-1"
                   register={personal.register("parental-authority")}
                   error={personal.formState.errors["parental-authority"]}
-                  type="text"
                 />
               </div>
             </div>
@@ -199,52 +199,101 @@ export function Schengen() {
         )}
 
         {step === 2 && (
-          <form className="space-y-4" onSubmit={travel.handleSubmit(travelInfoSubmit)}>
+          <form name="document" className="space-y-4" onSubmit={travel.handleSubmit(travelInfoSubmit)}>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <Input
-                label="Surname"
-                register={travel.register("surname", { required: "Surname is required" })}
-                error={travel.formState.errors["surname"]}
-                type="text"
-              />
-
-              <Input
-                label="Surname at birth"
-                register={travel.register("surname-at-birth", { required: "Surname at birth is required" })}
-                error={travel.formState.errors["surname-at-birth"]}
-                type="text"
-              />
-
-              <Input
-                label="Fist name"
-                register={travel.register("first-name", { required: "Fist name is required" })}
-                error={travel.formState.errors["first-name"]}
-                type="text"
-              />
-
-              <Input
-                label="Date of birth"
-                register={travel.register("date-of-birth", {
-                  required: "Birth date is required",
-                  max: { value: new Date().toISOString().split("T")[0], message: "Birth date cannot be future date" },
+                label="National identity number, where applicable"
+                placeholder="National identity number"
+                register={travel.register("national-identity-number", {
+                  required: "National identity number is required",
                 })}
-                error={travel.formState.errors["date-of-birth"]}
-                type="date"
-              />
-              <Input
-                label="Place of birth"
-                register={travel.register("place-of-birth", { required: "Place of birth is required" })}
-                error={travel.formState.errors["place-of-birth"]}
-                type="text"
+                error={travel.formState.errors["national-identity-number"]}
               />
 
               <Select
-                label="Country of birth"
+                label="Type of travel document"
+                options={documentTypeOptions}
+                control={travel.control}
+                placeholder="Select passport type"
+                name="travel-document-type"
+                register={travel.register("travel-document-type", { required: "Travel document type is required" })}
+                error={travel.formState.errors["travel-document-type"]}
+              />
+
+              <Input
+                label="Number of travel document"
+                placeholder="Travel document number"
+                register={travel.register("travel-document-number", { required: "Travel document number is required" })}
+                error={travel.formState.errors["travel-document-number"]}
+              />
+
+              <Input
+                label="Date of issue"
+                register={travel.register("date-of-issue", {
+                  required: "Issue date is required",
+                })}
+                error={travel.formState.errors["date-of-issue"]}
+                type="date"
+              />
+
+              <Input
+                label="Valid until"
+                register={travel.register("valid-until", {
+                  required: "Valid until is required",
+                })}
+                error={travel.formState.errors["valid-until"]}
+                type="date"
+              />
+
+              <Select
+                label="Issued by (country)"
                 options={countriesOptions}
                 control={travel.control}
-                name="country-of-birth"
-                register={travel.register("country-of-birth", { required: "Country of birth is required" })}
-                error={travel.formState.errors["country-of-birth"]}
+                placeholder="Select Issued by country"
+                name="issued-country"
+                register={travel.register("issued-country", { required: "Issued by (country) is required" })}
+                error={travel.formState.errors["issued-country"]}
+              />
+
+              <p className="[text-wrap:_balance col-span-full -mb-3 text-base font-medium text-gray-800">
+                Personal data of the family member who is an EU, EEA or CH citizen or an UK national who is a Withdrawal
+                Agreement beneficiary, if applicable Surname (Family name)
+              </p>
+
+              <Input
+                label="Surname (citizen)"
+                register={travel.register("citizen-surname")}
+                error={personal.formState.errors["citizen-surname"]}
+              />
+
+              <Input
+                label="Fist name (citizen)"
+                register={travel.register("citizen-first-name")}
+                error={personal.formState.errors["citizen-first-name"]}
+              />
+
+              <Input
+                label="Date of birth (citizen)"
+                register={travel.register("citizen-date-of-birth")}
+                error={travel.formState.errors["citizen-date-of-birth"]}
+                type="date"
+              />
+
+              <Select
+                label="Nationality (citizen)"
+                options={nationalityOptions}
+                control={personal.control}
+                name="citizen-nationality"
+                placeholder="Select nationality"
+                register={personal.register("citizen-nationality")}
+                error={personal.formState.errors["citizen-nationality"]}
+              />
+
+              <Input
+                label="Number of travel document or ID card (citizen)"
+                placeholder="Travel document number"
+                register={travel.register("citizen-travel-document-number")}
+                error={travel.formState.errors["citizen-travel-document-number"]}
               />
             </div>
 

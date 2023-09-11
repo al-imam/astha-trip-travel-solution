@@ -44,6 +44,7 @@ export function Select({ control, register, name, error, label, options, ...rest
                 whiteSpace: "nowrap",
                 fontSize: "0.875rem",
                 color: "#adb5bd",
+                letterSpacing: "0.3px",
               }),
             }}
             {...register}
@@ -98,6 +99,7 @@ export function SelectNotCreatable({ control, register, name, error, label, opti
                 whiteSpace: "nowrap",
                 fontSize: "0.875rem",
                 color: "#adb5bd",
+                letterSpacing: "0.3px",
               }),
             }}
             {...register}
