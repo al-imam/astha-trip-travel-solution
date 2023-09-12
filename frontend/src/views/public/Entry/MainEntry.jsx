@@ -51,6 +51,7 @@ const guestNumbersOptions = Array(8)
 
 export function MainEntry() {
   const guest = useForm();
+  const itenary = useForm();
   const guestType = guest.watch("guest-type");
   const [allGuest, setAllGuest] = useState([]);
 
@@ -84,7 +85,10 @@ export function MainEntry() {
     }
 
     allGuest.push(obj);
-    // guest.reset();
+  }
+
+  function submitItenary(data) {
+    console.log(data);
   }
 
   return (
@@ -309,7 +313,67 @@ export function MainEntry() {
           />
         </div>
       )}
+
+      <div className="mt-4 space-y-4 rounded border border-gray-200 bg-white px-4 py-8 shadow-sm ">
+        <p className="flex items-center gap-2 py-2 text-2xl font-semibold text-gray-900 ">
+          <TravelIcon className="text-xl" />
+          Tour Itenary Setup
+        </p>
+
+        <form name="add-itenary" className="flex gap-4" onSubmit={itenary.handleSubmit(submitItenary)}>
+          <div className="flex w-full gap-4 [&>*]:flex-1">
+            <Input
+              label="Date *"
+              register={itenary.register("date", {
+                required: "Passport valid until date is required",
+                min: { value: new Date().toISOString().split("T")[0], message: "Invalid date" },
+              })}
+              error={itenary.formState.errors["date"]}
+              type="date"
+            />
+
+            <Select
+              label="From *"
+              options={hotelNameOptions}
+              control={itenary.control}
+              placeholder="Select from"
+              name="from"
+              register={itenary.register("from", { required: "From is required" })}
+              error={itenary.formState.errors["from"]}
+            />
+
+            <Select
+              label="To *"
+              options={hotelNameOptions}
+              control={itenary.control}
+              placeholder="Select to"
+              name="to"
+              register={itenary.register("to", { required: "To is required" })}
+              error={itenary.formState.errors["to"]}
+            />
+          </div>
+          <Button
+            className={twMerge(
+              "whitespace-nowrap py-[0.6875rem]",
+              itenary.formState.isValid && itenary.getValues("date") ? "mt-auto" : "my-auto"
+            )}
+          >
+            Add Itenary <AddIcon className="ml-1 text-lg" />
+          </Button>
+        </form>
+      </div>
     </main>
+  );
+}
+
+export function TravelIcon(props) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" {...props}>
+      <path
+        fill="currentColor"
+        d="m6.85 17.15l-3.2-1.75l1.05-1.05l2.5.35l3.9-3.9l-7.8-4.25l1.4-1.4l9.55 2.45l3.925-3.875Q18.6 3.3 19.238 3.3t1.062.425q.425.425.425 1.063T20.3 5.85l-3.9 3.9l2.45 9.55l-1.4 1.4l-4.25-7.8l-3.9 3.9l.35 2.5l-1.05 1.05l-1.75-3.2Z"
+      ></path>
+    </svg>
   );
 }
 
