@@ -1,10 +1,11 @@
 import { Button } from "components/form/Button";
 import { Input } from "components/form/Input";
 import { Select, SelectNotCreatable } from "components/form/Select";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
+import { Table } from "./Table";
 
 const guestTypeOptions = ["Single", "Family"].map((value) => ({
   value,
@@ -50,6 +51,7 @@ const guestNumbersOptions = Array(8)
 export function MainEntry() {
   const guest = useForm();
   const guestType = guest.watch("guest-type");
+  const [allGuest, setAllGuest] = useState([]);
 
   console.log(guest.formState.errors);
 
@@ -60,11 +62,26 @@ export function MainEntry() {
   }, []);
 
   function submitGuest(data) {
-    console.log(data);
+    const obj = {};
+    for (const key in data) {
+      if (data[key] instanceof Object) {
+        if ("label" in data[key] && "value" in data[key]) {
+          obj[key] = data[key].value;
+          continue;
+        }
+
+        obj[key] = data[key][0];
+        continue;
+      }
+      obj[key] = data[key];
+    }
+
+    allGuest.push(obj);
+    // guest.reset();
   }
 
   return (
-    <main className="container mx-auto space-y-4 p-4">
+    <main className="container mx-auto flex flex-col gap-4 p-4">
       <div className="mr-4 flex items-center justify-between">
         <Link
           to="/agent"
@@ -256,7 +273,56 @@ export function MainEntry() {
           </div>
         </form>
       </div>
+
+      {allGuest.length > 0 && (
+        <div className="mt-4 space-y-4 rounded border border-gray-200 bg-white px-4 py-8 shadow-sm ">
+          <p class="flex items-center gap-2 py-2 text-2xl font-semibold text-gray-900 ">
+            <PersonIcon className="text-xl" />
+            List of guests
+          </p>
+          <Table
+            head={["Guest name", "Passport number", "Travel date", "Hotel name", "Action"]}
+            body={allGuest.map((value) => ({
+              ...value,
+              name: `${value.surname} ${value["first-name"]}`,
+              Action: () => (
+                <button
+                  title="delete"
+                  onClick={() => {
+                    setAllGuest((prev) => prev.filter((g) => g["passport-number"] !== value["passport-number"]));
+                  }}
+                  className="flex items-center justify-center rounded text-red-500/95"
+                >
+                  <DeleteIcon className="text-lg" />
+                </button>
+              ),
+            }))}
+          />
+        </div>
+      )}
     </main>
+  );
+}
+
+export function PersonIcon(props) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" {...props}>
+      <path
+        fill="currentColor"
+        d="M10 4a4 4 0 1 0 0 8a4 4 0 0 0 0-8zM4 8a6 6 0 1 1 12 0A6 6 0 0 1 4 8zm12.828-4.243a1 1 0 0 1 1.415 0a6 6 0 0 1 0 8.486a1 1 0 1 1-1.415-1.415a4 4 0 0 0 0-5.656a1 1 0 0 1 0-1.415zm.702 13a1 1 0 0 1 1.212-.727c1.328.332 2.169 1.18 2.652 2.148c.468.935.606 1.98.606 2.822a1 1 0 1 1-2 0c0-.657-.112-1.363-.394-1.928c-.267-.533-.677-.934-1.349-1.102a1 1 0 0 1-.727-1.212zM6.5 18C5.24 18 4 19.213 4 21a1 1 0 1 1-2 0c0-2.632 1.893-5 4.5-5h7c2.607 0 4.5 2.368 4.5 5a1 1 0 1 1-2 0c0-1.787-1.24-3-2.5-3h-7z"
+      ></path>
+    </svg>
+  );
+}
+
+export function DeleteIcon(props) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" {...props}>
+      <path
+        fill="currentColor"
+        d="M7 21q-.825 0-1.413-.588T5 19V6H4V4h5V3h6v1h5v2h-1v13q0 .825-.588 1.413T17 21H7ZM17 6H7v13h10V6ZM9 17h2V8H9v9Zm4 0h2V8h-2v9ZM7 6v13V6Z"
+      ></path>
+    </svg>
   );
 }
 
