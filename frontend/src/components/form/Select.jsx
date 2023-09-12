@@ -9,13 +9,12 @@ export function Select({ control, register, name, error, label, options, ...rest
 
   return (
     <div className="flex flex-col gap-1">
-      <label htmlFor={id} className="block text-base font-medium text-gray-800">
+      <label htmlFor={id} className="text-base font-medium text-gray-800 line-clamp-1">
         {label}
       </label>
       <Controller
         name={name}
         control={control}
-        defaultValue=""
         render={({ field }) => (
           <CreatableSelect
             id={id}
@@ -42,6 +41,7 @@ export function Select({ control, register, name, error, label, options, ...rest
               placeholder: (provided) => ({
                 ...provided,
                 whiteSpace: "nowrap",
+                overflow: "hidden",
                 fontSize: "0.875rem",
                 color: "#adb5bd",
                 letterSpacing: "0.3px",
@@ -54,7 +54,7 @@ export function Select({ control, register, name, error, label, options, ...rest
         )}
       />
 
-      {error && <p className="text-red-500/90">{error.message}</p>}
+      {error && <p className="text-sm text-red-500/90 line-clamp-1">{error.message}</p>}
     </div>
   );
 }
@@ -64,13 +64,12 @@ export function SelectNotCreatable({ control, register, name, error, label, opti
 
   return (
     <div className="flex flex-col gap-1">
-      <label htmlFor={id} className="block text-base font-medium text-gray-800">
+      <label htmlFor={id} className=" text-base font-medium text-gray-800 line-clamp-1">
         {label}
       </label>
       <Controller
         name={name}
         control={control}
-        defaultValue=""
         render={({ field }) => (
           <NormalSelect
             id={id}
@@ -98,6 +97,7 @@ export function SelectNotCreatable({ control, register, name, error, label, opti
                 ...provided,
                 whiteSpace: "nowrap",
                 fontSize: "0.875rem",
+                overflow: "hidden",
                 color: "#adb5bd",
                 letterSpacing: "0.3px",
               }),
@@ -109,7 +109,7 @@ export function SelectNotCreatable({ control, register, name, error, label, opti
         )}
       />
 
-      {error && <p className="text-red-500/90">{error.message}</p>}
+      {error && <p className="text-sm text-red-500/90 line-clamp-1">{error.message}</p>}
     </div>
   );
 }

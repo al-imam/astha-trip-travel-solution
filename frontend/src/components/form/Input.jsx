@@ -13,7 +13,7 @@ export function Input({
 }) {
   const id = useId();
   return (
-    <div className="flex flex-col gap-1 text-sm">
+    <div className="flex flex-col gap-1">
       <label htmlFor={id} className={twMerge("text-base font-medium text-gray-800 line-clamp-1", classNameLabel)}>
         {label}
       </label>
@@ -21,7 +21,7 @@ export function Input({
         {...register}
         id={id}
         className={twMerge(
-          "block w-full rounded border-none bg-gray-50 p-2.5 text-gray-900 outline-none ring-1 ring-brand-100  focus:ring-2 focus:ring-blue-500/50",
+          "block w-full rounded border-none bg-gray-50 p-2.5 text-sm text-gray-900 outline-none ring-1 ring-brand-100  focus:ring-2 focus:ring-blue-500/50",
           error && "ring-red-500/50 focus:ring-red-500/50",
           className
         )}
@@ -29,7 +29,7 @@ export function Input({
         type={type}
         {...rest}
       />
-      {error && <p className="text-red-500/90">{error.message}</p>}
+      {error && <p className="text-sm text-red-500/90 line-clamp-1">{error.message}</p>}
     </div>
   );
 }
