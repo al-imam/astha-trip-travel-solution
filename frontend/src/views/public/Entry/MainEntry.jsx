@@ -3,6 +3,7 @@ import { Input } from "components/form/Input";
 import { Select, SelectNotCreatable } from "components/form/Select";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import useFormPersist from "react-hook-form-persist";
 import { Link } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 import { Table } from "./Table";
@@ -60,6 +61,12 @@ export function MainEntry() {
     guest.setValue("guest-number", guestNumbersOptions[0]);
     guest.setValue("country", countryOptions[0]);
   }, []);
+
+  useFormPersist("main-entry-data", {
+    watch: guest.watch,
+    setValue: guest.setValue,
+    storage: window.localStorage,
+  });
 
   function submitGuest(data) {
     const obj = {};
@@ -276,27 +283,29 @@ export function MainEntry() {
 
       {allGuest.length > 0 && (
         <div className="mt-4 space-y-4 rounded border border-gray-200 bg-white px-4 py-8 shadow-sm ">
-          <p class="flex items-center gap-2 py-2 text-2xl font-semibold text-gray-900 ">
+          <p className="flex items-center gap-2 py-2 text-2xl font-semibold text-gray-900 ">
             <PersonIcon className="text-xl" />
             List of guests
           </p>
           <Table
+            hide={[3]}
             head={["Guest name", "Passport number", "Travel date", "Hotel name", "Action"]}
-            body={allGuest.map((value) => ({
-              ...value,
-              name: `${value.surname} ${value["first-name"]}`,
-              Action: () => (
-                <button
-                  title="delete"
-                  onClick={() => {
-                    setAllGuest((prev) => prev.filter((g) => g["passport-number"] !== value["passport-number"]));
-                  }}
-                  className="flex items-center justify-center rounded text-red-500/95"
-                >
-                  <DeleteIcon className="text-lg" />
-                </button>
-              ),
-            }))}
+            body={allGuest.map((value) => [
+              `${value.surname} ${value["first-name"]}`,
+              value["passport-number"],
+              value["travel-date"],
+              value["hotel-name"],
+
+              <button
+                title="delete"
+                onClick={() => {
+                  setAllGuest((prev) => prev.filter((g) => g["passport-number"] !== value["passport-number"]));
+                }}
+                className="flex items-center justify-center rounded text-red-500/95"
+              >
+                <DeleteIcon className="text-lg" />
+              </button>,
+            ])}
           />
         </div>
       )}

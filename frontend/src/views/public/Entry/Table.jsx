@@ -1,14 +1,16 @@
+import React from "react";
 import { twMerge } from "tailwind-merge";
 
-export function Table({ head = [], body = [] }) {
+export function Table({ head = [], body = [], hide = [] }) {
   return (
     <div className="relative overflow-x-auto">
       <table className="w-full  text-left text-sm text-gray-800">
         <thead className="bg-gray-50 text-sm uppercase text-gray-800 ">
           <tr className="">
-            {head.map((value) => (
+            {head.map((value, index) => (
               <th
-                className={twMerge("whitespace-nowrap py-4 pr-4 first:pl-4", value === "Hotel name" && "md-max:hidden")}
+                key={value}
+                className={twMerge("whitespace-nowrap py-4 pr-4 first:pl-4", hide.includes(index) && "md-max:hidden")}
               >
                 {value}
               </th>
@@ -17,12 +19,34 @@ export function Table({ head = [], body = [] }) {
         </thead>
         <tbody>
           {body.map((value) => (
-            <tr className="border-b bg-gray-50 odd:bg-white">
-              <td className="whitespace-nowrap py-4 pr-4 font-medium text-gray-800 first:pl-4">{value["name"]}</td>
-              <td className="whitespace-nowrap py-4 pr-4 first:pl-4">{value["passport-number"]}</td>
-              <td className="whitespace-nowrap py-4 pr-4 first:pl-4 ">{value["travel-date"]}</td>
-              <td className="whitespace-nowrap py-4 pr-4 first:pl-4 md-max:hidden">{value["hotel-name"]}</td>
-              <td className="whitespace-nowrap py-4 pr-4 first:pl-4 ">{<value.Action />}</td>
+            <tr key={value[1]} className="border-b bg-gray-50 text-gray-800 odd:bg-white">
+              {value.map((R, index) => {
+                if (React.isValidElement(value))
+                  return (
+                    <td
+                      key={index}
+                      className={twMerge(
+                        "whitespace-nowrap py-4 pr-4 first:pl-4",
+                        index === 0 && "font-medium",
+                        hide.includes(index) && "md-max:hidden"
+                      )}
+                    >
+                      <R />
+                    </td>
+                  );
+                return (
+                  <td
+                    key={R}
+                    className={twMerge(
+                      "whitespace-nowrap py-4 pr-4 first:pl-4",
+                      index === 0 && "font-medium",
+                      hide.includes(index) && "md-max:hidden"
+                    )}
+                  >
+                    {R}
+                  </td>
+                );
+              })}
             </tr>
           ))}
         </tbody>
