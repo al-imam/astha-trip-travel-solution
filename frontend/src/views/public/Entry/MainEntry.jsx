@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import useFormPersist from "react-hook-form-persist";
 import { Link } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
+import { v4 as uuid } from "uuid";
 import { Table } from "./Table";
 
 const guestTypeOptions = ["Single", "Family"].map((value) => ({
@@ -49,13 +50,72 @@ const guestNumbersOptions = Array(8)
     label: `${index + 2}`,
   }));
 
+function valueAndLabel(array) {
+  return array.map((value) => ({
+    value,
+    label: value,
+  }));
+}
+
+function getFromAndTo(name) {
+  return {
+    from: valueAndLabel([
+      "AirPort",
+      `${name} to Market`,
+      `${name} to Marina Bay Sands`,
+      `${name} to Sentosa Theme Park`,
+      `${name} to Universal Studios`,
+      `${name} to Hop-On Hop-Off Sightseeing Bus Tour`,
+      `${name} to S.E.A. Aquarium Entrance`,
+      `${name} to Art Science Museum`,
+      `${name} to Flyer & Gardens by the Bay`,
+      `${name} to Sentosa Mega Adventure Park`,
+      `${name} to National Gallery`,
+      `${name} to Full-Day City Tour`,
+      `${name}`,
+    ]),
+    to: valueAndLabel([
+      `Hotel ${name}`,
+      "AirPort",
+      `City Tour`,
+      `Market to ${name}`,
+      `Marina Bay Sands to ${name}`,
+      `Universal Studios to ${name}`,
+      `Sentosa Theme Park to ${name}`,
+      `Hop-On Hop-Off Sightseeing Bus Tour to ${name}`,
+      `S.E.A. Aquarium Entrance to ${name}`,
+      `Art Science Museum to ${name}`,
+      `Flyer & Gardens by the Bay to ${name}`,
+      `Sentosa Mega Adventure Park to ${name}`,
+      `National Gallery to ${name}`,
+      `Full-Day City Tour to ${name}`,
+    ]),
+  };
+}
+
 export function MainEntry() {
   const guest = useForm();
   const itenary = useForm();
   const [allGuest, setAllGuest] = useState([]);
   const [itenaries, setItenaries] = useState([]);
+  const [locations, setLocations] = useState({ from: [], to: [] });
 
   const guestType = guest.watch("guest-type");
+  const hotelName = guest.watch("hotel-name");
+
+  useEffect(() => {
+    const next = getFromAndTo(hotelName?.value);
+
+    const fromValue = itenary.getValues("from");
+    const toValue = itenary.getValues("to");
+    const indexOfFrom = locations.from.findIndex((f) => fromValue && f.value === fromValue.value);
+    const indexOfTo = locations.to.findIndex((f) => toValue && f.value === toValue.value);
+
+    setLocations(next);
+
+    itenary.setValue("to", indexOfTo !== -1 ? next.to[indexOfTo] : null);
+    itenary.setValue("from", indexOfFrom !== -1 ? next.from[indexOfFrom] : null);
+  }, [hotelName]);
 
   useEffect(() => {
     guest.setValue("guest-type", guestTypeOptions[0]);
@@ -320,7 +380,7 @@ export function MainEntry() {
                 onClick={() => {
                   setAllGuest((prev) => prev.filter((g) => g["passport-number"] !== value["passport-number"]));
                 }}
-                className="flex items-center justify-center rounded text-red-500/95"
+                className="flex items-center justify-center rounded text-red-500/95 hover:scale-105 hover:text-red-600"
               >
                 <DeleteIcon className="text-lg" />
               </button>,
@@ -329,13 +389,13 @@ export function MainEntry() {
         </div>
       )}
 
-      <div className="mt-4 space-y-4 rounded border border-gray-200 bg-white px-4 py-8 shadow-sm ">
+      <div className="mt-4 flex flex-col gap-4 rounded border border-gray-200 bg-white px-4 py-8 shadow-sm ">
         <p className="flex items-center gap-2 py-2 text-2xl font-semibold text-gray-900 ">
           <TravelIcon className="text-xl" />
           Tour Itenary Setup
         </p>
 
-        <form name="add-itenary" className="flex gap-4" onSubmit={itenary.handleSubmit(submitItenary)}>
+        <form name="add-itenary" className="mb-4 flex gap-4" onSubmit={itenary.handleSubmit(submitItenary)}>
           <div className="flex w-full gap-4 [&>*]:flex-1">
             <Input
               label="Date *"
@@ -349,7 +409,7 @@ export function MainEntry() {
 
             <Select
               label="From *"
-              options={hotelNameOptions}
+              options={locations.from}
               control={itenary.control}
               placeholder="Select from"
               name="from"
@@ -359,7 +419,7 @@ export function MainEntry() {
 
             <Select
               label="To *"
-              options={hotelNameOptions}
+              options={locations.to}
               control={itenary.control}
               placeholder="Select to"
               name="to"
