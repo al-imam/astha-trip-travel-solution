@@ -1,10 +1,10 @@
 import { Button } from "components/form/Button";
 import { Input } from "components/form/Input";
 import { Select, SelectNotCreatable } from "components/form/Select";
+import { useAuth } from "hook/useAuth";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import useFormPersist from "react-hook-form-persist";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 import { v4 as uuid } from "uuid";
 import { Table } from "./Table";
@@ -104,6 +104,8 @@ function getNumberByType(num, type) {
 export function MainEntry() {
   const guest = useForm();
   const itenary = useForm();
+  const auth = useAuth();
+  const navigate = useNavigate();
 
   const [allGuest, setAllGuest] = useState([]);
   const [itenaries, setItenaries] = useState([]);
@@ -183,19 +185,22 @@ export function MainEntry() {
   return (
     <main className="container mx-auto flex flex-col gap-4 p-4">
       <div className="mr-4 flex items-center justify-between">
-        <Link
-          to="/agent"
-          className="inline-flex items-center rounded-md border-gray-200 bg-white px-5 py-2.5 text-center text-sm font-medium text-blue-700 shadow hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-blue-300 "
+        <button
+          onClick={() => navigate(-1)}
+          className="my-1 inline-flex items-center rounded-md border-gray-200 bg-white px-5 py-2.5 text-center text-sm font-medium text-blue-700 shadow hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-blue-300 "
         >
           <NextIcon className="mr-2 scale-x-[-1]" />
           <span>
             <span className="hidden md:inline"> Back to </span>dashboard
           </span>
-        </Link>
-        <div className="ml-auto grid grid-cols-[1fr_auto_auto] text-base text-gray-800 [column-gap:0.5rem]">
-          <span>Remaining Balance</span> - <span>8900</span>
-          <span>Submission Rate</span> - <span>100</span>
-        </div>
+        </button>
+        {!auth.isLoading && auth.agent && (
+          <div className="ml-auto grid grid-cols-[1fr_auto_auto] text-base text-gray-800 [column-gap:0.5rem]">
+            {console.log(auth.agent)}
+            <span>Remaining Balance</span> - <span>{auth.agent.balance}</span>
+            <span>Submission Rate</span> - <span>{auth.agent.rate}</span>
+          </div>
+        )}
       </div>
 
       <div className="space-y-4 rounded border border-gray-200 bg-white px-4 py-8 shadow-sm ">
