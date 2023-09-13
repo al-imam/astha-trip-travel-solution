@@ -161,7 +161,9 @@ export function MainEntry() {
       obj[key] = data[key];
     }
 
+    obj.id = uuid();
     setItenaries((prev) => [...prev, obj]);
+    itenary.reset();
   }
 
   const isValid = Object.keys(itenary.formState.errors).length > 0;
@@ -431,6 +433,24 @@ export function MainEntry() {
             Add Itenary <AddIcon className="ml-1 text-lg" />
           </Button>
         </form>
+
+        <Table
+          head={["Date", "From", "To", "Action"]}
+          body={itenaries.map((value) => [
+            value["date"],
+            value["from"],
+            value["to"],
+            <button
+              title="delete itenary"
+              onClick={() => {
+                setItenaries((prev) => prev.filter((i) => i["id"] !== value["id"]));
+              }}
+              className="flex items-center justify-center rounded text-red-500/95 hover:scale-105 hover:text-red-600"
+            >
+              <DeleteIcon className="text-lg" />
+            </button>,
+          ])}
+        />
       </div>
     </main>
   );
