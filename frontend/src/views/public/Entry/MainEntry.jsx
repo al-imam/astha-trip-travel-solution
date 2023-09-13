@@ -219,6 +219,33 @@ export function MainEntry() {
     itenary.reset();
   }
 
+  async function submitLoiRequest() {
+    if (itenaries.length < 1 || allGuest.length < 1) return;
+
+    try {
+      await toast.promise(
+        axios.post("/api/loi/entry", {
+          datas: allGuest,
+          iternary: JSON.stringify(itenaries),
+        }),
+        {
+          pending: "Wait loading",
+          success: "Loi request send successfully",
+          error: {
+            render({ data }) {
+              if (data.response?.status === 501) {
+                return <p className="text-sm">{data.response?.data}</p>;
+              }
+              return <h1> Something is wrong!</h1>;
+            },
+          },
+        }
+      );
+
+      navigate(-1);
+    } catch {}
+  }
+
   const isValid = Object.keys(itenary.formState.errors).length > 0;
 
   return (
@@ -335,7 +362,7 @@ export function MainEntry() {
               })}
               error={guest.formState.errors["passport-copy"]}
               type="file"
-              accept=".pdf, image/*"
+              accept=".pdf, .jpg, .jpeg"
               multiple={false}
             />
 
@@ -346,7 +373,7 @@ export function MainEntry() {
               })}
               error={guest.formState.errors["visa-copy"]}
               type="file"
-              accept=".pdf, image/*"
+              accept=".pdf, .jpg, .jpeg"
               multiple={false}
             />
 
@@ -357,7 +384,7 @@ export function MainEntry() {
               })}
               error={guest.formState.errors["hotel-copy"]}
               type="file"
-              accept=".pdf, image/*"
+              accept=".pdf, .jpg, .jpeg"
               multiple={false}
             />
 
@@ -368,7 +395,7 @@ export function MainEntry() {
               })}
               error={guest.formState.errors["ticket-copy"]}
               type="file"
-              accept=".pdf, image/*"
+              accept=".pdf, .jpg, .jpeg"
               multiple={false}
             />
           </div>
@@ -404,6 +431,7 @@ export function MainEntry() {
                 title="delete"
                 onClick={() => {
                   setAllGuest((prev) => prev.filter((g) => g["passportNumber"] !== value["passportNumber"]));
+                  if (allGuest.length === 1) setItenaries([]);
                 }}
                 className="flex items-center justify-center rounded text-red-500/95 hover:scale-105 hover:text-red-600"
               >
@@ -421,8 +449,12 @@ export function MainEntry() {
             Tour Itenary Setup {itenaries.length > 0 ? `(${itenaries.length})` : null}
           </p>
 
-          <form name="add-itenary" className="mb-4 flex gap-4" onSubmit={itenary.handleSubmit(submitItenary)}>
-            <div className="flex w-full gap-4 [&>*]:flex-1">
+          <form
+            name="add-itenary"
+            className="mb-4 flex flex-col  gap-4 md:flex-row"
+            onSubmit={itenary.handleSubmit(submitItenary)}
+          >
+            <div className="flex w-full flex-col gap-4 md:flex-row [&>*]:flex-1">
               <Input
                 label="Date *"
                 register={itenary.register("date", {
@@ -453,7 +485,7 @@ export function MainEntry() {
                 error={itenary.formState.errors["to"]}
               />
             </div>
-            <Button className={twMerge("whitespace-nowrap py-[0.6875rem]", isValid ? "my-auto" : "mt-auto")}>
+            <Button className={twMerge("mr-auto whitespace-nowrap py-[0.6875rem]", isValid ? "my-auto" : "mt-auto")}>
               Add Itenary <AddIcon className="ml-1 text-lg" />
             </Button>
           </form>
@@ -476,6 +508,18 @@ export function MainEntry() {
             ])}
           />
         </div>
+      )}
+
+      {allGuest.length > 0 && itenaries.length > 0 && (
+        <>
+          <button
+            onClick={submitLoiRequest}
+            className="mr-auto  inline-flex  items-center  rounded-md border-gray-200 bg-red-600 px-5 py-2.5 text-center text-lg font-medium uppercase text-white shadow drop-shadow-sm hover:bg-red-500 focus:outline-none focus:ring-4 focus:ring-red-200"
+          >
+            SUBMIT LOI REQUEST
+          </button>
+          <div className="h-32"></div>
+        </>
       )}
     </main>
   );
