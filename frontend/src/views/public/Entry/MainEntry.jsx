@@ -52,10 +52,10 @@ const guestNumbersOptions = Array(8)
 export function MainEntry() {
   const guest = useForm();
   const itenary = useForm();
-  const guestType = guest.watch("guest-type");
   const [allGuest, setAllGuest] = useState([]);
+  const [itenaries, setItenaries] = useState([]);
 
-  console.log(guest.formState.errors);
+  const guestType = guest.watch("guest-type");
 
   useEffect(() => {
     guest.setValue("guest-type", guestTypeOptions[0]);
@@ -84,12 +84,27 @@ export function MainEntry() {
       obj[key] = data[key];
     }
 
-    allGuest.push(obj);
+    setAllGuest((prev) => [...prev, obj]);
   }
 
   function submitItenary(data) {
-    console.log(data);
+    const obj = {};
+    for (const key in data) {
+      if (data[key] instanceof Object) {
+        if ("label" in data[key] && "value" in data[key]) {
+          obj[key] = data[key].value;
+        }
+
+        continue;
+      }
+
+      obj[key] = data[key];
+    }
+
+    setItenaries((prev) => [...prev, obj]);
   }
+
+  const isValid = Object.keys(itenary.formState.errors).length > 0;
 
   return (
     <main className="container mx-auto flex flex-col gap-4 p-4">
@@ -352,12 +367,7 @@ export function MainEntry() {
               error={itenary.formState.errors["to"]}
             />
           </div>
-          <Button
-            className={twMerge(
-              "whitespace-nowrap py-[0.6875rem]",
-              itenary.formState.isValid && itenary.getValues("date") ? "mt-auto" : "my-auto"
-            )}
-          >
+          <Button className={twMerge("whitespace-nowrap py-[0.6875rem]", isValid ? "my-auto" : "mt-auto")}>
             Add Itenary <AddIcon className="ml-1 text-lg" />
           </Button>
         </form>
