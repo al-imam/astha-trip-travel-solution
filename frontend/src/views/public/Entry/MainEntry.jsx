@@ -14,11 +14,6 @@ const guestTypeOptions = ["Single", "Family"].map((value) => ({
   label: value,
 }));
 
-const passportTypeOptions = ["Ordinary", "Diplomatic", "Service", "Official", "Special"].map((value) => ({
-  value: `${value} passport`,
-  label: `${value} passport`,
-}));
-
 const countryOptions = ["Singapore", "Vietnam"].map((value) => ({
   value,
   label: value,
@@ -218,7 +213,14 @@ export function MainEntry() {
             <Input
               label="Passport number *"
               placeholder="Passport number"
-              register={guest.register("passport-number", { required: "Passport number is required" })}
+              register={guest.register("passport-number", {
+                required: "Passport number is required",
+                validate(value) {
+                  if (allGuest.findIndex((g) => g["passport-number"].toLowerCase() === value.toLowerCase()) !== -1) {
+                    return "Passport number already added";
+                  }
+                },
+              })}
               error={guest.formState.errors["passport-number"]}
             />
 
