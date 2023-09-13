@@ -62,6 +62,17 @@ function valueAndLabel(array) {
   }));
 }
 
+const purposeOfTourOptions = valueAndLabel([
+  "holiday",
+  "transit",
+  "business",
+  "meeting",
+  "exhibition",
+  "visiting friends & relatives",
+  "employment",
+  "education",
+]);
+
 function getFromAndTo(name) {
   return {
     from: valueAndLabel([
@@ -187,6 +198,7 @@ export function MainEntry() {
           hotelbooking: res.data.hotelbooking.name || null,
           ticket: res.data.tiket.name || null,
           country: data["country"].value,
+          tourPurpose: data["tour-purpose"].value,
           id: uuid(),
         },
       ]);
@@ -353,6 +365,17 @@ export function MainEntry() {
               name="hotel-name"
               register={guest.register("hotel-name", { required: "Hotel name is required" })}
               error={guest.formState.errors["hotel-name"]}
+            />
+
+            <Select
+              label="Purpose of tour *"
+              options={purposeOfTourOptions}
+              control={guest.control}
+              isDisabled={disableGlobalInputs}
+              placeholder="Select purpose of tour"
+              name="tour-purpose"
+              register={guest.register("tour-purpose", { required: "Hotel name is required" })}
+              error={guest.formState.errors["tour-purpose"]}
             />
 
             <Input
