@@ -96,12 +96,15 @@ function getFromAndTo(name) {
 export function MainEntry() {
   const guest = useForm();
   const itenary = useForm();
+
   const [allGuest, setAllGuest] = useState([]);
   const [itenaries, setItenaries] = useState([]);
   const [locations, setLocations] = useState({ from: [], to: [] });
 
   const guestType = guest.watch("guest-type");
   const hotelName = guest.watch("hotel-name");
+
+  const disableGlobalInputs = allGuest.length > 0;
 
   useEffect(() => {
     const next = getFromAndTo(hotelName?.value);
@@ -192,39 +195,34 @@ export function MainEntry() {
             <div className="flex items-center gap-2 text-lg md:text-2xl ">
               <AddIcon /> Entry LOI Request
             </div>
-            <div className=" ">
-              <SelectNotCreatable
-                options={countryOptions}
-                placeholder="Select country"
-                control={guest.control}
-                name="country"
-                isSearchable={false}
-                register={guest.register("country", { required: "Country is required" })}
-                error={guest.formState.errors["country"]}
-              />
-            </div>
+
+            <SelectNotCreatable
+              options={countryOptions}
+              placeholder="Select country"
+              isDisabled={disableGlobalInputs}
+              control={guest.control}
+              name="country"
+              isSearchable={false}
+              register={guest.register("country", { required: "Country is required" })}
+              error={guest.formState.errors["country"]}
+            />
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <Input
-              label="Surname *"
-              placeholder="Surname"
-              register={guest.register("surname", { required: "Surname is required" })}
-              error={guest.formState.errors["surname"]}
+              label="Guest Name *"
+              placeholder="Guest name"
+              register={guest.register("guest-name", { required: "Surname is required" })}
+              error={guest.formState.errors["guest-name"]}
             />
 
             <Input
-              label="First name *"
-              placeholder="First name"
-              register={guest.register("first-name", { required: "First name is required" })}
-              error={guest.formState.errors["first-name"]}
+              label="Passport number *"
+              placeholder="Passport number"
+              register={guest.register("passport-number", { required: "Passport number is required" })}
+              error={guest.formState.errors["passport-number"]}
             />
 
-            <Input
-              label="Surname at birth"
-              register={guest.register("surname-at-birth")}
-              error={guest.formState.errors["surname-at-birth"]}
-            />
-            <div className="flex gap-4 [&>*]:flex-1">
+            <div className="flex gap-4 [&>*]:flex-1 ">
               <SelectNotCreatable
                 label="Guest type *"
                 options={guestTypeOptions}
@@ -251,58 +249,18 @@ export function MainEntry() {
             </div>
 
             <Input
-              label="Passport number *"
-              placeholder="Passport number"
-              register={guest.register("passport-number", { required: "Passport number is required" })}
-              error={guest.formState.errors["passport-number"]}
-            />
-
-            <Select
-              label="Type of passport *"
-              options={passportTypeOptions}
-              control={guest.control}
-              placeholder="Select passport type"
-              name="passport-type"
-              register={guest.register("passport-type", { required: "Passport type is required" })}
-              error={guest.formState.errors["passport-type"]}
-            />
-
-            <Input
               label="Travel date *"
+              disabled={disableGlobalInputs}
               register={guest.register("travel-date", { required: "Travel date is required" })}
               error={guest.formState.errors["travel-date"]}
               type="date"
-            />
-
-            <Input
-              label="Passport issue date *"
-              register={guest.register("passport-issue-date", { required: "Passport issue date is required" })}
-              error={guest.formState.errors["passport-issue-date"]}
-              type="date"
-            />
-
-            <Input
-              label="Passport valid until date *"
-              register={guest.register("passport-valid-until-date", {
-                required: "Passport valid until date is required",
-              })}
-              error={guest.formState.errors["passport-valid-until-date"]}
-              type="date"
-            />
-
-            <Input
-              label="Phone number *"
-              placeholder="Phone number"
-              register={guest.register("phone-number", {
-                required: "Phone number is required",
-              })}
-              error={guest.formState.errors["phone-number"]}
             />
 
             <Select
               label="Hotel name *"
               options={hotelNameOptions}
               control={guest.control}
+              isDisabled={disableGlobalInputs}
               placeholder="Select hotel name"
               name="hotel-name"
               register={guest.register("hotel-name", { required: "Hotel name is required" })}
@@ -372,7 +330,7 @@ export function MainEntry() {
             hide={[3]}
             head={["Guest name", "Passport number", "Travel date", "Hotel name", "Action"]}
             body={allGuest.map((value) => [
-              `${value.surname} ${value["first-name"]}`,
+              value["guest-name"],
               value["passport-number"],
               value["travel-date"],
               value["hotel-name"],
@@ -391,67 +349,69 @@ export function MainEntry() {
         </div>
       )}
 
-      <div className="mt-4 flex flex-col gap-4 rounded border border-gray-200 bg-white px-4 py-8 shadow-sm ">
-        <p className="flex items-center gap-2 py-2 text-2xl font-semibold text-gray-900 ">
-          <TravelIcon className="text-xl" />
-          Tour Itenary Setup
-        </p>
+      {allGuest.length > 0 && (
+        <div className="mt-4 flex flex-col gap-4 rounded border border-gray-200 bg-white px-4 py-8 shadow-sm ">
+          <p className="flex items-center gap-2 py-2 text-2xl font-semibold text-gray-900 ">
+            <TravelIcon className="text-xl" />
+            Tour Itenary Setup
+          </p>
 
-        <form name="add-itenary" className="mb-4 flex gap-4" onSubmit={itenary.handleSubmit(submitItenary)}>
-          <div className="flex w-full gap-4 [&>*]:flex-1">
-            <Input
-              label="Date *"
-              register={itenary.register("date", {
-                required: "Passport valid until date is required",
-                min: { value: new Date().toISOString().split("T")[0], message: "Invalid date" },
-              })}
-              error={itenary.formState.errors["date"]}
-              type="date"
-            />
+          <form name="add-itenary" className="mb-4 flex gap-4" onSubmit={itenary.handleSubmit(submitItenary)}>
+            <div className="flex w-full gap-4 [&>*]:flex-1">
+              <Input
+                label="Date *"
+                register={itenary.register("date", {
+                  required: "Date is required",
+                  min: { value: new Date().toISOString().split("T")[0], message: "Invalid date" },
+                })}
+                error={itenary.formState.errors["date"]}
+                type="date"
+              />
 
-            <Select
-              label="From *"
-              options={locations.from}
-              control={itenary.control}
-              placeholder="Select from"
-              name="from"
-              register={itenary.register("from", { required: "From is required" })}
-              error={itenary.formState.errors["from"]}
-            />
+              <Select
+                label="From *"
+                options={locations.from}
+                control={itenary.control}
+                placeholder="Select from"
+                name="from"
+                register={itenary.register("from", { required: "From is required" })}
+                error={itenary.formState.errors["from"]}
+              />
 
-            <Select
-              label="To *"
-              options={locations.to}
-              control={itenary.control}
-              placeholder="Select to"
-              name="to"
-              register={itenary.register("to", { required: "To is required" })}
-              error={itenary.formState.errors["to"]}
-            />
-          </div>
-          <Button className={twMerge("whitespace-nowrap py-[0.6875rem]", isValid ? "my-auto" : "mt-auto")}>
-            Add Itenary <AddIcon className="ml-1 text-lg" />
-          </Button>
-        </form>
+              <Select
+                label="To *"
+                options={locations.to}
+                control={itenary.control}
+                placeholder="Select to"
+                name="to"
+                register={itenary.register("to", { required: "To is required" })}
+                error={itenary.formState.errors["to"]}
+              />
+            </div>
+            <Button className={twMerge("whitespace-nowrap py-[0.6875rem]", isValid ? "my-auto" : "mt-auto")}>
+              Add Itenary <AddIcon className="ml-1 text-lg" />
+            </Button>
+          </form>
 
-        <Table
-          head={["Date", "From", "To", "Action"]}
-          body={itenaries.map((value) => [
-            value["date"],
-            value["from"],
-            value["to"],
-            <button
-              title="delete itenary"
-              onClick={() => {
-                setItenaries((prev) => prev.filter((i) => i["id"] !== value["id"]));
-              }}
-              className="flex items-center justify-center rounded text-red-500/95 hover:scale-105 hover:text-red-600"
-            >
-              <DeleteIcon className="text-lg" />
-            </button>,
-          ])}
-        />
-      </div>
+          <Table
+            head={["Date", "From", "To", "Action"]}
+            body={itenaries.map((value) => [
+              value["date"],
+              value["from"],
+              value["to"],
+              <button
+                title="delete itenary"
+                onClick={() => {
+                  setItenaries((prev) => prev.filter((i) => i["id"] !== value["id"]));
+                }}
+                className="flex items-center justify-center rounded text-red-500/95 hover:scale-105 hover:text-red-600"
+              >
+                <DeleteIcon className="text-lg" />
+              </button>,
+            ])}
+          />
+        </div>
+      )}
     </main>
   );
 }

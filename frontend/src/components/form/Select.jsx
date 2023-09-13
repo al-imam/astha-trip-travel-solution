@@ -58,7 +58,7 @@ export function Select({ control, register, name, error, label, options, ...rest
                 ...styles,
                 userSelect: "none",
                 color: "rgb(27 37 89)",
-                fontSize: "0.875rem",
+                letterSpacing: "0.3px",
               }),
             }}
             {...register}
@@ -127,7 +127,6 @@ export function SelectNotCreatable({ control, register, name, error, label, opti
                 ...styles,
                 userSelect: "none",
                 color: "rgb(27 37 89)",
-                fontSize: "0.875rem",
               }),
             }}
             {...register}

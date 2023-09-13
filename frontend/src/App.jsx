@@ -8,6 +8,7 @@ import AgentLogin from "views/agent/agentLogin/AgentLogin";
 import AgentProfile from "views/agent/agentProfile/AgentProfile";
 import AgentHome from "views/agent/home/AgentHome";
 import Entry from "views/public/Entry/Entry";
+import MainEntry from "views/public/Entry/MainEntry";
 import Registration from "./views/agent/Rgistration/Registration";
 import { Schengen } from "views/public/Entry/Schengen";
 
@@ -19,6 +20,7 @@ const App = () => {
         <Route path="admin/*" element={<AdminLayout />} />
         <Route path="entry">
           <Route index element={<Entry />} />
+          <Route path="v2" element={<MainEntry />} />
           <Route path="schengen" element={<Schengen />} />
           <Route path="*" element={<Navigate to="/entry" replace />} />
         </Route>

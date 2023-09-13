@@ -138,7 +138,7 @@ function TotalInfo() {
       <div className="mt-4 flex flex-wrap gap-4">
         <Link
           className="inline-block rounded-lg border-2 border-brand-900/30 bg-white/10  p-3 text-xl font-bold text-brand-600 shadow-xl hover:scale-105 dark:border-brand-200 dark:text-brand-100"
-          to="/entry"
+          to="/entry/v2"
         >
           <span className="flex items-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">

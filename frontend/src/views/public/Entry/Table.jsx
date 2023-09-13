@@ -19,7 +19,10 @@ export function Table({ head = [], body = [], hide = [] }) {
         </thead>
         <tbody>
           {body.map((value) => (
-            <tr key={value[1]} className="border-b bg-gray-50 text-gray-800 odd:bg-white">
+            <tr
+              key={JSON.stringify(value, (_, value) => (React.isValidElement(value) ? undefined : value))}
+              className="border-b bg-gray-50 text-gray-800 odd:bg-white"
+            >
               {value.map((R, index) => {
                 if (React.isValidElement(value))
                   return (
