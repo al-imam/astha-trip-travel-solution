@@ -335,5 +335,5 @@ module.exports = {
       "loop-text": "loop 10s linear infinite",
     },
   },
-  plugins: [require("tailwindcss-rtl")],
+  plugins: [require("tailwindcss-rtl"), require("@tailwindcss/line-clamp")],
 };

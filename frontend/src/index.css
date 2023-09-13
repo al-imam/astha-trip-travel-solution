@@ -33,6 +33,14 @@
     margin-left: -50vw;
     left: 50%;
   }
+
+  input[type="file"]::file-selector-button {
+    @apply mr-2 rounded-sm border-none bg-gray-50 text-gray-800 ring-1 ring-gray-900/30;
+  }
+
+  input[type="file"]::file-selector-button:hover {
+    @apply ring-gray-900/50;
+  }
 }
 
 input.defaultCheckbox::before {
