@@ -27,7 +27,14 @@ export function Select({ control, register, name, error, label, options, ...rest
                 margin: 0,
                 padding: 2,
                 backgroundColor: "rgb(248 249 250)",
-                borderColor: error ? "rgb(245 57 57 / 0.5)" : state.isFocused ? "rgb(59 130 246 / 0.5)" : "#C0B8FE",
+                borderColor: error
+                  ? "rgb(245 57 57 / 0.5)"
+                  : state.isFocused
+                  ? "rgb(59 130 246 / 0.5)"
+                  : state.isDisabled
+                  ? "rgb(233 227 255)"
+                  : "rgb(192 184 254)",
+                opacity: state.isDisabled ? "0.5" : 1,
                 borderWidth: 1.5,
                 "&:hover": {
                   borderColor: "none",
@@ -45,6 +52,13 @@ export function Select({ control, register, name, error, label, options, ...rest
                 fontSize: "0.875rem",
                 color: "#adb5bd",
                 letterSpacing: "0.3px",
+                userSelect: "none",
+              }),
+              valueContainer: (styles) => ({
+                ...styles,
+                userSelect: "none",
+                color: "rgb(27 37 89)",
+                fontSize: "0.875rem",
               }),
             }}
             {...register}
@@ -82,8 +96,15 @@ export function SelectNotCreatable({ control, register, name, error, label, opti
                 margin: 0,
                 padding: 2,
                 backgroundColor: "rgb(248 249 250)",
-                borderColor: error ? "rgb(245 57 57 / 0.5)" : state.isFocused ? "rgb(59 130 246 / 0.5)" : "#C0B8FE",
+                borderColor: error
+                  ? "rgb(245 57 57 / 0.5)"
+                  : state.isFocused
+                  ? "rgb(59 130 246 / 0.5)"
+                  : state.isDisabled
+                  ? "rgb(233 227 255)"
+                  : "rgb(192 184 254)",
                 borderWidth: 1.5,
+                opacity: state.isDisabled ? "0.5" : 1,
                 "&:hover": {
                   borderColor: "none",
                 },
@@ -93,13 +114,20 @@ export function SelectNotCreatable({ control, register, name, error, label, opti
                     : "0 0 0 1px rgb(59 130 246 / 0.5)"
                   : "none",
               }),
-              placeholder: (provided) => ({
-                ...provided,
+              placeholder: (styles) => ({
+                ...styles,
                 whiteSpace: "nowrap",
                 fontSize: "0.875rem",
                 overflow: "hidden",
                 color: "#adb5bd",
                 letterSpacing: "0.3px",
+                userSelect: "none",
+              }),
+              valueContainer: (styles) => ({
+                ...styles,
+                userSelect: "none",
+                color: "rgb(27 37 89)",
+                fontSize: "0.875rem",
               }),
             }}
             {...register}
