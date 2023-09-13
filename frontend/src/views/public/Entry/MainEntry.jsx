@@ -1,10 +1,12 @@
+import axios from "axios";
 import { Button } from "components/form/Button";
 import { Input } from "components/form/Input";
 import { Select, SelectNotCreatable } from "components/form/Select";
 import { useAuth } from "hook/useAuth";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { twMerge } from "tailwind-merge";
 import { v4 as uuid } from "uuid";
 import { Table } from "./Table";
@@ -139,26 +141,63 @@ export function MainEntry() {
     guest.setValue("country", countryOptions[0]);
   }, []);
 
-  function submitGuest(data) {
+  async function submitGuest(data) {
     if (allGuest.length >= numberOfGuest) return;
 
-    const obj = {};
-    for (const key in data) {
-      if (data[key] instanceof Object) {
-        if ("label" in data[key] && "value" in data[key]) {
-          obj[key] = data[key].value;
-          continue;
-        }
+    if (!auth.admin) {
+      const balance = parseInt(auth.agent.balance) || 0;
+      const rate = parseInt(auth.agent.rate) || 100;
 
-        obj[key] = data[key][0];
-        continue;
+      if (balance <= rate * allGuest.length) {
+        return toast.error("Your balance is low please add balance");
       }
-      obj[key] = data[key];
     }
 
-    const start = allGuest.length < 2 ? 2 : allGuest.length + 1;
-    setFamilyMemberOptions(getNumberSelect(start, 9));
-    setAllGuest((prev) => [...prev, obj]);
+    const form = new FormData();
+    form.append("imgpasport", data["passport-copy"][0]);
+    form.append("imgvisa", data["visa-copy"][0]);
+    form.append("hotel", data["hotel-copy"][0]);
+    form.append("ticket", data["ticket-copy"][0]);
+
+    try {
+      const res = await toast.promise(axios.post("/temp/guestlist/photoupload", form), {
+        pending: "Photo Uploading wait ...",
+        success: "added to list",
+        error: {
+          render({ data }) {
+            if (data.response.status === 406) {
+              return <p className="text-sm">{data.response?.data}</p>;
+            }
+            return "Something is wrong!";
+          },
+        },
+      });
+
+      const start = allGuest.length < 2 ? 2 : allGuest.length + 1;
+      setFamilyMemberOptions(getNumberSelect(start, 9));
+      setAllGuest((prev) => [
+        ...prev,
+        {
+          guestName: data["guest-name"],
+          passportNumber: data["passport-number"],
+          travelDate: data["travel-date"],
+          hotelName: data["hotel-name"].value,
+          passportPhoto: res.data.passpor.name || null,
+          visaPhoto: res.data.visa.name || null,
+          hotelbooking: res.data.hotelbooking.name || null,
+          ticket: res.data.tiket.name || null,
+          country: data["country"].value,
+          id: uuid(),
+        },
+      ]);
+
+      guest.setValue("passport-number", "");
+      guest.setValue("guest-name", "");
+      guest.setValue("visa-copy", "");
+      guest.setValue("hotel-copy", "");
+      guest.setValue("passport-copy", "");
+      guest.setValue("ticket-copy", "");
+    } catch {}
   }
 
   function submitItenary(data) {
@@ -235,7 +274,7 @@ export function MainEntry() {
               register={guest.register("passport-number", {
                 required: "Passport number is required",
                 validate(value) {
-                  if (allGuest.findIndex((g) => g["passport-number"].toLowerCase() === value.toLowerCase()) !== -1) {
+                  if (allGuest.findIndex((g) => g["passportNumber"].toLowerCase() === value?.toLowerCase()) !== -1) {
                     return "Passport number already added";
                   }
                 },
@@ -356,15 +395,15 @@ export function MainEntry() {
             hide={[3]}
             head={["Guest name", "Passport number", "Travel date", "Hotel name", "Action"]}
             body={allGuest.map((value) => [
-              value["guest-name"],
-              value["passport-number"],
-              value["travel-date"],
-              value["hotel-name"],
+              value["guestName"],
+              value["passportNumber"],
+              value["travelDate"],
+              value["hotelName"],
 
               <button
                 title="delete"
                 onClick={() => {
-                  setAllGuest((prev) => prev.filter((g) => g["passport-number"] !== value["passport-number"]));
+                  setAllGuest((prev) => prev.filter((g) => g["passportNumber"] !== value["passportNumber"]));
                 }}
                 className="flex items-center justify-center rounded text-red-500/95 hover:scale-105 hover:text-red-600"
               >
