@@ -19,8 +19,7 @@ const App = () => {
         <Route path="auth/*" element={<AuthLayout />} />
         <Route path="admin/*" element={<AdminLayout />} />
         <Route path="entry">
-          <Route index element={<Entry />} />
-          <Route path="v2" element={<MainEntry />} />
+          <Route index element={<MainEntry />} />
           <Route path="schengen" element={<Schengen />} />
           <Route path="*" element={<Navigate to="/entry" replace />} />
         </Route>
