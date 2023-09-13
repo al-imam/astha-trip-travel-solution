@@ -88,6 +88,11 @@ function getFromAndTo(name) {
   };
 }
 
+function getNumberByType(num, type) {
+  if (type?.toLowerCase() === "single") return 1;
+  return parseInt(num) || 1;
+}
+
 export function MainEntry() {
   const guest = useForm();
   const itenary = useForm();
@@ -98,6 +103,8 @@ export function MainEntry() {
 
   const guestType = guest.watch("guest-type");
   const hotelName = guest.watch("hotel-name");
+  const guestNumber = guest.getValues("guest-number");
+  const numberOfGuest = getNumberByType(guestNumber?.value, guestType?.value);
 
   const disableGlobalInputs = allGuest.length > 0;
 
@@ -121,13 +128,9 @@ export function MainEntry() {
     guest.setValue("country", countryOptions[0]);
   }, []);
 
-  useFormPersist("main-entry-data", {
-    watch: guest.watch,
-    setValue: guest.setValue,
-    storage: window.localStorage,
-  });
-
   function submitGuest(data) {
+    if (allGuest.length >= numberOfGuest) return;
+
     const obj = {};
     for (const key in data) {
       if (data[key] instanceof Object) {
@@ -231,6 +234,7 @@ export function MainEntry() {
                 placeholder="Select guest type"
                 control={guest.control}
                 name="guest-type"
+                isDisabled={allGuest.length > 1}
                 isSearchable={false}
                 register={guest.register("guest-type", { required: "Guest type is required" })}
                 error={guest.formState.errors["guest-type"]}
@@ -314,11 +318,13 @@ export function MainEntry() {
             />
           </div>
 
-          <div>
-            <Button>
-              Add New Guest <AddIcon className="ml-1 text-lg" />
-            </Button>
-          </div>
+          {allGuest.length >= numberOfGuest || (
+            <div>
+              <Button>
+                Continue <AddIcon className="ml-1 text-lg" />
+              </Button>
+            </div>
+          )}
         </form>
       </div>
 
