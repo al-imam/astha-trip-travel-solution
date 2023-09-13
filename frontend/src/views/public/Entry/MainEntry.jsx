@@ -38,12 +38,20 @@ const hotelNameOptions = [
   label: value,
 }));
 
-const guestNumbersOptions = Array(8)
-  .fill(null)
-  .map((_, index) => ({
-    value: `${index + 2}`,
-    label: `${index + 2}`,
-  }));
+function getNumberSelect(start, end) {
+  const resultArray = [];
+
+  for (let i = start; i <= end; i++) {
+    resultArray.push({
+      value: `${i}`,
+      label: `${i}`,
+    });
+  }
+
+  return resultArray;
+}
+
+const guestNumbersOptions = getNumberSelect(2, 9);
 
 function valueAndLabel(array) {
   return array.map((value) => ({
@@ -100,10 +108,11 @@ export function MainEntry() {
   const [allGuest, setAllGuest] = useState([]);
   const [itenaries, setItenaries] = useState([]);
   const [locations, setLocations] = useState({ from: [], to: [] });
+  const [familyMemberOptions, setFamilyMemberOptions] = useState(guestNumbersOptions);
 
   const guestType = guest.watch("guest-type");
   const hotelName = guest.watch("hotel-name");
-  const guestNumber = guest.getValues("guest-number");
+  const guestNumber = guest.watch("guest-number");
   const numberOfGuest = getNumberByType(guestNumber?.value, guestType?.value);
 
   const disableGlobalInputs = allGuest.length > 0;
@@ -145,6 +154,8 @@ export function MainEntry() {
       obj[key] = data[key];
     }
 
+    const start = allGuest.length < 2 ? 2 : allGuest.length + 1;
+    setFamilyMemberOptions(getNumberSelect(start, 9));
     setAllGuest((prev) => [...prev, obj]);
   }
 
@@ -227,7 +238,7 @@ export function MainEntry() {
               error={guest.formState.errors["passport-number"]}
             />
 
-            <div className="flex gap-4 [&>*]:flex-1 ">
+            <div className="flex gap-4 [&>*]:flex-1">
               <SelectNotCreatable
                 label="Guest type *"
                 options={guestTypeOptions}
@@ -243,7 +254,7 @@ export function MainEntry() {
               {guestType?.value.toLowerCase() === "family" && (
                 <SelectNotCreatable
                   label="Guests *"
-                  options={guestNumbersOptions}
+                  options={familyMemberOptions}
                   placeholder="Select guest number"
                   control={guest.control}
                   name="guest-number"
@@ -318,12 +329,14 @@ export function MainEntry() {
             />
           </div>
 
-          {allGuest.length >= numberOfGuest || (
+          {allGuest.length < numberOfGuest ? (
             <div>
               <Button>
                 Continue <AddIcon className="ml-1 text-lg" />
               </Button>
             </div>
+          ) : (
+            <p className="py-2 text-lg font-medium text-gray-900">Specified maximum guests added ({numberOfGuest})</p>
           )}
         </form>
       </div>
@@ -332,7 +345,7 @@ export function MainEntry() {
         <div className="mt-4 space-y-4 rounded border border-gray-200 bg-white px-4 py-8 shadow-sm ">
           <p className="flex items-center gap-2 py-2 text-2xl font-semibold text-gray-900 ">
             <PersonIcon className="text-xl" />
-            List of guests
+            List of guests ({allGuest.length})
           </p>
           <Table
             hide={[3]}
@@ -361,7 +374,7 @@ export function MainEntry() {
         <div className="mt-4 flex flex-col gap-4 rounded border border-gray-200 bg-white px-4 py-8 shadow-sm ">
           <p className="flex items-center gap-2 py-2 text-2xl font-semibold text-gray-900 ">
             <TravelIcon className="text-xl" />
-            Tour Itenary Setup
+            Tour Itenary Setup {itenaries.length > 0 ? `(${itenaries.length})` : null}
           </p>
 
           <form name="add-itenary" className="mb-4 flex gap-4" onSubmit={itenary.handleSubmit(submitItenary)}>
