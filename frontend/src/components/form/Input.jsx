@@ -5,7 +5,7 @@ export function Input({
   register,
   error,
   label,
-  placeholder = label,
+  placeholder = label.replace(/ \*$/, ""),
   className,
   classNameLabel,
   type = "text",

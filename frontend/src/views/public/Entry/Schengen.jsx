@@ -2,13 +2,14 @@ import { Button } from "components/form/Button";
 import { Input } from "components/form/Input";
 import { Select, SelectNotCreatable } from "components/form/Select";
 import { StepIndicator } from "components/form/StepIndicator";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { useForm } from "react-hook-form";
 import useFormPersist from "react-hook-form-persist";
 import { useNavigate } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 import countries from "../countries.json";
 import districts from "../districts.json";
+import { Radio } from "components/form/Radio";
 
 const countriesOptions = countries.map((e) => ({
   label: e.name,
@@ -53,15 +54,32 @@ const sexesOption = ["Male", "Female"].map((e) => ({
   value: e,
 }));
 
+const purposeOfJourneyOptions = [
+  "Tourism",
+  "Business",
+  "Visiting family or friends",
+  "Cultural",
+  "Sports",
+  "Official visit",
+  "Medical reasons",
+  "Study",
+  "Airport transit",
+].map((value) => ({
+  label: value,
+  value,
+}));
+
 const steps = ["Personal", "Documents", "Contact and Occupation"];
 
 export function Schengen() {
+  const navigate = useNavigate();
+  const [step, setStep] = useState(1);
+
   const personal = useForm();
   const travel = useForm();
+  const contact = useForm();
 
-  const navigate = useNavigate();
-
-  const [step, setStep] = useState(1);
+  const isResidence = contact.watch("residence-in-a-country") === "Yes";
 
   const clearPersonal = useFormPersist("personal-visa-data", {
     watch: personal.watch,
@@ -75,15 +93,22 @@ export function Schengen() {
     storage: window.sessionStorage,
   });
 
-  function personalInfoSubmit(data) {
+  function personalSubmit(data) {
     console.log(data);
     setStep(2);
   }
 
-  function travelInfoSubmit(data) {
+  function travelSubmit(data) {
     console.log(data);
     setStep(3);
   }
+
+  function contactSubmit(data) {
+    console.log(data);
+    setStep(4);
+  }
+
+  console.log(contact.formState.errors);
 
   return (
     <main className="container mx-auto space-y-4 p-4">
@@ -101,7 +126,7 @@ export function Schengen() {
         <StepIndicator steps={steps} current={step} />
 
         {step === 1 && (
-          <form name="personal" className="space-y-4" onSubmit={personal.handleSubmit(personalInfoSubmit)}>
+          <form name="personal" className="space-y-4" onSubmit={personal.handleSubmit(personalSubmit)}>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <Select
                 label="Number of travel document *"
@@ -145,7 +170,8 @@ export function Schengen() {
               />
 
               <Select
-                label="Select place of birth"
+                label="Place of birth *"
+                placeholder="Select place of birth"
                 name="place-of-birth"
                 options={placeOfBirthOptions}
                 control={personal.control}
@@ -154,7 +180,7 @@ export function Schengen() {
               />
 
               <Select
-                label="Country of birth"
+                label="Country of birth *"
                 options={countriesOptions}
                 control={personal.control}
                 placeholder="Select country of birth"
@@ -164,7 +190,7 @@ export function Schengen() {
               />
 
               <Select
-                label="Current nationality"
+                label="Current nationality *"
                 options={nationalityOptions}
                 control={personal.control}
                 name="current-nationality"
@@ -197,7 +223,7 @@ export function Schengen() {
               />
 
               <SelectNotCreatable
-                label="Sex (gender)"
+                label="Sex (gender) *"
                 options={sexesOption}
                 placeholder="Select your gender"
                 control={personal.control}
@@ -207,7 +233,7 @@ export function Schengen() {
                 error={personal.formState.errors["sex"]}
               />
               <Select
-                label="Civil status"
+                label="Civil status *"
                 options={civilStatusOptions}
                 control={personal.control}
                 name="civil-status"
@@ -235,15 +261,10 @@ export function Schengen() {
         )}
 
         {step === 2 && (
-          <form
-            name="document"
-            className="space-y-4"
-            onSubmit={travel.handleSubmit(travelInfoSubmit)}
-            autocomplete="off"
-          >
+          <form name="document" className="space-y-4" onSubmit={travel.handleSubmit(travelSubmit)}>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <Input
-                label="National identity number, where applicable"
+                label="National identity number *"
                 placeholder="National identity number"
                 register={travel.register("national-identity-number", {
                   required: "National identity number is required",
@@ -252,7 +273,7 @@ export function Schengen() {
               />
 
               <Select
-                label="Type of travel document"
+                label="Type of travel document *"
                 options={documentTypeOptions}
                 control={travel.control}
                 placeholder="Select passport type"
@@ -262,7 +283,7 @@ export function Schengen() {
               />
 
               <Input
-                label="Date of issue"
+                label="Date of issue *"
                 register={travel.register("date-of-issue", {
                   required: "Issue date is required",
                 })}
@@ -271,7 +292,7 @@ export function Schengen() {
               />
 
               <Input
-                label="Valid until"
+                label="Valid until *"
                 register={travel.register("valid-until", {
                   required: "Valid until is required",
                 })}
@@ -280,7 +301,7 @@ export function Schengen() {
               />
 
               <Select
-                label="Issued by (country)"
+                label="Issued by (country) *"
                 options={countriesOptions}
                 control={travel.control}
                 placeholder="Select Issued by country"
@@ -343,6 +364,125 @@ export function Schengen() {
 
             <div className="flex justify-between">
               <Button type="button" onClick={() => setStep(1)}>
+                <NextIcon className="mr-2 scale-x-[-1]" /> Previous
+              </Button>
+              <Button>
+                Next <NextIcon className="ml-2" />
+              </Button>
+            </div>
+          </form>
+        )}
+
+        {step === 3 && (
+          <form name="document" className="space-y-4" onSubmit={contact.handleSubmit(contactSubmit)}>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <Input
+                label="Applicant's home address *"
+                placeholder="Home address"
+                register={contact.register("home-address", {
+                  required: "Home address is required",
+                })}
+                error={contact.formState.errors["home-address"]}
+              />
+
+              <Input
+                label="Email address *"
+                register={contact.register("email-address", {
+                  required: "Email address is required",
+                })}
+                error={contact.formState.errors["home-address"]}
+              />
+
+              <Input
+                label="Telephone no *"
+                register={contact.register("telephone-no", {
+                  required: "Telephone no is required",
+                  pattern: { value: /^(\+\d{1,})?(\d+)$/, message: "Invalid telephone" },
+                })}
+                error={contact.formState.errors["telephone-no"]}
+              />
+
+              <div className={twMerge(isResidence ? "lg:row-start-4" : "lg:row-start-3")}>
+                <Input
+                  label="Current occupation *"
+                  register={contact.register("current-occupation", {
+                    required: "Current occupation is required",
+                  })}
+                  error={contact.formState.errors["current-occupation"]}
+                />
+              </div>
+
+              <div className="col-span-full flex flex-col gap-4 lg:flex-row">
+                <Input
+                  label="Employer and employer's address and telephone number. For students, name and address of educational establishment. *"
+                  classNameLabel="line-clamp-none"
+                  register={contact.register("employers-address-telephone-number", {
+                    required: "Employer's address and telephone number is required",
+                  })}
+                  error={contact.formState.errors["employers-address-telephone-number"]}
+                />
+
+                <Radio
+                  label="Residence in a country other than the country of current nationality? *"
+                  options={["No", "Yes"]}
+                  classNameLabel="line-clamp-none"
+                  checked="No"
+                  register={contact.register("residence-in-a-country", { required: "Residence is required" })}
+                  error={contact.formState.errors["residence-in-a-country"]}
+                />
+              </div>
+
+              {isResidence && (
+                <Fragment>
+                  <Input
+                    label="Resident permit or equivalent *"
+                    register={contact.register("resident-permit-or-equivalent", {
+                      required: "Telephone no is required",
+                    })}
+                    error={contact.formState.errors["resident-permit-or-equivalent"]}
+                  />
+
+                  <Input
+                    label="No (Resident) *"
+                    register={contact.register("resident-no", {
+                      required: "No is required",
+                    })}
+                    error={contact.formState.errors["resident-no"]}
+                  />
+
+                  <Input
+                    label="Valid until *"
+                    register={contact.register("resident-valid-until", {
+                      required: "Valid until is required",
+                    })}
+                    error={contact.formState.errors["resident-valid-until"]}
+                    type="date"
+                  />
+                </Fragment>
+              )}
+
+              <Select
+                label="Purpose(s) of the journey *"
+                control={contact.control}
+                options={purposeOfJourneyOptions}
+                name="purpose-of-journey"
+                register={contact.register("purpose-of-journey", {
+                  required: "Purpose(s) of the journey is required",
+                })}
+                error={contact.formState.errors["purpose-of-journey"]}
+              />
+
+              <Input
+                label="Additional information on purpose of stay *"
+                register={contact.register("purpose-of-journey-additional", {
+                  required: "Additional information on purpose of stay is required",
+                })}
+                error={contact.formState.errors["purpose-of-journey-additional"]}
+              />
+            </div>
+
+            <div className="flex justify-between">
+              <Button type="button" onClick={() => setStep(2)}>
                 <NextIcon className="mr-2 scale-x-[-1]" /> Previous
               </Button>
               <Button>
