@@ -5,13 +5,30 @@ import { StepIndicator } from "components/form/StepIndicator";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import useFormPersist from "react-hook-form-persist";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 import countries from "../countries.json";
+import districts from "../districts.json";
 
 const countriesOptions = countries.map((e) => ({
   label: e.name,
   value: e.nationality,
+}));
+
+const placeOfBirthOptions = districts.map((value) => ({
+  label: value,
+  value,
+}));
+
+const citizenRelationshipOptions = [
+  "Spouse",
+  "Child",
+  "Grandchild",
+  "Dependent ascendant",
+  "Registered partnership",
+].map((value) => ({
+  label: value,
+  value,
 }));
 
 const nationalityOptions = countries.map((e) => ({
@@ -41,37 +58,44 @@ const steps = ["Personal", "Documents", "Contact and Occupation"];
 export function Schengen() {
   const personal = useForm();
   const travel = useForm();
+
+  const navigate = useNavigate();
+
   const [step, setStep] = useState(1);
 
   const clearPersonal = useFormPersist("personal-visa-data", {
     watch: personal.watch,
     setValue: personal.setValue,
-    storage: window.localStorage,
+    storage: window.sessionStorage,
   });
 
   const clearTravel = useFormPersist("travel-visa-data", {
     watch: travel.watch,
     setValue: travel.setValue,
-    storage: window.localStorage,
-    validate: true,
+    storage: window.sessionStorage,
   });
 
   function personalInfoSubmit(data) {
+    console.log(data);
     setStep(2);
   }
 
   function travelInfoSubmit(data) {
+    console.log(data);
     setStep(3);
   }
 
   return (
     <main className="container mx-auto space-y-4 p-4">
-      <Link to="/agent" className="flex w-max items-center rounded bg-brand-500 px-3 py-2 text-white">
-        <span className="pr-2 text-2xl">
-          <LeftArrow />
+      <button
+        onClick={() => navigate(-1)}
+        className="my-1 inline-flex items-center rounded-md border-gray-200 bg-white px-5 py-2.5 text-center text-sm font-medium text-blue-700 shadow hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-blue-300 "
+      >
+        <NextIcon className="mr-2 scale-x-[-1]" />
+        <span>
+          <span className="hidden md:inline"> Back to </span>dashboard
         </span>
-        Back to dashboard
-      </Link>
+      </button>
 
       <div className="space-y-4 rounded border border-gray-200 bg-white px-4 py-8 shadow-sm ">
         <StepIndicator steps={steps} current={step} />
@@ -79,26 +103,39 @@ export function Schengen() {
         {step === 1 && (
           <form name="personal" className="space-y-4" onSubmit={personal.handleSubmit(personalInfoSubmit)}>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <Select
+                label="Number of travel document *"
+                placeholder="Select passport number"
+                options={[]}
+                control={personal.control}
+                name="passport-number"
+                register={personal.register("passport-number", { required: "Travel document number is required" })}
+                error={personal.formState.errors["passport-number"]}
+              />
+
               <Input
-                label="Surname"
+                label="Surname *"
+                placeholder="Surname"
                 register={personal.register("surname", { required: "Surname is required" })}
                 error={personal.formState.errors["surname"]}
               />
 
               <Input
                 label="Surname at birth"
-                register={personal.register("surname-at-birth", { required: "Surname at birth is required" })}
+                register={personal.register("surname-at-birth")}
                 error={personal.formState.errors["surname-at-birth"]}
               />
 
               <Input
-                label="Fist name"
+                label="Fist name *"
+                placeholder="Fist name"
                 register={personal.register("first-name", { required: "Fist name is required" })}
                 error={personal.formState.errors["first-name"]}
               />
 
               <Input
-                label="Date of birth"
+                label="Date of birth *"
+                placeholder="Date of birth"
                 register={personal.register("date-of-birth", {
                   required: "Birth date is required",
                   max: { value: new Date().toISOString().split("T")[0], message: "Birth date cannot be future date" },
@@ -107,8 +144,11 @@ export function Schengen() {
                 type="date"
               />
 
-              <Input
-                label="Place of birth"
+              <Select
+                label="Select place of birth"
+                name="place-of-birth"
+                options={placeOfBirthOptions}
+                control={personal.control}
                 register={personal.register("place-of-birth", { required: "Place of birth is required" })}
                 error={personal.formState.errors["place-of-birth"]}
               />
@@ -144,46 +184,42 @@ export function Schengen() {
                 error={personal.formState.errors["nationality-at-birth"]}
               />
 
-              <div className="col-span-full md:col-span-1">
-                <Select
-                  label="Other nationalities, if you have"
-                  placeholder="Select other nationalities "
-                  options={nationalityOptions}
-                  control={personal.control}
-                  name="other-nationalities"
-                  isClearable
-                  isMulti
-                  register={personal.register("other-nationalities")}
-                  error={personal.formState.errors["other-nationalities"]}
-                />
-              </div>
+              <Select
+                label="Other nationalities, if you have"
+                placeholder="Select other nationalities "
+                options={nationalityOptions}
+                control={personal.control}
+                name="other-nationalities"
+                isClearable
+                isMulti
+                register={personal.register("other-nationalities")}
+                error={personal.formState.errors["other-nationalities"]}
+              />
 
-              <div className=" flex flex-col gap-4 sm:col-span-2 md:col-span-3 md:row-start-auto lg:flex-row [&>*]:flex-1">
-                <div className="flex flex-col gap-4 sm:flex-row [&>*]:flex-1">
-                  <SelectNotCreatable
-                    label="Sex (gender)"
-                    options={sexesOption}
-                    placeholder="Select your gender"
-                    control={personal.control}
-                    name="sex"
-                    isSearchable={false}
-                    register={personal.register("sex", { required: "Sex (gender) is required" })}
-                    error={personal.formState.errors["sex"]}
-                  />
-                  <Select
-                    label="Civil status"
-                    options={civilStatusOptions}
-                    control={personal.control}
-                    name="civil-status"
-                    placeholder="Select civil status"
-                    register={personal.register("civil-status", { required: "Civil status is required" })}
-                    error={personal.formState.errors["civil-status"]}
-                  />
-                </div>
+              <SelectNotCreatable
+                label="Sex (gender)"
+                options={sexesOption}
+                placeholder="Select your gender"
+                control={personal.control}
+                name="sex"
+                isSearchable={false}
+                register={personal.register("sex", { required: "Sex (gender) is required" })}
+                error={personal.formState.errors["sex"]}
+              />
+              <Select
+                label="Civil status"
+                options={civilStatusOptions}
+                control={personal.control}
+                name="civil-status"
+                placeholder="Select civil status"
+                register={personal.register("civil-status", { required: "Civil status is required" })}
+                error={personal.formState.errors["civil-status"]}
+              />
+              <div className="col-span-full">
                 <Input
                   label="Parental authority (in case of minors) /legal guardian (surname, first name, address, if different from applicant's, telephone no., e-mail address, and nationality)"
-                  placeholder="surname, first name, address .. etc"
-                  classNameLabel="line-clamp-2 md:line-clamp-1"
+                  placeholder="surname, first name, address, if different from applicant's, telephone no., e-mail address, and nationality"
+                  classNameLabel="line-clamp-none"
                   register={personal.register("parental-authority")}
                   error={personal.formState.errors["parental-authority"]}
                 />
@@ -199,7 +235,12 @@ export function Schengen() {
         )}
 
         {step === 2 && (
-          <form name="document" className="space-y-4" onSubmit={travel.handleSubmit(travelInfoSubmit)}>
+          <form
+            name="document"
+            className="space-y-4"
+            onSubmit={travel.handleSubmit(travelInfoSubmit)}
+            autocomplete="off"
+          >
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <Input
                 label="National identity number, where applicable"
@@ -218,13 +259,6 @@ export function Schengen() {
                 name="travel-document-type"
                 register={travel.register("travel-document-type", { required: "Travel document type is required" })}
                 error={travel.formState.errors["travel-document-type"]}
-              />
-
-              <Input
-                label="Number of travel document"
-                placeholder="Travel document number"
-                register={travel.register("travel-document-number", { required: "Travel document number is required" })}
-                error={travel.formState.errors["travel-document-number"]}
               />
 
               <Input
@@ -255,7 +289,7 @@ export function Schengen() {
                 error={travel.formState.errors["issued-country"]}
               />
 
-              <p className="[text-wrap:_balance col-span-full -mb-3 text-base font-medium text-gray-800">
+              <p className="[text-wrap:_balance col-span-full -mb-3 mt-2 text-base font-medium text-gray-800">
                 Personal data of the family member who is an EU, EEA or CH citizen or an UK national who is a Withdrawal
                 Agreement beneficiary, if applicable Surname (Family name)
               </p>
@@ -263,13 +297,13 @@ export function Schengen() {
               <Input
                 label="Surname (citizen)"
                 register={travel.register("citizen-surname")}
-                error={personal.formState.errors["citizen-surname"]}
+                error={travel.formState.errors["citizen-surname"]}
               />
 
               <Input
                 label="Fist name (citizen)"
                 register={travel.register("citizen-first-name")}
-                error={personal.formState.errors["citizen-first-name"]}
+                error={travel.formState.errors["citizen-first-name"]}
               />
 
               <Input
@@ -282,11 +316,11 @@ export function Schengen() {
               <Select
                 label="Nationality (citizen)"
                 options={nationalityOptions}
-                control={personal.control}
+                control={travel.control}
                 name="citizen-nationality"
                 placeholder="Select nationality"
-                register={personal.register("citizen-nationality")}
-                error={personal.formState.errors["citizen-nationality"]}
+                register={travel.register("citizen-nationality")}
+                error={travel.formState.errors["citizen-nationality"]}
               />
 
               <Input
@@ -294,6 +328,16 @@ export function Schengen() {
                 placeholder="Travel document number"
                 register={travel.register("citizen-travel-document-number")}
                 error={travel.formState.errors["citizen-travel-document-number"]}
+              />
+
+              <Select
+                label=" Family relationship with an EU, EEA or CH citizen or an UK national who is a Withdrawal Agreement beneficiary, if applicable"
+                options={citizenRelationshipOptions}
+                control={travel.control}
+                name="citizen-relationship"
+                placeholder="Select relationship"
+                register={travel.register("citizen-relationship")}
+                error={travel.formState.errors["citizen-relationship"]}
               />
             </div>
 
