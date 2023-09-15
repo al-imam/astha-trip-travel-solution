@@ -32,26 +32,26 @@ const citizenRelationshipOptions = [
   value,
 }));
 
-const nationalityOptions = countries.map((e) => ({
-  label: e.nationality,
-  value: e.nationality,
+const nationalityOptions = countries.map(({ nationality }) => ({
+  label: nationality,
+  value: nationality,
 }));
 
-const documentTypeOptions = ["Ordinary", "Diplomatic", "Service", "Official", "Special"].map((e) => ({
-  label: `${e} passport`,
-  value: `${e} passport`,
+const documentTypeOptions = ["Ordinary", "Diplomatic", "Service", "Official", "Special"].map((value) => ({
+  label: `${value} passport`,
+  value: `${value} passport`,
 }));
 
 const civilStatusOptions = ["Single", "Married", "Registered Partnership", "Separated", "Divorced", "Widow(er)"].map(
-  (e) => ({
-    label: e,
-    value: e,
+  (value) => ({
+    label: value,
+    value,
   })
 );
 
-const sexesOption = ["Male", "Female"].map((e) => ({
-  label: e,
-  value: e,
+const sexesOption = ["Male", "Female"].map((value) => ({
+  label: value,
+  value,
 }));
 
 const purposeOfJourneyOptions = [
@@ -149,7 +149,12 @@ export function Schengen() {
         <StepIndicator steps={steps} current={step} />
 
         {step === 1 && (
-          <form name="personal" className="space-y-4" onSubmit={personal.handleSubmit(personalSubmit)}>
+          <form
+            name="personal"
+            className="space-y-4"
+            onSubmit={personal.handleSubmit(personalSubmit)}
+            autoComplete="off"
+          >
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <Select
                 label="Number of travel document *"
@@ -284,7 +289,7 @@ export function Schengen() {
         )}
 
         {step === 2 && (
-          <form name="document" className="space-y-4" onSubmit={travel.handleSubmit(travelSubmit)}>
+          <form name="document" autoComplete="off" className="space-y-4" onSubmit={travel.handleSubmit(travelSubmit)}>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <Input
                 label="National identity number *"
@@ -439,7 +444,7 @@ export function Schengen() {
         )}
 
         {step === 3 && (
-          <form name="document" className="space-y-4" onSubmit={contact.handleSubmit(contactSubmit)}>
+          <form name="document" autoComplete="off" className="space-y-4" onSubmit={contact.handleSubmit(contactSubmit)}>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <Group
                 options={["No", "Yes"]}
@@ -556,7 +561,7 @@ export function Schengen() {
         )}
 
         {step === 4 && (
-          <form name="document" className="space-y-4" onSubmit={info.handleSubmit(infoSubmit)}>
+          <form name="document" autoComplete="off" className="space-y-4" onSubmit={info.handleSubmit(infoSubmit)}>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <div className="col-span-full flex flex-col gap-4 md:flex-row [&>*]:flex-1">
                 <Input

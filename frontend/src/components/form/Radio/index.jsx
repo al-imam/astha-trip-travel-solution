@@ -22,7 +22,7 @@ export function Radio({ label, title = label, options, error, classNameLabel, re
         )}
       >
         {options.map((v) => (
-          <div className={twMerge(style.container, "[--dark:rgb(59,130,246)] ")}>
+          <div key={v} className={twMerge(style.container, "[--dark:rgb(59,130,246)] ")}>
             <input
               value={v}
               type="radio"
@@ -47,7 +47,7 @@ export function RadioNoLabel({ options, register, checked, ...rest }) {
   const id = useId();
 
   return options.map((v) => (
-    <div className={twMerge(style.container, "[--dark:rgb(59,130,246)] ")}>
+    <div key={v} className={twMerge(style.container, "[--dark:rgb(59,130,246)] ")}>
       <input
         value={v}
         type="radio"
