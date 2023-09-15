@@ -69,7 +69,12 @@ const purposeOfJourneyOptions = [
   value,
 }));
 
-const steps = ["Personal", "Documents", "Contact and Occupation"];
+const numberOfEntryRequestOptions = ["Single entry", "Two entries", "Multiple entries"].map((value) => ({
+  label: value,
+  value,
+}));
+
+const steps = ["", "", "", ""];
 
 export function Schengen() {
   const navigate = useNavigate();
@@ -78,16 +83,19 @@ export function Schengen() {
   const personal = useForm();
   const travel = useForm();
   const contact = useForm();
+  const info = useForm();
 
   const isResidence = contact.watch("residence-in-a-country") === "Yes";
+  const isEuCitizen = travel.watch("have-eu-citizen") === "Yes";
+  const isFingerprintsCollectedPreviously = info.watch("fingerprints-collected-previously") === "Yes";
 
-  const clearPersonal = useFormPersist("personal-visa-data", {
+  useFormPersist("personal-visa-data", {
     watch: personal.watch,
     setValue: personal.setValue,
     storage: window.sessionStorage,
   });
 
-  const clearTravel = useFormPersist("travel-visa-data", {
+  useFormPersist("travel-visa-data", {
     watch: travel.watch,
     setValue: travel.setValue,
     storage: window.sessionStorage,
@@ -108,7 +116,10 @@ export function Schengen() {
     setStep(4);
   }
 
-  console.log(contact.formState.errors);
+  function infoSubmit(data) {
+    console.log(data);
+    // setStep(4);
+  }
 
   return (
     <main className="container mx-auto space-y-4 p-4">
@@ -310,56 +321,68 @@ export function Schengen() {
                 error={travel.formState.errors["issued-country"]}
               />
 
-              <p className="[text-wrap:_balance col-span-full -mb-3 mt-2 text-base font-medium text-gray-800">
-                Personal data of the family member who is an EU, EEA or CH citizen or an UK national who is a Withdrawal
-                Agreement beneficiary, if applicable Surname (Family name)
-              </p>
+              <div className="col-span-full flex flex-col gap-4 lg:flex-row">
+                <Radio
+                  label="Personal data of the family member who is an EU, EEA or CH citizen or an UK national who is a Withdrawal Agreement beneficiary, Have any? *"
+                  options={["No", "Yes"]}
+                  classNameLabel="line-clamp-none"
+                  checked="No"
+                  register={travel.register("have-eu-citizen", { required: "Answer the question" })}
+                  error={travel.formState.errors["have-eu-citizen"]}
+                />
 
-              <Input
-                label="Surname (citizen)"
-                register={travel.register("citizen-surname")}
-                error={travel.formState.errors["citizen-surname"]}
-              />
+                <Select
+                  label="Family relationship with an EU, EEA or CH citizen or an UK national who is a Withdrawal Agreement beneficiary, if applicable"
+                  options={citizenRelationshipOptions}
+                  control={travel.control}
+                  name="citizen-relationship"
+                  isClearable
+                  classNameLabel="line-clamp-none"
+                  placeholder="Select relationship"
+                  register={travel.register("citizen-relationship")}
+                  error={travel.formState.errors["citizen-relationship"]}
+                />
+              </div>
 
-              <Input
-                label="Fist name (citizen)"
-                register={travel.register("citizen-first-name")}
-                error={travel.formState.errors["citizen-first-name"]}
-              />
+              {isEuCitizen && (
+                <Fragment>
+                  <Input
+                    label="Surname (EU, EEA or CH citizen or an UK national)"
+                    register={travel.register("citizen-surname")}
+                    error={travel.formState.errors["citizen-surname"]}
+                  />
 
-              <Input
-                label="Date of birth (citizen)"
-                register={travel.register("citizen-date-of-birth")}
-                error={travel.formState.errors["citizen-date-of-birth"]}
-                type="date"
-              />
+                  <Input
+                    label="Fist name (EU, EEA or CH citizen or an UK national)"
+                    register={travel.register("citizen-first-name")}
+                    error={travel.formState.errors["citizen-first-name"]}
+                  />
 
-              <Select
-                label="Nationality (citizen)"
-                options={nationalityOptions}
-                control={travel.control}
-                name="citizen-nationality"
-                placeholder="Select nationality"
-                register={travel.register("citizen-nationality")}
-                error={travel.formState.errors["citizen-nationality"]}
-              />
+                  <Input
+                    label="Date of birth (EU, EEA or CH citizen or an UK national)"
+                    register={travel.register("citizen-date-of-birth")}
+                    error={travel.formState.errors["citizen-date-of-birth"]}
+                    type="date"
+                  />
 
-              <Input
-                label="Number of travel document or ID card (citizen)"
-                placeholder="Travel document number"
-                register={travel.register("citizen-travel-document-number")}
-                error={travel.formState.errors["citizen-travel-document-number"]}
-              />
+                  <Select
+                    label="Nationality (EU, EEA or CH citizen or an UK national)"
+                    options={nationalityOptions}
+                    control={travel.control}
+                    name="citizen-nationality"
+                    placeholder="Select nationality"
+                    register={travel.register("citizen-nationality")}
+                    error={travel.formState.errors["citizen-nationality"]}
+                  />
 
-              <Select
-                label=" Family relationship with an EU, EEA or CH citizen or an UK national who is a Withdrawal Agreement beneficiary, if applicable"
-                options={citizenRelationshipOptions}
-                control={travel.control}
-                name="citizen-relationship"
-                placeholder="Select relationship"
-                register={travel.register("citizen-relationship")}
-                error={travel.formState.errors["citizen-relationship"]}
-              />
+                  <Input
+                    label="Number of travel document or ID card (EU, EEA or CH citizen or an UK national)"
+                    placeholder="Travel document number"
+                    register={travel.register("citizen-travel-document-number")}
+                    error={travel.formState.errors["citizen-travel-document-number"]}
+                  />
+                </Fragment>
+              )}
             </div>
 
             <div className="flex justify-between">
@@ -479,6 +502,100 @@ export function Schengen() {
                 })}
                 error={contact.formState.errors["purpose-of-journey-additional"]}
               />
+            </div>
+
+            <div className="flex justify-between">
+              <Button type="button" onClick={() => setStep(2)}>
+                <NextIcon className="mr-2 scale-x-[-1]" /> Previous
+              </Button>
+              <Button>
+                Next <NextIcon className="ml-2" />
+              </Button>
+            </div>
+          </form>
+        )}
+
+        {step === 4 && (
+          <form name="document" className="space-y-4" onSubmit={info.handleSubmit(infoSubmit)}>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <Input
+                label="Member State of main destination (and other Member States of destination, if applicable) *"
+                placeholder="Member State of main destination"
+                register={info.register("main-destination", {
+                  required: "Main destination is required",
+                })}
+                error={info.formState.errors["main-destination"]}
+              />
+              <Input
+                label="Member state of first entry *"
+                register={info.register("first-entry", {
+                  required: "Member state of first entry is required",
+                })}
+                error={info.formState.errors["first-entry"]}
+              />
+
+              <SelectNotCreatable
+                label="Number of entries requested *"
+                placeholder="Select Number of entries requested"
+                options={numberOfEntryRequestOptions}
+                control={info.control}
+                name="number-of-entries-requested"
+                register={info.register("number-of-entries-requested", {
+                  required: "Number of entries requested is required",
+                })}
+                error={info.formState.errors["number-of-entries-requested"]}
+              />
+
+              <div className="col-span-full flex flex-col gap-4 md:flex-row [&>*]:flex-1 ">
+                <Input
+                  label="Intended date of arrival of first intended stay in the Schengen area *"
+                  classNameLabel="line-clamp-none md:line-clamp-2  3xl:line-clamp-1"
+                  placeholder="Intended date of arrival"
+                  register={info.register("intended-date-of-arrival", {
+                    required: "Intended date of arrival is required",
+                  })}
+                  error={info.formState.errors["intended-date-of-arrival"]}
+                  type="date"
+                />
+
+                <Input
+                  label="Intended date of departure from Schengen area after the first intended stay *"
+                  classNameLabel="line-clamp-none md:line-clamp-2  3xl:line-clamp-1"
+                  placeholder="Intended date of arrival"
+                  register={info.register("intended-date-of-departure", {
+                    required: "Intended date of departure is required",
+                  })}
+                  error={info.formState.errors["intended-date-of-departure"]}
+                  type="date"
+                />
+
+                <Radio
+                  label="Fingerprints collected previously for the purpose of applying for a Schengen visa? *"
+                  options={["No", "Yes"]}
+                  classNameLabel="line-clamp-none md:line-clamp-2  3xl:line-clamp-1"
+                  checked="No"
+                  register={info.register("fingerprints-collected-previously", {
+                    required: "Fingerprints collected previously is required",
+                  })}
+                  error={info.formState.errors["fingerprints-collected-previously"]}
+                />
+              </div>
+
+              {isFingerprintsCollectedPreviously && (
+                <Fragment>
+                  <Input
+                    label="Previously collected fingerprints date, if you know"
+                    register={info.register("previously-collected-fingerprints-date")}
+                    error={info.formState.errors["previously-collected-fingerprints-date"]}
+                  />
+
+                  <Input
+                    label="Previously collected fingerprints visa no, if you know"
+                    register={info.register("previously-collected-fingerprints-visa-no")}
+                    error={info.formState.errors["previously-collected-fingerprints-visa-no"]}
+                  />
+                </Fragment>
+              )}
             </div>
 
             <div className="flex justify-between">
