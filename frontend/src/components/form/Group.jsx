@@ -41,3 +41,24 @@ export function Group({
     </div>
   );
 }
+
+export function Join({ legend, title = legend, classNameContainer, classNameLegend, className, children }) {
+  return (
+    <div className={twMerge("flex flex-col gap-1", classNameContainer)}>
+      <fieldset
+        className={twMerge(
+          "flex flex-col gap-4 rounded border border-gray-300/90 bg-white px-4 py-4 text-gray-800 [--gray-900:rgb(27_37_89)] "
+        )}
+      >
+        <legend
+          title={title}
+          className={twMerge("w-auto text-base font-medium leading-5 text-gray-800", classNameLegend)}
+        >
+          {legend}
+        </legend>
+
+        <div className={twMerge("-mt-2", className)}>{children}</div>
+      </fieldset>
+    </div>
+  );
+}

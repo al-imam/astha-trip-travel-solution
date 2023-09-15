@@ -14,7 +14,11 @@ export function Input({
   const id = useId();
   return (
     <div className="flex flex-col gap-1">
-      <label htmlFor={id} className={twMerge("text-base font-medium text-gray-800 line-clamp-1", classNameLabel)}>
+      <label
+        title={label}
+        htmlFor={id}
+        className={twMerge("text-base font-medium text-gray-800 line-clamp-1", classNameLabel)}
+      >
         {label}
       </label>
       <input

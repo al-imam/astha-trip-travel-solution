@@ -2,15 +2,14 @@ import { Button } from "components/form/Button";
 import { Input } from "components/form/Input";
 import { Select, SelectNotCreatable } from "components/form/Select";
 import { StepIndicator } from "components/form/StepIndicator";
-import { Fragment, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import useFormPersist from "react-hook-form-persist";
 import { useNavigate } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 import countries from "../countries.json";
 import districts from "../districts.json";
-import { Radio } from "components/form/Radio";
-import { Group } from "components/form/Group";
+import { Group, Join } from "components/form/Group";
 
 const countriesOptions = countries.map((e) => ({
   label: e.name,
@@ -71,6 +70,18 @@ const purposeOfJourneyOptions = [
 }));
 
 const numberOfEntryRequestOptions = ["Single entry", "Two entries", "Multiple entries"].map((value) => ({
+  label: value,
+  value,
+}));
+
+const costOfTravelingAndLivingOptions = [
+  "by the applicant himself/herself Means of support",
+  "Cash",
+  "Traveler's cheques",
+  "Credit card",
+  "Prepaid accommodation",
+  "Prepaid transport",
+].map((value) => ({
   label: value,
   value,
 }));
@@ -360,7 +371,7 @@ export function Schengen() {
                 register={travel.register("have-eu-citizen", { required: "Answer the question" })}
                 error={travel.formState.errors["have-eu-citizen"]}
                 isOpen={isEuCitizen}
-                className="grid gap-4 sm:grid-cols-2 md:grid-cols-3"
+                className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
               >
                 <Input
                   label="Surname"
@@ -430,17 +441,43 @@ export function Schengen() {
         {step === 3 && (
           <form name="document" className="space-y-4" onSubmit={contact.handleSubmit(contactSubmit)}>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              <div className={twMerge(isResidence ? "lg:row-start-4" : "lg:row-start-3")}>
+              <Group
+                options={["No", "Yes"]}
+                legend="Residence in a country other than the country of current nationality? *"
+                classNameContainer="col-span-full"
+                checked="No"
+                register={contact.register("residence-in-a-country", { required: "Residence is required" })}
+                error={contact.formState.errors["residence-in-a-country"]}
+                isOpen={isResidence}
+                className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+              >
                 <Input
-                  label="Current occupation *"
-                  register={contact.register("current-occupation", {
-                    required: "Current occupation is required",
+                  label="Resident permit or equivalent *"
+                  register={contact.register("resident-permit-or-equivalent", {
+                    required: { value: isResidence, message: "Telephone no is required" },
                   })}
-                  error={contact.formState.errors["current-occupation"]}
+                  error={contact.formState.errors["resident-permit-or-equivalent"]}
                 />
-              </div>
 
-              <div className="col-span-full flex flex-col gap-4 lg:flex-row">
+                <Input
+                  label="No (Resident) *"
+                  register={contact.register("resident-no", {
+                    required: { value: isResidence, message: "No is required" },
+                  })}
+                  error={contact.formState.errors["resident-no"]}
+                />
+
+                <Input
+                  label="Valid until *"
+                  register={contact.register("resident-valid-until", {
+                    required: { value: isResidence, message: "Valid until is required" },
+                  })}
+                  error={contact.formState.errors["resident-valid-until"]}
+                  type="date"
+                />
+              </Group>
+
+              <div className="col-span-full">
                 <Input
                   label="Employer and employer's address and telephone number. For students, name and address of educational establishment. *"
                   classNameLabel="line-clamp-none"
@@ -449,45 +486,15 @@ export function Schengen() {
                   })}
                   error={contact.formState.errors["employers-address-telephone-number"]}
                 />
-
-                <Radio
-                  label="Residence in a country other than the country of current nationality? *"
-                  options={["No", "Yes"]}
-                  classNameLabel="line-clamp-none"
-                  checked="No"
-                  register={contact.register("residence-in-a-country", { required: "Residence is required" })}
-                  error={contact.formState.errors["residence-in-a-country"]}
-                />
               </div>
 
-              {isResidence && (
-                <Fragment>
-                  <Input
-                    label="Resident permit or equivalent *"
-                    register={contact.register("resident-permit-or-equivalent", {
-                      required: "Telephone no is required",
-                    })}
-                    error={contact.formState.errors["resident-permit-or-equivalent"]}
-                  />
-
-                  <Input
-                    label="No (Resident) *"
-                    register={contact.register("resident-no", {
-                      required: "No is required",
-                    })}
-                    error={contact.formState.errors["resident-no"]}
-                  />
-
-                  <Input
-                    label="Valid until *"
-                    register={contact.register("resident-valid-until", {
-                      required: "Valid until is required",
-                    })}
-                    error={contact.formState.errors["resident-valid-until"]}
-                    type="date"
-                  />
-                </Fragment>
-              )}
+              <Input
+                label="Current occupation *"
+                register={contact.register("current-occupation", {
+                  required: "Current occupation is required",
+                })}
+                error={contact.formState.errors["current-occupation"]}
+              />
 
               <Select
                 label="Purpose(s) of the journey *"
@@ -501,11 +508,39 @@ export function Schengen() {
               />
 
               <Input
-                label="Additional information on purpose of stay *"
+                label="Additional info on purpose of stay *"
                 register={contact.register("purpose-of-journey-additional", {
                   required: "Additional information on purpose of stay is required",
                 })}
                 error={contact.formState.errors["purpose-of-journey-additional"]}
+              />
+
+              <Input
+                label="Member State of main destination (and other Member States of destination, if applicable) *"
+                placeholder="Member State of main destination"
+                register={contact.register("main-destination", {
+                  required: "Main destination is required",
+                })}
+                error={contact.formState.errors["main-destination"]}
+              />
+              <Input
+                label="Member state of first entry *"
+                register={contact.register("first-entry", {
+                  required: "Member state of first entry is required",
+                })}
+                error={contact.formState.errors["first-entry"]}
+              />
+
+              <SelectNotCreatable
+                label="Number of entries requested *"
+                placeholder="Select Number of entries requested"
+                options={numberOfEntryRequestOptions}
+                control={contact.control}
+                name="number-of-entries-requested"
+                register={contact.register("number-of-entries-requested", {
+                  required: "Number of entries requested is required",
+                })}
+                error={contact.formState.errors["number-of-entries-requested"]}
               />
             </div>
 
@@ -523,38 +558,9 @@ export function Schengen() {
         {step === 4 && (
           <form name="document" className="space-y-4" onSubmit={info.handleSubmit(infoSubmit)}>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              <Input
-                label="Member State of main destination (and other Member States of destination, if applicable) *"
-                placeholder="Member State of main destination"
-                register={info.register("main-destination", {
-                  required: "Main destination is required",
-                })}
-                error={info.formState.errors["main-destination"]}
-              />
-              <Input
-                label="Member state of first entry *"
-                register={info.register("first-entry", {
-                  required: "Member state of first entry is required",
-                })}
-                error={info.formState.errors["first-entry"]}
-              />
-
-              <SelectNotCreatable
-                label="Number of entries requested *"
-                placeholder="Select Number of entries requested"
-                options={numberOfEntryRequestOptions}
-                control={info.control}
-                name="number-of-entries-requested"
-                register={info.register("number-of-entries-requested", {
-                  required: "Number of entries requested is required",
-                })}
-                error={info.formState.errors["number-of-entries-requested"]}
-              />
-
-              <div className="col-span-full flex flex-col gap-4 md:flex-row [&>*]:flex-1 ">
+              <div className="col-span-full flex flex-col gap-4 md:flex-row [&>*]:flex-1">
                 <Input
                   label="Intended date of arrival of first intended stay in the Schengen area *"
-                  classNameLabel="line-clamp-none md:line-clamp-2  3xl:line-clamp-1"
                   placeholder="Intended date of arrival"
                   register={info.register("intended-date-of-arrival", {
                     required: "Intended date of arrival is required",
@@ -565,7 +571,6 @@ export function Schengen() {
 
                 <Input
                   label="Intended date of departure from Schengen area after the first intended stay *"
-                  classNameLabel="line-clamp-none md:line-clamp-2  3xl:line-clamp-1"
                   placeholder="Intended date of arrival"
                   register={info.register("intended-date-of-departure", {
                     required: "Intended date of departure is required",
@@ -573,34 +578,118 @@ export function Schengen() {
                   error={info.formState.errors["intended-date-of-departure"]}
                   type="date"
                 />
+              </div>
 
-                <Radio
-                  label="Fingerprints collected previously for the purpose of applying for a Schengen visa? *"
-                  options={["No", "Yes"]}
-                  classNameLabel="line-clamp-none md:line-clamp-2  3xl:line-clamp-1"
-                  checked="No"
-                  register={info.register("fingerprints-collected-previously", {
-                    required: "Fingerprints collected previously is required",
-                  })}
-                  error={info.formState.errors["fingerprints-collected-previously"]}
+              <Group
+                options={["No", "Yes"]}
+                legend="Fingerprints collected previously for the purpose of applying for a Schengen visa? *"
+                classNameContainer="col-span-full"
+                checked="No"
+                register={info.register("fingerprints-collected-previously", {
+                  required: "Fingerprints collected previously is required",
+                })}
+                error={info.formState.errors["fingerprints-collected-previously"]}
+                isOpen={isFingerprintsCollectedPreviously}
+                className="flex flex-col gap-4 md:flex-row [&>*]:flex-1"
+              >
+                <Input
+                  label="Previously collected fingerprints date, if you know"
+                  register={info.register("previously-collected-fingerprints-date")}
+                  error={info.formState.errors["previously-collected-fingerprints-date"]}
+                />
+
+                <Input
+                  label="Previously collected fingerprints visa no, if you know"
+                  register={info.register("previously-collected-fingerprints-visa-no")}
+                  error={info.formState.errors["previously-collected-fingerprints-visa-no"]}
+                />
+              </Group>
+
+              <Join
+                legend="Entry permit for the final country of destination, where applicable"
+                classNameContainer="col-span-full"
+                className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+              >
+                <Input
+                  label="Issue by"
+                  register={info.register("destination-issue-by")}
+                  error={info.formState.errors["destination-issue-by"]}
+                />
+
+                <Input
+                  label="Valid From"
+                  placeholder="Intended date of arrival"
+                  register={info.register("destination-valid-from")}
+                  error={info.formState.errors["destination-valid-from"]}
+                  type="date"
+                />
+
+                <Input
+                  label="Valid Until"
+                  register={info.register("destination-valid-to")}
+                  error={info.formState.errors["destination-valid-to"]}
+                  type="date"
+                />
+              </Join>
+
+              <div className="col-span-full">
+                <Input
+                  label="Surname and first name of the inviting person(s) in the Member State(s). If not applicable, name of hotel(s) or temporary accommodation(s) in the Member State(s)"
+                  register={info.register("surname-and-first-name-of-inviting-persons")}
+                  error={info.formState.errors["surname-and-first-name-of-inviting-persons"]}
+                  classNameLabel="line-clamp-none"
                 />
               </div>
 
-              {isFingerprintsCollectedPreviously && (
-                <Fragment>
-                  <Input
-                    label="Previously collected fingerprints date, if you know"
-                    register={info.register("previously-collected-fingerprints-date")}
-                    error={info.formState.errors["previously-collected-fingerprints-date"]}
-                  />
+              <div className="col-span-full">
+                <Input
+                  label="Address and e-mail address of inviting person(s)/hotel(s) temporary accommodation(s)"
+                  register={info.register("address-email-of-inviting-persons")}
+                  error={info.formState.errors["address-email-of-inviting-persons"]}
+                  classNameLabel="line-clamp-none"
+                />
+              </div>
 
-                  <Input
-                    label="Previously collected fingerprints visa no, if you know"
-                    register={info.register("previously-collected-fingerprints-visa-no")}
-                    error={info.formState.errors["previously-collected-fingerprints-visa-no"]}
-                  />
-                </Fragment>
-              )}
+              <Input
+                label="Telephone no of inviting person"
+                register={info.register("telephone-no-of-inviting-persons")}
+                error={info.formState.errors["telephone-no-of-inviting-persons"]}
+              />
+
+              <Input
+                label="Name and address of inviting com/org"
+                register={info.register("name-address-of-inviting-company")}
+                error={info.formState.errors["name-address-of-inviting-company"]}
+              />
+
+              <Input
+                label="Telephone no of company/organization"
+                register={info.register("telephone-no-of-inviting-company")}
+                error={info.formState.errors["telephone-no-of-inviting-company"]}
+              />
+
+              <div className="col-span-full">
+                <Input
+                  label="Surname, first name, address, telephone no. and e-mail address of contact person in company/organization"
+                  register={info.register("surname-and-first-name-of-contact-persons")}
+                  error={info.formState.errors["surname-and-first-name-of-contact-persons"]}
+                  classNameLabel="line-clamp-none"
+                />
+              </div>
+
+              <div className="col-span-full">
+                <Select
+                  label="Cost of traveling and living during the applicant's stay is covered *"
+                  classNameLabel="line-clamp-none"
+                  options={costOfTravelingAndLivingOptions}
+                  control={info.control}
+                  name="cost-of-traveling-and-living"
+                  register={info.register("cost-of-traveling-and-living", {
+                    required: "Cost of traveling and living during the applicant's stay is covered is required",
+                  })}
+                  error={info.formState.errors["cost-of-traveling-and-living"]}
+                />
+              </div>
             </div>
 
             <div className="flex justify-between">
