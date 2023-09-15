@@ -10,6 +10,7 @@ import { twMerge } from "tailwind-merge";
 import countries from "../countries.json";
 import districts from "../districts.json";
 import { Radio } from "components/form/Radio";
+import { Group } from "components/form/Group";
 
 const countriesOptions = countries.map((e) => ({
   label: e.name,
@@ -321,68 +322,98 @@ export function Schengen() {
                 error={travel.formState.errors["issued-country"]}
               />
 
-              <div className="col-span-full flex flex-col gap-4 lg:flex-row">
-                <Radio
-                  label="Personal data of the family member who is an EU, EEA or CH citizen or an UK national who is a Withdrawal Agreement beneficiary, Have any? *"
-                  options={["No", "Yes"]}
-                  classNameLabel="line-clamp-none"
-                  checked="No"
-                  register={travel.register("have-eu-citizen", { required: "Answer the question" })}
-                  error={travel.formState.errors["have-eu-citizen"]}
-                />
+              <Input
+                label="Applicant's Home address *"
+                placeholder="Home address"
+                register={travel.register("home-address", {
+                  required: "Home address is required",
+                })}
+                error={travel.formState.errors["home-address"]}
+              />
 
-                <Select
-                  label="Family relationship with an EU, EEA or CH citizen or an UK national who is a Withdrawal Agreement beneficiary, if applicable"
-                  options={citizenRelationshipOptions}
-                  control={travel.control}
-                  name="citizen-relationship"
-                  isClearable
-                  classNameLabel="line-clamp-none"
-                  placeholder="Select relationship"
-                  register={travel.register("citizen-relationship")}
-                  error={travel.formState.errors["citizen-relationship"]}
+              <Input
+                label="Applicant's Email address *"
+                placeholder="Email address"
+                register={travel.register("email-address", {
+                  required: "Email address is required",
+                })}
+                error={travel.formState.errors["email-address"]}
+              />
+
+              <div className="lg:col-span-2">
+                <Input
+                  label="Applicant's Telephone no *"
+                  placeholder="Telephone no"
+                  register={travel.register("telephone-no", {
+                    required: "Telephone no is required",
+                    pattern: { value: /^(\+\d{1,})?(\d+)$/, message: "Invalid telephone" },
+                  })}
+                  error={travel.formState.errors["telephone-no"]}
                 />
               </div>
 
-              {isEuCitizen && (
-                <Fragment>
-                  <Input
-                    label="Surname (EU, EEA or CH citizen or an UK national)"
-                    register={travel.register("citizen-surname")}
-                    error={travel.formState.errors["citizen-surname"]}
-                  />
+              <Group
+                options={["No", "Yes"]}
+                legend="Personal data of the family member who is an EU, EEA or CH citizen or an UK national who is a withdrawal agreement beneficiary, have any? *"
+                classNameContainer="col-span-full"
+                checked="No"
+                register={travel.register("have-eu-citizen", { required: "Answer the question" })}
+                error={travel.formState.errors["have-eu-citizen"]}
+                isOpen={isEuCitizen}
+                className="grid gap-4 sm:grid-cols-2 md:grid-cols-3"
+              >
+                <Input
+                  label="Surname"
+                  register={travel.register("citizen-surname")}
+                  error={travel.formState.errors["citizen-surname"]}
+                />
 
-                  <Input
-                    label="Fist name (EU, EEA or CH citizen or an UK national)"
-                    register={travel.register("citizen-first-name")}
-                    error={travel.formState.errors["citizen-first-name"]}
-                  />
+                <Input
+                  label="Fist name"
+                  register={travel.register("citizen-first-name")}
+                  error={travel.formState.errors["citizen-first-name"]}
+                />
 
-                  <Input
-                    label="Date of birth (EU, EEA or CH citizen or an UK national)"
-                    register={travel.register("citizen-date-of-birth")}
-                    error={travel.formState.errors["citizen-date-of-birth"]}
-                    type="date"
-                  />
+                <Input
+                  label="Date of birth"
+                  register={travel.register("citizen-date-of-birth")}
+                  error={travel.formState.errors["citizen-date-of-birth"]}
+                  type="date"
+                />
 
-                  <Select
-                    label="Nationality (EU, EEA or CH citizen or an UK national)"
-                    options={nationalityOptions}
-                    control={travel.control}
-                    name="citizen-nationality"
-                    placeholder="Select nationality"
-                    register={travel.register("citizen-nationality")}
-                    error={travel.formState.errors["citizen-nationality"]}
-                  />
+                <Select
+                  label="Nationality"
+                  options={nationalityOptions}
+                  control={travel.control}
+                  name="citizen-nationality"
+                  placeholder="Select nationality"
+                  register={travel.register("citizen-nationality")}
+                  error={travel.formState.errors["citizen-nationality"]}
+                />
 
+                <div className="col-span-full md:col-span-2">
                   <Input
-                    label="Number of travel document or ID card (EU, EEA or CH citizen or an UK national)"
+                    label="Number of travel document or ID card"
                     placeholder="Travel document number"
                     register={travel.register("citizen-travel-document-number")}
                     error={travel.formState.errors["citizen-travel-document-number"]}
                   />
-                </Fragment>
-              )}
+                </div>
+
+                <div className="col-span-full">
+                  <Select
+                    label="Family relationship with an EU, EEA or CH citizen or an UK national who is a Withdrawal Agreement beneficiary, if applicable"
+                    options={citizenRelationshipOptions}
+                    control={travel.control}
+                    name="citizen-relationship"
+                    isClearable
+                    classNameLabel="line-clamp-none"
+                    placeholder="Select relationship"
+                    register={travel.register("citizen-relationship")}
+                    error={travel.formState.errors["citizen-relationship"]}
+                  />
+                </div>
+              </Group>
             </div>
 
             <div className="flex justify-between">
@@ -399,32 +430,6 @@ export function Schengen() {
         {step === 3 && (
           <form name="document" className="space-y-4" onSubmit={contact.handleSubmit(contactSubmit)}>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              <Input
-                label="Applicant's home address *"
-                placeholder="Home address"
-                register={contact.register("home-address", {
-                  required: "Home address is required",
-                })}
-                error={contact.formState.errors["home-address"]}
-              />
-
-              <Input
-                label="Email address *"
-                register={contact.register("email-address", {
-                  required: "Email address is required",
-                })}
-                error={contact.formState.errors["home-address"]}
-              />
-
-              <Input
-                label="Telephone no *"
-                register={contact.register("telephone-no", {
-                  required: "Telephone no is required",
-                  pattern: { value: /^(\+\d{1,})?(\d+)$/, message: "Invalid telephone" },
-                })}
-                error={contact.formState.errors["telephone-no"]}
-              />
-
               <div className={twMerge(isResidence ? "lg:row-start-4" : "lg:row-start-3")}>
                 <Input
                   label="Current occupation *"
