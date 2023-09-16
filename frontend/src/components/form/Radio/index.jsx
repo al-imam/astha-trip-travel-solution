@@ -47,17 +47,21 @@ export function RadioNoLabel({ options, register, checked, ...rest }) {
   const id = useId();
 
   return options.map((v) => (
-    <div key={v} className={twMerge(style.container, "[--dark:rgb(59,130,246)] ")}>
+    <div key={v} className={twMerge(style.container, " [--dark:rgb(59,130,246)]")}>
       <input
         value={v}
         type="radio"
         id={id + v.replace(/\s+/g, "")}
-        className={style.radio}
+        className={twMerge(style.radio, "sr-only")}
         defaultChecked={v === checked}
         {...register}
         {...rest}
       />
-      <label htmlFor={id + v.replace(/\s+/g, "")} className={style.label}>
+
+      <div className={style["check-box"]}>
+        <div className={style["box"]} />
+      </div>
+      <label htmlFor={id + v.replace(/\s+/g, "")} className={twMerge(style.label, "sm-max:leading-tight")}>
         {v}
       </label>
     </div>
