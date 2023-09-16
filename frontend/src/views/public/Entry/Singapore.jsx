@@ -61,34 +61,27 @@ const sexesOptions = ["Male", "Female"].map((value) => ({
   value,
 }));
 
-const purposeOfJourneyOptions = [
-  "Tourism",
-  "Business",
-  "Visiting family or friends",
-  "Cultural",
-  "Sports",
-  "Official visit",
-  "Medical reasons",
-  "Study",
-  "Airport transit",
-].map((value) => ({
+const purposeOfVisitOptions = ["Social", "Business"].map((value) => ({
   label: value,
   value,
 }));
 
-const numberOfEntryRequestOptions = ["Single entry", "Two entries", "Multiple entries"].map((value) => ({
+const academicOptions = ["No Formal Education", "Primary", "Secondary", "Pre-University"].map((value) => ({
   label: value,
   value,
 }));
 
-const costOfTravelingAndLivingOptions = [
-  "by the applicant himself/herself Means of support",
-  "Cash",
-  "Traveler's cheques",
-  "Credit card",
-  "Prepaid accommodation",
-  "Prepaid transport",
-].map((value) => ({
+const qualificationsAttainedOptions = ["Diploma", "University", "Post-Graduate"].map((value) => ({
+  label: value,
+  value,
+}));
+
+const typeOfVisaOptions = ["Single Journey", "Double Journey", "Triple Journey", "Multiple Journey"].map((value) => ({
+  label: value,
+  value,
+}));
+
+const stayLocationOptions = ["Next of Kin's Place", "Relative's Place", "Friend's Place", "Hotel"].map((value) => ({
   label: value,
   value,
 }));
@@ -100,9 +93,11 @@ export function Singapore() {
   const [step, setStep] = useState(1);
 
   const particularsOfApplicant = useForm();
+  const otherDetails = useForm();
 
   const citizenshipOfSpouse = particularsOfApplicant.watch("citizenship-of-spouse");
 
+  const isStayingMoreThanThirtyDays = otherDetails.watch("days-intend-to-stay") === "More than 30 days";
   const isSpouseIsSingaporeCitizen = citizenshipOfSpouseOptions.some(
     (c) => citizenshipOfSpouse && c.value === citizenshipOfSpouse.value
   );
@@ -113,9 +108,14 @@ export function Singapore() {
     storage: window.sessionStorage,
   });
 
-  function personalSubmit(data) {
+  function particularsOfApplicantSubmit(data) {
     console.log(data);
     setStep(2);
+  }
+
+  function otherDetailsSubmit(data) {
+    console.log(data);
+    setStep(3);
   }
 
   return (
@@ -135,9 +135,9 @@ export function Singapore() {
 
         {step === 1 && (
           <form
-            name="personal"
+            name="particulars_of_applicant"
             className="space-y-4"
-            onSubmit={particularsOfApplicant.handleSubmit(personalSubmit)}
+            onSubmit={particularsOfApplicant.handleSubmit(particularsOfApplicantSubmit)}
             autoComplete="off"
           >
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -146,7 +146,7 @@ export function Singapore() {
                 placeholder="Name"
                 register={particularsOfApplicant.register("surname", {
                   required: "Name is required",
-                  maxLength: { value: 50, message: "Name must've with in 50 character!" },
+                  maxLength: { value: 50, message: "Exceeds 50 character limit" },
                 })}
                 error={particularsOfApplicant.formState.errors["surname"]}
               />
@@ -155,7 +155,7 @@ export function Singapore() {
                 label="Alias *"
                 register={particularsOfApplicant.register("alias", {
                   required: "Alias is required",
-                  maxLength: { value: 50, message: "Alias must've with in 50 character!" },
+                  maxLength: { value: 50, message: "Exceeds 50 character limit" },
                 })}
                 error={particularsOfApplicant.formState.errors["alias"]}
               />
@@ -209,7 +209,7 @@ export function Singapore() {
                   label="NRIC No *"
                   register={particularsOfApplicant.register("nric-no", {
                     required: { value: isSpouseIsSingaporeCitizen, message: "NRIC No is required" },
-                    maxLength: { value: 9, message: "NRIC no must've with in 9 character!" },
+                    maxLength: { value: 9, message: "Exceeds 9 character limit" },
                   })}
                   error={particularsOfApplicant.formState.errors["nric-no"]}
                 />
@@ -277,7 +277,7 @@ export function Singapore() {
                 label="Passport no *"
                 register={particularsOfApplicant.register("passport-no", {
                   required: "Passport no is required",
-                  maxLength: { value: 15, message: "Passport no must've with in 15 character!" },
+                  maxLength: { value: 15, message: "Exceeds 15 character limit" },
                 })}
                 error={particularsOfApplicant.formState.errors["passport-no"]}
               />
@@ -307,7 +307,7 @@ export function Singapore() {
                   required: "Place/Country of Issue is required",
                   maxLength: {
                     value: 25,
-                    message: "Place/Country of Issue must've with in 25 character!",
+                    message: "Exceeds 25 character limit",
                   },
                 })}
                 error={particularsOfApplicant.formState.errors["country-of-issue"]}
@@ -319,7 +319,7 @@ export function Singapore() {
                 register={particularsOfApplicant.register("prc-id-number", {
                   maxLength: {
                     value: 20,
-                    message: "PRC ID Number must've with in 25 character!",
+                    message: "Exceeds 20 character limit",
                   },
                 })}
                 error={particularsOfApplicant.formState.errors["prc-id-number"]}
@@ -352,10 +352,9 @@ export function Singapore() {
               <Input
                 label="Prefecture of Origin/Residence *"
                 register={particularsOfApplicant.register("prefecture-of-residence", {
-                  required: "Prefecture of Origin/Residence is required",
                   maxLength: {
                     value: 25,
-                    message: "Prefecture of Origin/Residence must've with in 25 character!",
+                    message: "Exceeds 25 character limit",
                   },
                 })}
                 error={particularsOfApplicant.formState.errors["prefecture-of-residence"]}
@@ -371,6 +370,246 @@ export function Singapore() {
             </div>
 
             <div className="flex justify-end">
+              <Button>
+                Next <NextIcon className="ml-2" />
+              </Button>
+            </div>
+          </form>
+        )}
+
+        {step === 2 && (
+          <form
+            name="other_details"
+            className="space-y-4"
+            onSubmit={otherDetails.handleSubmit(otherDetailsSubmit)}
+            autoComplete="off"
+          >
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <Input
+                label="Email Address *"
+                register={otherDetails.register("email-address", {
+                  required: "Email address is required",
+                  pattern: {
+                    value: /^[a-zA-Z][a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{1,}$/,
+                    message: "Email is not valid",
+                  },
+                  maxLength: {
+                    value: 25,
+                    message: "Exceeds 25 character limit",
+                  },
+                })}
+                error={otherDetails.formState.errors["email-address"]}
+              />
+
+              <Input
+                label="Contact number *"
+                register={otherDetails.register("contact-number", {
+                  required: "Contact number is required",
+                  pattern: { value: /^(\+\d{1,})?(\d+)$/, message: "Contact number is not valid" },
+                  maxLength: { value: 25, message: "Exceeds 25 character limit" },
+                })}
+                error={otherDetails.formState.errors["contact-number"]}
+              />
+
+              <Input
+                label="Occupation *"
+                register={otherDetails.register("occupation", {
+                  required: "Occupation is required",
+                  maxLength: { value: 25, message: "Exceeds 25 character limit" },
+                })}
+                error={otherDetails.formState.errors["occupation"]}
+              />
+
+              <SelectNotCreatable
+                label="Highest Academic/Professional *"
+                options={academicOptions}
+                control={otherDetails.control}
+                name="highest-academic"
+                placeholder="Select Highest Academic"
+                isSearchable={false}
+                register={otherDetails.register("highest-academic", {
+                  required: "Highest Academic/Professional is required",
+                })}
+                error={otherDetails.formState.errors["highest-academic"]}
+              />
+
+              <SelectNotCreatable
+                label="Qualifications Attained *"
+                options={qualificationsAttainedOptions}
+                control={otherDetails.control}
+                name="qualifications-attained"
+                placeholder="Select Qualifications Attained"
+                isSearchable={false}
+                register={otherDetails.register("qualifications-attained", {
+                  required: "Qualifications Attained is required",
+                })}
+                error={otherDetails.formState.errors["qualifications-attained"]}
+              />
+
+              <Input
+                label="Annual Income in Singapore dollars (SGD) *"
+                register={otherDetails.register("annual-income", {
+                  required: "Annual Income is required",
+                  pattern: { value: /^\d+$/, message: "Annual Income is not valid (only number)" },
+                  maxLength: { value: 11, message: "Exceeds 11 character limit" },
+                })}
+                error={otherDetails.formState.errors["annual-income"]}
+              />
+
+              <Input
+                label="Religion *"
+                register={otherDetails.register("religion", {
+                  required: "Religion is required",
+                  maxLength: { value: 25, message: "Exceeds 25 character limit" },
+                })}
+                error={otherDetails.formState.errors["religion"]}
+              />
+
+              <Input
+                label="Expected Date of Arrival in Singapore *"
+                register={otherDetails.register("arrival-date", {
+                  required: "Date of Arrival in Singapore is required",
+                })}
+                error={otherDetails.formState.errors["arrival-date"]}
+                type="date"
+              />
+
+              <SelectNotCreatable
+                label="Type of Visa *"
+                options={typeOfVisaOptions}
+                control={otherDetails.control}
+                name="type-of-visa"
+                placeholder="Select Type of Visa"
+                isSearchable={false}
+                register={otherDetails.register("type-of-visa", {
+                  required: "Type of Visa is required",
+                })}
+                error={otherDetails.formState.errors["type-of-visa"]}
+              />
+
+              <SelectNotCreatable
+                label="Purpose of visit *"
+                options={purposeOfVisitOptions}
+                control={otherDetails.control}
+                name="purpose-of-visit"
+                placeholder="Select purpose of visit"
+                isSearchable={false}
+                register={otherDetails.register("purpose-of-visit", {
+                  required: "Purpose of visit is required",
+                })}
+                error={otherDetails.formState.errors["purpose-of-visit"]}
+              />
+
+              <Input
+                label="Details of purpose"
+                register={otherDetails.register("details-of-purpose")}
+                error={otherDetails.formState.errors["details-of-purpose"]}
+              />
+
+              <Select
+                label="Where will you be staying in Singapore? *"
+                placeholder="Select location"
+                name="stay-location"
+                options={stayLocationOptions}
+                control={otherDetails.control}
+                register={otherDetails.register("stay-location", {
+                  required: "Stay location is required",
+                })}
+                error={otherDetails.formState.errors["stay-location"]}
+              />
+
+              <Group
+                options={["Less than 30 days", "More than 30 days"]}
+                legend="How long do you intend to stay in Singapore *"
+                classNameContainer="col-span-full"
+                checked="Less than 30 days"
+                register={otherDetails.register("days-intend-to-stay", { required: "Answer the question" })}
+                error={otherDetails.formState.errors["days-intend-to-stay"]}
+                isOpen={isStayingMoreThanThirtyDays}
+              >
+                <Input
+                  label="If your intended stay in Singapore is more than 30 days, please state the reason for your intended length of stay and the duration"
+                  classNameLabel="line-clamp-none"
+                  placeholder="Describe why ..."
+                  register={otherDetails.register("reason-for-stay")}
+                  error={otherDetails.formState.errors["reason-for-stay"]}
+                />
+              </Group>
+
+              <Join
+                legend="Address in Singapore"
+                classNameContainer="col-span-full"
+                className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 xl:flex xl:flex-wrap xl:[&>*]:flex-1"
+              >
+                <Input
+                  label="Block/House no *"
+                  register={otherDetails.register("singapore-house-no", {
+                    required: "Block/House no is required",
+                    maxLength: { value: 5, message: "Exceeds 5 character limit" },
+                  })}
+                  error={otherDetails.formState.errors["singapore-house-no"]}
+                />
+
+                <Input
+                  label="Floor no *"
+                  register={otherDetails.register("singapore-floor-no", {
+                    required: "Floor no is required",
+                    maxLength: { value: 2, message: "Exceeds 2 character limit" },
+                  })}
+                  error={otherDetails.formState.errors["singapore-floor-no"]}
+                />
+
+                <Input
+                  label="Unit no *"
+                  register={otherDetails.register("singapore-unit-no", {
+                    required: "Unit no is required",
+                    maxLength: { value: 4, message: "Exceeds 4 character limit" },
+                  })}
+                  error={otherDetails.formState.errors["singapore-unit-no"]}
+                />
+
+                <Input
+                  label="Postal code *"
+                  register={otherDetails.register("singapore-postal-code", {
+                    required: "Postal code is required",
+                    maxLength: { value: 4, message: "Exceeds 4 character limit" },
+                  })}
+                  error={otherDetails.formState.errors["singapore-postal-code"]}
+                />
+
+                <Input
+                  label="Street name *"
+                  register={otherDetails.register("singapore-street-name", {
+                    required: "Street name is required",
+                    maxLength: { value: 20, message: "Exceeds 20 character limit" },
+                  })}
+                  error={otherDetails.formState.errors["singapore-street-name"]}
+                />
+                <Input
+                  label="Contact no *"
+                  register={otherDetails.register("singapore-contact-no", {
+                    required: "Contact no is required",
+                    maxLength: { value: 20, message: "Exceeds 20 character limit" },
+                  })}
+                  error={otherDetails.formState.errors["singapore-contact-no"]}
+                />
+
+                <div className="col-span-full md:col-span-2">
+                  <Input
+                    label="Building name *"
+                    register={otherDetails.register("singapore-building-name", {
+                      required: "Building name is required",
+                    })}
+                    error={otherDetails.formState.errors["singapore-building-name"]}
+                  />
+                </div>
+              </Join>
+            </div>
+
+            <div className="flex justify-between">
+              <Button type="button" onClick={() => setStep(1)}>
+                <NextIcon className="mr-2 scale-x-[-1]" /> Previous
+              </Button>
               <Button>
                 Next <NextIcon className="ml-2" />
               </Button>
