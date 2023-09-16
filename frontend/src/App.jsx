@@ -10,6 +10,7 @@ import AgentHome from "views/agent/home/AgentHome";
 import MainEntry from "views/public/Entry/MainEntry";
 import { Schengen } from "views/public/Entry/Schengen";
 import Registration from "./views/agent/Rgistration/Registration";
+import { Singapore } from "views/public/Entry/Singapore";
 
 function App() {
   return (
@@ -19,6 +20,8 @@ function App() {
       <Route path="entry">
         <Route index element={<MainEntry />} />
         <Route path="schengen" element={<Schengen />} />
+        <Route path="singapore" element={<Singapore />} />
+
         <Route path="*" element={<Navigate to="/entry" replace />} />
       </Route>
       <Route path="agentEntry/*" element={<AgentEntry />} />

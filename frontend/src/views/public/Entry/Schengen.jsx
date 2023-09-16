@@ -723,7 +723,7 @@ export function LeftArrow(props) {
   );
 }
 
-function NextIcon({ className, ...rest }) {
+export function NextIcon({ className, ...rest }) {
   return (
     <svg
       className={twMerge(" h-3.5 w-3.5", className)}
