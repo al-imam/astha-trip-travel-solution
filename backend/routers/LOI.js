@@ -10,7 +10,7 @@ const isAuthenticate = require("../middleware/Auth/isAuthenticate");
 const approveLoiRequest = require("../controller/LOI/approveLoiRequest");
 const deleteController = require("../controller/LOI/deleteAfterCancel");
 const LOI = require("../model/LOI");
-
+const LoiByAgent =require('../controller/LOI/LoiByAgent')
 LOIRoute.post("/entry", isAuthenticate, LOIEntry);
 LOIRoute.get("/getall", isAdmin, GetAll);
 
@@ -49,5 +49,6 @@ LOIRoute.post(
   validateBody([isString("reference")]),
   deleteController
 );
+LOIRoute.post("/loibyagent",isAdmin,LoiByAgent);
 
 module.exports = LOIRoute;
