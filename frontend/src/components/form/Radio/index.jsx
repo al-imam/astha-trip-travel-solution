@@ -32,7 +32,10 @@ export function Radio({ label, title = label, options, error, classNameLabel, re
               {...register}
               {...rest}
             />
-            <label htmlFor={id + v.replace(/\s+/g, "")} className={style.label}>
+            <label htmlFor={id + v.replace(/\s+/g, "")} className={twMerge(style.label, "sm-max:leading-tight")}>
+              <div className={style["check-box"]}>
+                <div className={style["box"]} />
+              </div>
               {v}
             </label>
           </div>
@@ -58,10 +61,10 @@ export function RadioNoLabel({ options, register, checked, ...rest }) {
         {...rest}
       />
 
-      <div className={style["check-box"]}>
-        <div className={style["box"]} />
-      </div>
       <label htmlFor={id + v.replace(/\s+/g, "")} className={twMerge(style.label, "sm-max:leading-tight")}>
+        <div className={style["check-box"]}>
+          <div className={style["box"]} />
+        </div>
         {v}
       </label>
     </div>
