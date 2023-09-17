@@ -146,6 +146,10 @@ export function Singapore() {
     console.log(data);
   }
 
+  function stopSubmitting(event) {
+    if (event.key === "Enter") event.preventDefault();
+  }
+
   return (
     <main className="container mx-auto space-y-4 p-4">
       <button
@@ -647,7 +651,7 @@ export function Singapore() {
                   <div className="flex flex-col gap-1">
                     {livedOtherCountries.map((c) => (
                       <div className="grid grid-cols-[1fr_auto]" key={JSON.stringify(c)}>
-                        <p>{c.country}</p>{" "}
+                        <p>{c.country}</p>
                         <button
                           type="button"
                           className="mx-8"
@@ -681,6 +685,7 @@ export function Singapore() {
 
                   <Input
                     label="Address *"
+                    onKeyDown={stopSubmitting}
                     register={countryForm.register("address", {
                       required: "Address is required",
                     })}
@@ -689,6 +694,7 @@ export function Singapore() {
 
                   <Input
                     label="From *"
+                    onKeyDown={stopSubmitting}
                     register={countryForm.register("from", {
                       required: "From is required",
                     })}
@@ -697,6 +703,7 @@ export function Singapore() {
                   />
                   <Input
                     label="To *"
+                    onKeyDown={stopSubmitting}
                     register={countryForm.register("to", {
                       required: "To is required",
                     })}
