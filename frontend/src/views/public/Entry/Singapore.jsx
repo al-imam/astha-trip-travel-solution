@@ -126,20 +126,30 @@ export function Singapore() {
     storage: window.sessionStorage,
   });
 
+  useFormPersist("particulars_of_local_contact", {
+    watch: particularsOfLocalContact.watch,
+    setValue: particularsOfLocalContact.setValue,
+    storage: window.sessionStorage,
+  });
+
   function particularsOfApplicantSubmit(data) {
     console.log(data);
     setStep(2);
   }
 
   function otherDetailsSubmit(data) {
+    if (isLivedOtherCountry && livedOtherCountries.length < 1) {
+      otherDetails.setError("lived-other-country", { type: "required", message: "Add Country or Select No" });
+      return countryForm.setFocus("country");
+    }
+
     console.log(data);
     setStep(3);
   }
 
   function submitCountryForm({ from, to, country, address }) {
     setLivedOtherCountries([...livedOtherCountries, { from, to, address, country: country.value }]);
-    countryForm.reset();
-    countryForm.setValue("country", null);
+    countryForm.reset({ country: null, from: "", to: "", address: "" });
   }
 
   function particularsOfLocalContactSubmit(data) {
@@ -663,7 +673,7 @@ export function Singapore() {
                     ))}
                   </div>
                 )}
-                <div className="grid grid-cols-2 gap-4 sm:flex sm:[&>*]:flex-1">
+                <div className="grid gap-4 sm:grid-cols-2 xl:flex xl:[&>*]:flex-1">
                   <Select
                     label="Country/Place *"
                     name="country"
