@@ -11,6 +11,7 @@ import districts from "../districts.json";
 import races from "../races.json";
 import { Group, Join } from "components/form/Group";
 import { NextIcon } from "./Schengen";
+import { AddIcon, DeleteIcon } from "./MainEntry";
 
 const countriesOptions = countries.map((e) => ({
   label: e.name,
@@ -91,20 +92,29 @@ const steps = ["", "", "", ""];
 export function Singapore() {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
+  const [livedOtherCountries, setLivedOtherCountries] = useState([]);
 
   const particularsOfApplicant = useForm();
   const otherDetails = useForm();
+  const countryForm = useForm();
 
   const citizenshipOfSpouse = particularsOfApplicant.watch("citizenship-of-spouse");
 
   const isStayingMoreThanThirtyDays = otherDetails.watch("days-intend-to-stay") === "More than 30 days";
+  const isLivedOtherCountry = otherDetails.watch("lived-other-country") === "Yes";
   const isSpouseIsSingaporeCitizen = citizenshipOfSpouseOptions.some(
     (c) => citizenshipOfSpouse && c.value === citizenshipOfSpouse.value
   );
 
-  useFormPersist("personal-visa-data-singapore", {
+  useFormPersist("particulars_of_applicant", {
     watch: particularsOfApplicant.watch,
     setValue: particularsOfApplicant.setValue,
+    storage: window.sessionStorage,
+  });
+
+  useFormPersist("other_details", {
+    watch: otherDetails.watch,
+    setValue: otherDetails.setValue,
     storage: window.sessionStorage,
   });
 
@@ -116,6 +126,12 @@ export function Singapore() {
   function otherDetailsSubmit(data) {
     console.log(data);
     setStep(3);
+  }
+
+  function submitCountryForm({ from, to, country, address }) {
+    setLivedOtherCountries([...livedOtherCountries, { from, to, address, country: country.value }]);
+    countryForm.reset();
+    countryForm.setValue("country", null);
   }
 
   return (
@@ -603,6 +619,147 @@ export function Singapore() {
                     error={otherDetails.formState.errors["singapore-building-name"]}
                   />
                 </div>
+              </Join>
+
+              <Group
+                options={["No", "Yes"]}
+                legend="Did you reside in other countries/places, other than your country/place of origin, for one year or more during the last 5 years? *"
+                classNameContainer="col-span-full"
+                checked={isLivedOtherCountry ? "Yes" : "No"}
+                register={otherDetails.register("lived-other-country", { required: "Answer the question" })}
+                error={otherDetails.formState.errors["lived-other-country"]}
+                isOpen={isLivedOtherCountry}
+                className="flex flex-col gap-4"
+              >
+                {livedOtherCountries.length > 0 && (
+                  <div className="flex flex-col gap-1">
+                    {livedOtherCountries.map((c) => (
+                      <div className="grid grid-cols-[1fr_auto]" key={JSON.stringify(c)}>
+                        <p>{c.country}</p>{" "}
+                        <button
+                          type="button"
+                          className="mx-8"
+                          onClick={() => setLivedOtherCountries((prev) => prev.filter((v) => c.country !== v.country))}
+                        >
+                          <DeleteIcon className="text-lg text-red-500/90 hover:text-red-600/90" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                <div className="grid grid-cols-2 gap-4 sm:flex sm:[&>*]:flex-1">
+                  <Select
+                    label="Country/Place *"
+                    name="country"
+                    options={countriesOptions}
+                    placeholder="Select country"
+                    register={countryForm.register("country", {
+                      required: "Country/Place is required",
+                      validate(v) {
+                        if (
+                          livedOtherCountries.findIndex((l) => l.country.toLowerCase() === v?.value.toLowerCase()) !==
+                          -1
+                        )
+                          return `${v?.value.toLowerCase()} already added`;
+                      },
+                    })}
+                    control={countryForm.control}
+                    error={countryForm.formState.errors["country"]}
+                  />
+
+                  <Input
+                    label="Address *"
+                    register={countryForm.register("address", {
+                      required: "Address is required",
+                    })}
+                    error={countryForm.formState.errors["address"]}
+                  />
+
+                  <Input
+                    label="From *"
+                    register={countryForm.register("from", {
+                      required: "From is required",
+                    })}
+                    error={countryForm.formState.errors["from"]}
+                    type="date"
+                  />
+                  <Input
+                    label="To *"
+                    register={countryForm.register("to", {
+                      required: "To is required",
+                    })}
+                    error={countryForm.formState.errors["to"]}
+                    type="date"
+                  />
+                </div>
+
+                <button
+                  className="mr-auto box-border inline-flex items-center rounded border border-brand-100 bg-gray-50 px-5 py-2 text-center text-sm font-medium text-blue-700 shadow transition-all hover:border-blue-700 hover:bg-blue-700 hover:text-white focus:outline-none focus:ring-4 focus:ring-blue-300 "
+                  onClick={countryForm.handleSubmit(submitCountryForm)}
+                  type="button"
+                >
+                  Add <AddIcon className="ml-1 text-lg " />
+                </button>
+              </Group>
+
+              <Join
+                legend="Details of Travelling Companion (Only for applicant who is 12 years old or less at the point of application. Details are not required if applicant is accompanied by an airline representative.)"
+                classNameContainer="col-span-full"
+                className="grid gap-4 sm:grid-cols-2 md:grid-cols-3"
+              >
+                <Input
+                  label="Relationship of Travelling Companion To Applicant"
+                  register={otherDetails.register("relationship-of-travelling-companion", {
+                    maxLength: { value: 25, message: "Exceeds 25 character limit" },
+                  })}
+                  error={otherDetails.formState.errors["relationship-of-travelling-companion"]}
+                />
+
+                <Input
+                  label="Name"
+                  register={otherDetails.register("name-of-travelling-companion", {
+                    maxLength: { value: 50, message: "Exceeds 50 character limit" },
+                  })}
+                  error={otherDetails.formState.errors["name-of-travelling-companion"]}
+                />
+
+                <Input
+                  label="Date of birth"
+                  register={otherDetails.register("birth-date-of-travelling-companion")}
+                  error={otherDetails.formState.errors["birth-date-of-travelling-companion"]}
+                  type="date"
+                />
+
+                <SelectNotCreatable
+                  label="Sex (gender)"
+                  options={sexesOptions}
+                  placeholder="Select gender"
+                  control={otherDetails.control}
+                  isClearable
+                  name="sex-of-travelling-companion"
+                  isSearchable={false}
+                  register={otherDetails.register("sex-of-travelling-companion")}
+                  error={otherDetails.formState.errors["sex-of-travelling-companion"]}
+                />
+
+                <Select
+                  label="Nationality/Citizenship "
+                  placeholder="Select nationality/citizenship"
+                  options={nationalityOptions}
+                  control={otherDetails.control}
+                  isClearable
+                  name="nationality-of-travelling-companion"
+                  register={otherDetails.register("nationality-of-travelling-companion")}
+                  error={otherDetails.formState.errors["nationality-of-travelling-companion"]}
+                />
+
+                <Input
+                  label="Passport no"
+                  register={otherDetails.register("passport-no-of-travelling-companion", {
+                    maxLength: { value: 15, message: "Exceeds 15 character limit" },
+                  })}
+                  error={otherDetails.formState.errors["passport-no-of-travelling-companion"]}
+                />
               </Join>
             </div>
 

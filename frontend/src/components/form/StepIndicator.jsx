@@ -3,7 +3,7 @@ export function StepIndicator({ steps = [], current = 2 }) {
     <ol className="relative isolate flex w-full items-center justify-around gap-2 text-sm font-medium text-gray-500 sm:text-base">
       {steps.map((step, index) => (
         <li
-          key={step}
+          key={index}
           className={`mt-auto flex flex-1 flex-col-reverse items-center ${
             index + 1 < current && "text-blue-600 dark:text-blue-500"
           }`}

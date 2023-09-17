@@ -18,19 +18,14 @@
 }
 
 .check-box {
-  display: grid;
-  grid-template: "container";
-  place-items: center;
-  place-content: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   height: 1rem;
   aspect-ratio: 1 / 1;
   opacity: 0.9;
   border: 2px solid var(--color);
-  border-radius: 234872348px;
-}
-
-.check-box > * {
-  grid-area: container;
+  border-radius: 50%;
 }
 
 .box {
@@ -40,7 +35,7 @@
   transition: opacity var(--speed) ease-out;
   background: var(--color);
   aspect-ratio: 1 / 1;
-  border-radius: 34223px;
+  border-radius: 50%;
 }
 
 .radio:checked + .label .check-box .box {
