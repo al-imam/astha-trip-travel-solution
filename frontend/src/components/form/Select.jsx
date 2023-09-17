@@ -3,13 +3,14 @@ import NormalSelect from "react-select";
 
 import { Controller } from "react-hook-form";
 import { useId } from "react";
+import { twMerge } from "tailwind-merge";
 
-export function Select({ control, register, name, error, label, options, ...rest }) {
+export function Select({ control, register, name, error, label, options, classNameLabel, ...rest }) {
   const id = useId();
 
   return (
     <div className="flex flex-col gap-1">
-      <label htmlFor={id} className="text-base font-medium text-gray-800 line-clamp-1">
+      <label htmlFor={id} className={twMerge("text-base font-medium text-gray-800 line-clamp-1", classNameLabel)}>
         {label}
       </label>
       <Controller
@@ -73,12 +74,12 @@ export function Select({ control, register, name, error, label, options, ...rest
   );
 }
 
-export function SelectNotCreatable({ control, register, name, error, label, options, ...rest }) {
+export function SelectNotCreatable({ control, register, name, error, label, options, classNameLabel, ...rest }) {
   const id = useId();
 
   return (
     <div className="flex flex-col gap-1">
-      <label htmlFor={id} className=" text-base font-medium text-gray-800 line-clamp-1">
+      <label htmlFor={id} className={twMerge("text-base font-medium text-gray-800 line-clamp-1", classNameLabel)}>
         {label}
       </label>
       <Controller
