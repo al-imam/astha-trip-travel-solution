@@ -180,6 +180,7 @@ export function Schengen() {
 
     try {
       await axios.post("/api/visa-form/schengen", Object.assign(form, flattenObject(data)));
+
       cleanContact.clear();
       cleanTravel.clear();
       cleanInfo.clear();
