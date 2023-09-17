@@ -213,6 +213,12 @@ const SingaporeSchema = new Schema({
         req: true
     },
 
+
+    status: {
+        // 32
+        type: "VARCHAR(255)",
+        req: true,
+    },
     apply_by: {
         // 32
         type: "VARCHAR(255)",

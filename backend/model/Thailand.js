@@ -142,6 +142,11 @@ const ThailandSchema = new Schema({
         type: 'VARCHAR(255)',
         req: true
     },
+    status: {
+        // 32
+        type: "VARCHAR(255)",
+        req: true,
+    },
     // Address i
     apply_by: {
         // 32
