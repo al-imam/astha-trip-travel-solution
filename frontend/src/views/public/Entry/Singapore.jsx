@@ -12,6 +12,7 @@ import races from "../races.json";
 import { Group, Join } from "components/form/Group";
 import { NextIcon } from "./Schengen";
 import { AddIcon, DeleteIcon } from "./MainEntry";
+import { Radio } from "components/form/Radio";
 
 const countriesOptions = countries.map((e) => ({
   label: e.name,
@@ -87,7 +88,7 @@ const stayLocationOptions = ["Next of Kin's Place", "Relative's Place", "Friend'
   value,
 }));
 
-const steps = ["", "", "", ""];
+const steps = ["", "", ""];
 
 export function Singapore() {
   const navigate = useNavigate();
@@ -97,11 +98,18 @@ export function Singapore() {
   const particularsOfApplicant = useForm();
   const otherDetails = useForm();
   const countryForm = useForm();
+  const particularsOfLocalContact = useForm();
 
   const citizenshipOfSpouse = particularsOfApplicant.watch("citizenship-of-spouse");
 
+  const a = particularsOfLocalContact.watch("a");
+  const b = particularsOfLocalContact.watch("b");
+  const c = particularsOfLocalContact.watch("c");
+  const d = particularsOfLocalContact.watch("d");
+
   const isStayingMoreThanThirtyDays = otherDetails.watch("days-intend-to-stay") === "More than 30 days";
   const isLivedOtherCountry = otherDetails.watch("lived-other-country") === "Yes";
+  const isExtraInformationRequired = [a, b, c, d].includes("Yes");
   const isSpouseIsSingaporeCitizen = citizenshipOfSpouseOptions.some(
     (c) => citizenshipOfSpouse && c.value === citizenshipOfSpouse.value
   );
@@ -132,6 +140,10 @@ export function Singapore() {
     setLivedOtherCountries([...livedOtherCountries, { from, to, address, country: country.value }]);
     countryForm.reset();
     countryForm.setValue("country", null);
+  }
+
+  function particularsOfLocalContactSubmit(data) {
+    console.log(data);
   }
 
   return (
@@ -765,6 +777,123 @@ export function Singapore() {
 
             <div className="flex justify-between">
               <Button type="button" onClick={() => setStep(1)}>
+                <NextIcon className="mr-2 scale-x-[-1]" /> Previous
+              </Button>
+              <Button>
+                Next <NextIcon className="ml-2" />
+              </Button>
+            </div>
+          </form>
+        )}
+
+        {step === 3 && (
+          <form
+            name="particulars_of_local_contact"
+            className="space-y-4"
+            onSubmit={particularsOfLocalContact.handleSubmit(particularsOfLocalContactSubmit)}
+            autoComplete="off"
+          >
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <Input
+                label="Name of local contact company/hotel *"
+                register={particularsOfLocalContact.register("name-of-local-contact", {
+                  required: "Name of local contact company/hotel is required",
+
+                  maxLength: {
+                    value: 50,
+                    message: "Exceeds 50 character limit",
+                  },
+                })}
+                error={particularsOfLocalContact.formState.errors["name-of-local-contact"]}
+              />
+
+              <Input
+                label="Relationship of local contact/company/hotel to applicant *"
+                register={particularsOfLocalContact.register("Relationship-of-local-contact", {
+                  required: "Relationship of local contact to applicant is required",
+                  maxLength: {
+                    value: 25,
+                    message: "Exceeds 25 character limit",
+                  },
+                })}
+                error={particularsOfLocalContact.formState.errors["Relationship-of-local-contact"]}
+              />
+
+              <Input
+                label="Contact no *"
+                register={particularsOfLocalContact.register("contact-no-of-local-contact", {
+                  required: "Contact no is required",
+                })}
+                error={particularsOfLocalContact.formState.errors["contact-no-of-local-contact"]}
+              />
+
+              <Input
+                label="Email address *"
+                register={particularsOfLocalContact.register("email-of-local-contact", {
+                  required: "Email address is required",
+                })}
+                error={particularsOfLocalContact.formState.errors["email-of-local-contact"]}
+              />
+
+              <Join legend="Antecedent of applicant" classNameContainer="col-span-full" className="flex flex-col gap-4">
+                <Radio
+                  label="Have you ever been refused entry into or deported from any country/place, including Singapore?"
+                  options={["No", "Yes"]}
+                  checked="No"
+                  error={particularsOfLocalContact.formState.errors["a"]}
+                  register={particularsOfLocalContact.register("a", {
+                    required: "Answer the question",
+                  })}
+                  classNameLabel="line-clamp-none"
+                />
+
+                <Radio
+                  label="Have you ever been convicted in a court of law in any country/place, including Singapore?"
+                  options={["No", "Yes"]}
+                  checked="No"
+                  error={particularsOfLocalContact.formState.errors["b"]}
+                  register={particularsOfLocalContact.register("b", {
+                    required: "Answer the question",
+                  })}
+                  classNameLabel="line-clamp-none"
+                />
+
+                <Radio
+                  label="Have you ever been prohibited from entering Singapore?"
+                  options={["No", "Yes"]}
+                  checked="No"
+                  error={particularsOfLocalContact.formState.errors["c"]}
+                  register={particularsOfLocalContact.register("c", {
+                    required: "Answer the question",
+                  })}
+                  classNameLabel="line-clamp-none"
+                />
+
+                <Radio
+                  label="Have you ever entered Singapore using a different passport or name?"
+                  options={["No", "Yes"]}
+                  checked="No"
+                  error={particularsOfLocalContact.formState.errors["d"]}
+                  register={particularsOfLocalContact.register("d", {
+                    required: "Answer the question",
+                  })}
+                  classNameLabel="line-clamp-none"
+                />
+
+                {isExtraInformationRequired && (
+                  <Input
+                    label={`If any of the answer is "Yes", please furnish details below *`}
+                    register={particularsOfLocalContact.register("details-why-yes", {
+                      required: { value: isExtraInformationRequired, message: "Details is required" },
+                    })}
+                    error={particularsOfLocalContact.formState.errors["details-why-yes"]}
+                  />
+                )}
+              </Join>
+            </div>
+
+            <div className="flex justify-between">
+              <Button type="button" onClick={() => setStep(2)}>
                 <NextIcon className="mr-2 scale-x-[-1]" /> Previous
               </Button>
               <Button>

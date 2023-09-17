@@ -5,6 +5,7 @@
 
 .radio {
   appearance: none;
+  position: absolute;
 }
 
 .label {
