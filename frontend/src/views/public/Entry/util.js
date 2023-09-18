@@ -29,3 +29,16 @@ export function flattenObject(obj) {
 
   return result;
 }
+
+export function getNumberSelect(start, end) {
+  const resultArray = [];
+
+  for (let i = start; i <= end; i++) {
+    resultArray.push({
+      value: `${i}`,
+      label: `${i}`,
+    });
+  }
+
+  return resultArray;
+}
