@@ -12,7 +12,7 @@ export function Select({ control, register, name, error, label, options, classNa
 
   return (
     <div className="flex flex-col gap-1" id={identity}>
-      <label htmlFor={id} className={twMerge("text-base font-medium text-gray-800 line-clamp-1", classNameLabel)}>
+      <label htmlFor={id} className={twMerge("text-base font-medium text-gray-800 sm:line-clamp-1", classNameLabel)}>
         {label}
       </label>
       <Controller
@@ -84,7 +84,7 @@ export function SelectNotCreatable({ control, register, name, error, label, opti
 
   return (
     <div className="flex flex-col gap-1" id={identity}>
-      <label htmlFor={id} className={twMerge("text-base font-medium text-gray-800 line-clamp-1", classNameLabel)}>
+      <label htmlFor={id} className={twMerge("text-base font-medium text-gray-800 sm:line-clamp-1", classNameLabel)}>
         {label}
       </label>
       <Controller
