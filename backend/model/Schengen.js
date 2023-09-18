@@ -94,15 +94,27 @@ const SchengenSchema = new Schema({
         type: "VARCHAR(255)",
         req: true,
     },
-    uk_family_home_address_email: {
+    home_email: {
         type: "VARCHAR(255)",
         req: true,
     },
-    uk_family_phone: {
+    home_address: {
         type: "VARCHAR(255)",
         req: true,
     },
-    residence_in_a_country_other_then: {
+    phone: {
+        type: "VARCHAR(255)",
+        req: true,
+    },
+    residence_in_a_country_equivalent: {
+        type: "VARCHAR(255)",
+        req: true,
+    },
+    residence_in_a_country_no: {
+        type: "VARCHAR(255)",
+        req: true,
+    },
+    residence_in_a_country_valid: {
         type: "VARCHAR(255)",
         req: true,
     },

@@ -97,6 +97,12 @@ const Index = () => {
                 {
                     Header: "Agent",
                     accessor: "apply_by",
+                    Cell:(prop)=>{
+                        const User = JSON.parse(prop.row.original.apply_by)
+                        return (
+                            <span className={`${(User.type === "Admin")?"text-green-500":"text-red-500"}`}>{User.email}</span>
+                        )
+                    }
 
                 },
                 {
@@ -136,6 +142,12 @@ const Index = () => {
                 {
                     Header: "Agent",
                     accessor: "apply_by",
+                    Cell:(prop)=>{
+                        const User = JSON.parse(prop.row.original.apply_by)
+                        return (
+                            <span className={`${(User.type === "Admin")?"text-green-500":"text-red-500"}`}>{User.email}</span>
+                        )
+                    }
 
                 },
                 {

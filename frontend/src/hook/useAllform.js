@@ -17,7 +17,7 @@ const useAllform = (country) => {
 
     const getData = async (c) => {
         try {
-            const resdb =await axios.get(`/api/visaform/get-${c}`);
+            const resdb =await axios.get(`/api/visa-form/get-${c}`);
             setData(resdb.data);
             setLoading(false);
         } catch (error) {

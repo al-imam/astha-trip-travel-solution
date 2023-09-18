@@ -145,11 +145,8 @@ export function Schengen() {
   }
 
   async function infoSubmit(data) {
-    console.log(Object.assign(form, flattenObject(data)));
-
     try {
-      await axios.post("/api/visa-form/schengen", Object.assign(form, flattenObject(data)));
-
+      await axios.post("/api/visa-form/schengen", Object.assign(form, flattenObject(data)));  
       cleanContact.clear();
       cleanTravel.clear();
       cleanInfo.clear();
