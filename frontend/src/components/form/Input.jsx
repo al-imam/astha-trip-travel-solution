@@ -25,7 +25,7 @@ export function Input({
         {...register}
         id={id}
         className={twMerge(
-          "block w-full rounded border-none bg-gray-50 p-2.5 text-sm text-gray-900 outline-none ring-1 ring-brand-100 focus:ring-2  focus:ring-blue-500/50 disabled:opacity-50 disabled:ring-brand-50",
+          "block h-10 w-full rounded border-none bg-gray-50 p-2.5 text-sm text-gray-900 outline-none ring-1 ring-brand-100  focus:ring-2 focus:ring-blue-500/50 disabled:opacity-50 disabled:ring-brand-50",
           error && "ring-red-500/50 focus:ring-red-500/50",
           className
         )}

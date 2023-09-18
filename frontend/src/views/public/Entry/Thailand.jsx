@@ -4,7 +4,7 @@ import { Group, Join } from "components/form/Group";
 import { Input } from "components/form/Input";
 import { Select, SelectNotCreatable } from "components/form/Select";
 import { StepIndicator } from "components/form/StepIndicator";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import useFormPersist from "react-hook-form-persist";
 import { useNavigate } from "react-router-dom";
@@ -71,12 +71,22 @@ const travelingByOptions = ["Ait plane", "Train", "Bus / Car", "Cruise"].map((va
   value: value.toLocaleUpperCase(),
 }));
 
+const purposeOfVisitOptions = ["Tourist", "Transit", "Business", "Diplomatic/Official"].map((value) => ({
+  label: value,
+  value,
+}));
+
+const validCountryOptions = ["ALL COUNTRIES OF THE WORLD EXCEPT ISRAIL"].map((value) => ({
+  label: value.toLowerCase(),
+  value,
+}));
+
 const sexesOption = ["Male", "Female"].map((value) => ({
   label: value,
   value,
 }));
 
-const steps = ["", "", "", ""];
+const steps = ["", "", ""];
 
 export function Thailand() {
   const navigate = useNavigate();
@@ -85,10 +95,27 @@ export function Thailand() {
 
   const personal = useForm();
   const contact = useForm();
+  const purpose = useForm();
+
+  useEffect(() => {
+    purpose.setValue("countries-for-which-travel-document-is-valid", validCountryOptions[0]);
+  }, []);
 
   const cleanPersonal = useFormPersist("thailand-personal-submit", {
     watch: personal.watch,
     setValue: personal.setValue,
+    storage: window.sessionStorage,
+  });
+
+  const cleanContact = useFormPersist("thailand-contact-submit", {
+    watch: contact.watch,
+    setValue: contact.setValue,
+    storage: window.sessionStorage,
+  });
+
+  const cleanPurpose = useFormPersist("thailand-purpose-submit", {
+    watch: purpose.watch,
+    setValue: purpose.setValue,
     storage: window.sessionStorage,
   });
 
@@ -101,7 +128,12 @@ export function Thailand() {
   function contactSubmit(data) {
     console.log(data);
     setForm((prev) => Object.assign(prev, flattenObject(data)));
-    setStep(2);
+    setStep(3);
+  }
+
+  function purposeSubmit(data) {
+    console.log(data);
+    setForm((prev) => Object.assign(prev, flattenObject(data)));
   }
 
   return (
@@ -347,14 +379,14 @@ export function Thailand() {
                 <Input
                   label="Names, dates and places of birth of minor children (if accompanying)"
                   classNameLabel="line-clamp-none"
-                  register={contact.register("permanent-telephone")}
-                  error={contact.formState.errors["permanent-telephone"]}
+                  register={contact.register("names-dates-and-places-of-birth-of-minor-children")}
+                  error={contact.formState.errors["names-dates-and-places-of-birth-of-minor-children"]}
                 />
                 <Input
-                  label="Date of Arrival in and Departure from Thailand"
+                  label="Date of arrival in and departure from thailand"
                   classNameLabel="line-clamp-none"
-                  register={contact.register("permanent-telephone")}
-                  error={contact.formState.errors["permanent-telephone"]}
+                  register={contact.register("date-of-arrival-in-and-departure-from-thailand")}
+                  error={contact.formState.errors["date-of-arrival-in-and-departure-from-thailand"]}
                   type="date"
                 />
               </div>
@@ -392,6 +424,88 @@ export function Thailand() {
               </Button>
               <Button>
                 Next <NextIcon className="ml-2" />
+              </Button>
+            </div>
+          </form>
+        )}
+
+        {step === 3 && (
+          <form name="purpose" autoComplete="off" className="space-y-4" onSubmit={purpose.handleSubmit(purposeSubmit)}>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <Input
+                label="Date of previous visit to thailand *"
+                register={purpose.register("date-of-previous-visit", {
+                  required: "Date of previous visit to thailand is required",
+                })}
+                error={purpose.formState.errors["date-of-previous-visit"]}
+                type="date"
+              />
+
+              <Select
+                label="Purpose of visit *"
+                placeholder="Select purpose of visit"
+                options={purposeOfVisitOptions}
+                control={purpose.control}
+                name="purpose-of-visit"
+                register={purpose.register("purpose-of-visit", { required: "purpose of visit is required" })}
+                error={purpose.formState.errors["purpose-of-visit"]}
+              />
+
+              <Select
+                label="Countries for which travel document is valid *"
+                placeholder="Select countries"
+                options={validCountryOptions}
+                control={purpose.control}
+                name="countries-for-which-travel-document-is-valid"
+                register={purpose.register("countries-for-which-travel-document-is-valid", {
+                  required: "Countries is required",
+                })}
+                error={purpose.formState.errors["countries-for-which-travel-document-is-valid"]}
+              />
+
+              <Input
+                label="Proposed address in thailand *"
+                register={purpose.register("proposed-address-in-thailand", {
+                  required: "Proposed address in thailand is required",
+                })}
+                error={purpose.formState.errors["proposed-address-in-thailand"]}
+              />
+
+              <Input
+                label="Name and address of local guarantor *"
+                register={purpose.register("name-and-address-of-local-guarantor", {
+                  required: "Name and address of local guarantor is required",
+                })}
+                error={purpose.formState.errors["name-and-address-of-local-guarantor"]}
+              />
+
+              <Input
+                label="Telephone/fax of local guarantor *"
+                register={purpose.register("telephone-fax-of-local-guarantor", {
+                  required: "Telephone/fax is required",
+                })}
+                error={purpose.formState.errors["telephone-fax-of-local-guarantor"]}
+              />
+
+              <Input
+                label="Name and address of guarantor in thailand *"
+                register={purpose.register("name-and-address-of-guarantor-in-thailand")}
+                error={purpose.formState.errors["name-and-address-of-guarantor-in-thailand"]}
+              />
+
+              <Input
+                label="Telephone/fax of thailand guarantor *"
+                register={purpose.register("telephone-fax-of-thailand-guarantor")}
+                error={purpose.formState.errors["telephone-fax-of-thailand-guarantor"]}
+              />
+            </div>
+
+            <div className="flex justify-between">
+              <Button type="button" onClick={() => setStep(2)}>
+                <NextIcon className="mr-2 scale-x-[-1]" /> Previous
+              </Button>
+              <Button>
+                Submit <NextIcon className="ml-2" />
               </Button>
             </div>
           </form>
