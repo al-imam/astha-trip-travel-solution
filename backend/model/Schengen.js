@@ -175,7 +175,11 @@ const SchengenSchema = new Schema({
         type: "VARCHAR(255)",
         req: true,
     },
-
+    status: {
+        // 32
+        type: "VARCHAR(255)",
+        req: true,
+    },
 });
 
 const Schengen = new Model(SchengenSchema, "Schengen_data")

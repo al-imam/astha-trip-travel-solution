@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import NormalSelect from "react-select";
 import Widget from 'components/widget/Widget'
 import { motion, AnimatePresence } from 'framer-motion';
@@ -72,20 +72,121 @@ const Index = () => {
 
 
     const colunm = useMemo(() => {
-        return [
-            {
-                Header: "ID",
-                accessor: "id", // accessor is the "key" in the data
-            },
-            {
-                Header: "Amount",
-                accessor: "ammount",
-                Cell: (prop) => {
-                    return prop.row.original.id
-                }
-            },
-        ]
+        return {
+            schengen: [
+                {
+                    Header: "ID",
+                    accessor: "id", // accessor is the "key" in the data
+                },
+                {
+                    Header: "Name",
+                    accessor: "name",
+                    Cell: (prop) => {
+                        return prop.row.original.surname + " " + prop.row.original.first_name
+                    }
+                },
+                {
+                    Header: "Passport Number",
+                    accessor: "passport_number",
+
+                },
+                {
+                    Header: "Passport Type",
+                    accessor: "type_of_travel_document",
+                },
+                {
+                    Header: "Agent",
+                    accessor: "apply_by",
+
+                },
+                {
+                    Header: "Status",
+                    accessor: "status",
+
+                },
+                {
+                    Header: "Action",
+                    accessor: "action",
+                    Cell: (prop) => {
+                        return prop.row.original.id
+                    }
+                },
+            ],
+            thailand: [
+                {
+                    Header: "ID",
+                    accessor: "id", // accessor is the "key" in the data
+                },
+                {
+                    Header: "Name",
+                    accessor: "name",
+                    Cell: (prop) => {
+                        return prop.row.original.first_name + " " + prop.row.original.middle_name
+                    }
+                },
+                {
+                    Header: "Passport Number",
+                    accessor: "passport_number",
+
+                },
+                {
+                    Header: "Passport Type",
+                    accessor: "type_of_passport",
+                },
+                {
+                    Header: "Agent",
+                    accessor: "apply_by",
+
+                },
+                {
+                    Header: "Status",
+                    accessor: "status",
+
+                },
+                {
+                    Header: "Action",
+                    accessor: "action",
+                    Cell: (prop) => {
+                        return prop.row.original.id
+                    }
+                },
+            ]
+        }
     })
+    // selected country data 
+    const [SelectedCountryData, SetSelectedCountryData] = useState([]);
+    useEffect(() => {
+
+        if (SelectedCountry === "singapore") {
+            SetSelectedCountryData(allSingapore);
+        }
+        if (SelectedCountry === "schengen") {
+            SetSelectedCountryData(allschengen);
+        }
+        if (SelectedCountry === "thailand") {
+            SetSelectedCountryData(allthailand);
+        }
+    }, [SelectedCountry])
+
+
+    let col = []
+
+    switch (SelectedCountry) {
+        case "singapore":
+            col = colunm.schengen
+            break;
+
+        case "schengen":
+            col = colunm.schengen
+            break;
+        case "thailand":
+            col = colunm.thailand
+            break;
+    }
+    // filter the data 
+    const [filterStatus, SetfilterStatus] = useState();
+    const [filterAgent, SetfilterAgent] = useState();
+
 
     return (
         <div className='w-full relative pt-7'>
@@ -93,17 +194,19 @@ const Index = () => {
             <div className='w-full relative flex justify-between gap-2'>
                 <Widget
                     icon={<TwemojiFlagForFlagSingapore className="text-2xl " />} title={"Singapore"}
-                    subtitle={singaporLoad?(<SvgSpinnersPulseRings3/>): allSingapore.length}
+                    subtitle={singaporLoad ? (<SvgSpinnersPulseRings3 />) : allSingapore.length}
+                />
+
+                <Widget
+                    icon={<TwemojiFlagForFlagEuropeanUnion className="text-2xl " />}
+                    title={"Schengen"}
+                    subtitle={schengenLoad ? (<SvgSpinnersPulseRings3 />) :
+                        allschengen.length}
                 />
                 <Widget
                     icon={<EmojioneV1FlagForThailand className="text-2xl " />}
                     title={"Thailand"}
-                    subtitle={allthailand.length}
-                />
-                <Widget
-                    icon={<TwemojiFlagForFlagEuropeanUnion className="text-2xl " />}
-                    title={"Schengen"}
-                    subtitle={allschengen.length}
+                    subtitle={thailandLoad ? (<SvgSpinnersPulseRings3 />) : allthailand.length}
                 />
             </div>
             <div className='w-full relative p-3'>
@@ -121,7 +224,7 @@ const Index = () => {
             </div>
             <AnimatePresence>
                 {
-                    SelectedCountry === "singapore" ? (<motion.div
+                    SelectedCountryData.length ? (<motion.div
                         initial={{
                             opacity: 0,
                             top: -10
@@ -141,7 +244,7 @@ const Index = () => {
                         }}
                         className='w-full relative'>
                         <div className='w-full relative flex gap-3 justify-between mt-3'>
-                            <Widget icon={<LineMdDocumentList className="text-2xl " />} title={"Total"} subtitle={100} />
+                            <Widget icon={<LineMdDocumentList className="text-2xl " />} title={"Total"} subtitle={SelectedCountryData.length} />
                             <Widget icon={<LineMdDocumentList className="text-2xl " />} title={"Pending"} subtitle={100} />
                             <Widget icon={<LineMdDocumentList className="text-2xl" />} title={"Canaled"} subtitle={100} />
                         </div>
@@ -152,6 +255,10 @@ const Index = () => {
                                 >
                                     <label>Filter Status</label>
                                     <NormalSelect
+                                        onChange={(e) => {
+                                            SetfilterStatus(e.value);
+                                        }}
+                                        value={{label:filterStatus,value:filterStatus}}
                                         options={[
                                             { label: "Pending", value: "pending" },
                                             { label: "Approved", value: "approved" },
@@ -179,19 +286,24 @@ const Index = () => {
 
                                     </label>
                                     <NormalSelect
+                                        onChange={(e) => {
+                                            SetfilterAgent(e.value)
+                                        }}
+                                        value={{ label: filterAgent, value: filterAgent }}
                                         options={data.length ? data.map(e => ({ label: e.email, value: e.email })) : []}
                                         styles={StyleSelect}
                                     />
                                 </div>
                             </div>
-                            <Table colunm={colunm} datas={[]} />
+                            {/* // "singapore", "schengen", "thailand" */}
+                            <Table colunm={col} datas={SelectedCountryData} />
                         </div>
                     </motion.div>
                     ) : ""
                 }
             </AnimatePresence>
             {
-                SelectedCountry !== "singapore" ? (<motion.div
+                !SelectedCountryData.length ? (<motion.div
                     initial={{
                         opacity: 0,
                         top: 10
