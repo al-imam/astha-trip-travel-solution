@@ -129,7 +129,6 @@ export function Schengen() {
   });
 
   function personalSubmit(data) {
-    console.log(data);
     setForm((prev) => Object.assign(prev, flattenObject(data)));
     setStep(2);
   }
@@ -395,7 +394,7 @@ export function Schengen() {
                 options={["No", "Yes"]}
                 legend="Personal data of the family member who is an EU, EEA or CH citizen or an UK national who is a withdrawal agreement beneficiary, have any? *"
                 classNameContainer="col-span-full"
-                checked="No"
+                checked={isEuCitizen ? 2 : 1}
                 register={travel.register("have-eu-citizen", { required: "Answer the question" })}
                 error={travel.formState.errors["have-eu-citizen"]}
                 isOpen={isEuCitizen}
@@ -403,19 +402,25 @@ export function Schengen() {
               >
                 <Input
                   label="Surname"
-                  register={travel.register("citizen-surname")}
+                  register={travel.register("citizen-surname", {
+                    required: { value: isEuCitizen, message: "Surname is required" },
+                  })}
                   error={travel.formState.errors["citizen-surname"]}
                 />
 
                 <Input
                   label="Fist name"
-                  register={travel.register("citizen-first-name")}
+                  register={travel.register("citizen-first-name", {
+                    required: { value: isEuCitizen, message: "First name is required" },
+                  })}
                   error={travel.formState.errors["citizen-first-name"]}
                 />
 
                 <Input
                   label="Date of birth"
-                  register={travel.register("citizen-date-of-birth")}
+                  register={travel.register("citizen-date-of-birth", {
+                    required: { value: isEuCitizen, message: "Date of birth is required" },
+                  })}
                   error={travel.formState.errors["citizen-date-of-birth"]}
                   type="date"
                 />
@@ -426,7 +431,9 @@ export function Schengen() {
                   control={travel.control}
                   name="citizen-nationality"
                   placeholder="Select nationality"
-                  register={travel.register("citizen-nationality")}
+                  register={travel.register("citizen-nationality", {
+                    required: { value: isEuCitizen, message: "Nationality is required" },
+                  })}
                   error={travel.formState.errors["citizen-nationality"]}
                 />
 
@@ -434,7 +441,9 @@ export function Schengen() {
                   <Input
                     label="Number of travel document or ID card"
                     placeholder="Travel document number"
-                    register={travel.register("citizen-travel-document-number")}
+                    register={travel.register("citizen-travel-document-number", {
+                      required: { value: isEuCitizen, message: "Number of travel document or ID card is required" },
+                    })}
                     error={travel.formState.errors["citizen-travel-document-number"]}
                   />
                 </div>
@@ -448,7 +457,9 @@ export function Schengen() {
                     isClearable
                     classNameLabel="line-clamp-none"
                     placeholder="Select relationship"
-                    register={travel.register("citizen-relationship")}
+                    register={travel.register("citizen-relationship", {
+                      required: { value: isEuCitizen, message: "Relationship is required" },
+                    })}
                     error={travel.formState.errors["citizen-relationship"]}
                   />
                 </div>
@@ -473,7 +484,7 @@ export function Schengen() {
                 options={["No", "Yes"]}
                 legend="Residence in a country other than the country of current nationality? *"
                 classNameContainer="col-span-full"
-                checked="No"
+                checked={isResidence ? 2 : 1}
                 register={contact.register("residence-in-a-country", { required: "Residence is required" })}
                 error={contact.formState.errors["residence-in-a-country"]}
                 isOpen={isResidence}
@@ -612,7 +623,7 @@ export function Schengen() {
                 options={["No", "Yes"]}
                 legend="Fingerprints collected previously for the purpose of applying for a Schengen visa? *"
                 classNameContainer="col-span-full"
-                checked="No"
+                checked={isFingerprintsCollectedPreviously ? 2 : 1}
                 register={info.register("fingerprints-collected-previously", {
                   required: "Fingerprints collected previously is required",
                 })}
@@ -712,6 +723,7 @@ export function Schengen() {
                   classNameLabel="line-clamp-none"
                   options={costOfTravelingAndLivingOptions}
                   control={info.control}
+                  isMulti
                   name="cost-of-traveling-and-living"
                   register={info.register("cost-of-traveling-and-living", {
                     required: "Cost of traveling and living during the applicant's stay is covered is required",

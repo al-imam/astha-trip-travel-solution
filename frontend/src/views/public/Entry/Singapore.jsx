@@ -564,7 +564,7 @@ export function Singapore() {
                 options={["Less than 30 days", "More than 30 days"]}
                 legend="How long do you intend to stay in Singapore *"
                 classNameContainer="col-span-full"
-                checked="Less than 30 days"
+                checked={isStayingMoreThanThirtyDays ? 2 : 1}
                 register={otherDetails.register("days-intend-to-stay", { required: "Answer the question" })}
                 error={otherDetails.formState.errors["days-intend-to-stay"]}
                 isOpen={isStayingMoreThanThirtyDays}
@@ -651,7 +651,7 @@ export function Singapore() {
                 options={["No", "Yes"]}
                 legend="Did you reside in other countries/places, other than your country/place of origin, for one year or more during the last 5 years? *"
                 classNameContainer="col-span-full"
-                checked={isLivedOtherCountry ? "Yes" : "No"}
+                checked={isLivedOtherCountry ? 2 : 1}
                 register={otherDetails.register("lived-other-country", { required: "Answer the question" })}
                 error={otherDetails.formState.errors["lived-other-country"]}
                 isOpen={isLivedOtherCountry}
@@ -856,7 +856,7 @@ export function Singapore() {
                 <Radio
                   label="Have you ever been refused entry into or deported from any country/place, including Singapore?"
                   options={["No", "Yes"]}
-                  checked="No"
+                  checked={1}
                   error={particularsOfLocalContact.formState.errors["a"]}
                   register={particularsOfLocalContact.register("a", {
                     required: "Answer the question",
@@ -867,7 +867,7 @@ export function Singapore() {
                 <Radio
                   label="Have you ever been convicted in a court of law in any country/place, including Singapore?"
                   options={["No", "Yes"]}
-                  checked="No"
+                  checked={1}
                   error={particularsOfLocalContact.formState.errors["b"]}
                   register={particularsOfLocalContact.register("b", {
                     required: "Answer the question",
@@ -878,7 +878,7 @@ export function Singapore() {
                 <Radio
                   label="Have you ever been prohibited from entering Singapore?"
                   options={["No", "Yes"]}
-                  checked="No"
+                  checked={1}
                   error={particularsOfLocalContact.formState.errors["c"]}
                   register={particularsOfLocalContact.register("c", {
                     required: "Answer the question",
@@ -889,7 +889,7 @@ export function Singapore() {
                 <Radio
                   label="Have you ever entered Singapore using a different passport or name?"
                   options={["No", "Yes"]}
-                  checked="No"
+                  checked={1}
                   error={particularsOfLocalContact.formState.errors["d"]}
                   register={particularsOfLocalContact.register("d", {
                     required: "Answer the question",

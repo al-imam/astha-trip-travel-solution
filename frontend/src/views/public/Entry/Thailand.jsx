@@ -4,7 +4,7 @@ import { Group, Join } from "components/form/Group";
 import { Input } from "components/form/Input";
 import { Select, SelectNotCreatable } from "components/form/Select";
 import { StepIndicator } from "components/form/StepIndicator";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import useFormPersist from "react-hook-form-persist";
 import { useNavigate } from "react-router-dom";
@@ -66,39 +66,27 @@ const maritalStatusOptions = ["Single", "Married", "Divorced", "Widowed"].map((v
   value: value.toLocaleUpperCase(),
 }));
 
+const travelingByOptions = ["Ait plane", "Train", "Bus / Car", "Cruise"].map((value) => ({
+  label: value,
+  value: value.toLocaleUpperCase(),
+}));
+
+const purposeOfVisitOptions = ["Tourist", "Transit", "Business", "Diplomatic/Official"].map((value) => ({
+  label: value,
+  value,
+}));
+
+const validCountryOptions = ["ALL COUNTRIES OF THE WORLD EXCEPT ISRAIL"].map((value) => ({
+  label: value.toLowerCase(),
+  value,
+}));
+
 const sexesOption = ["Male", "Female"].map((value) => ({
   label: value,
   value,
 }));
 
-const purposeOfJourneyOptions = [
-  "Tourism",
-  "Business",
-  "Visiting family or friends",
-  "Cultural",
-  "Sports",
-  "Official visit",
-  "Medical reasons",
-  "Study",
-  "Airport transit",
-].map((value) => ({
-  label: value,
-  value,
-}));
-
-const costOfTravelingAndLivingOptions = [
-  "by the applicant himself/herself Means of support",
-  "Cash",
-  "Traveler's cheques",
-  "Credit card",
-  "Prepaid accommodation",
-  "Prepaid transport",
-].map((value) => ({
-  label: value,
-  value,
-}));
-
-const steps = ["", "", "", ""];
+const steps = ["", "", ""];
 
 export function Thailand() {
   const navigate = useNavigate();
@@ -106,6 +94,12 @@ export function Thailand() {
   const [_, setForm] = useState({});
 
   const personal = useForm();
+  const contact = useForm();
+  const purpose = useForm();
+
+  useEffect(() => {
+    purpose.setValue("countries-for-which-travel-document-is-valid", validCountryOptions[0]);
+  }, []);
 
   const cleanPersonal = useFormPersist("thailand-personal-submit", {
     watch: personal.watch,
@@ -113,10 +107,33 @@ export function Thailand() {
     storage: window.sessionStorage,
   });
 
+  const cleanContact = useFormPersist("thailand-contact-submit", {
+    watch: contact.watch,
+    setValue: contact.setValue,
+    storage: window.sessionStorage,
+  });
+
+  const cleanPurpose = useFormPersist("thailand-purpose-submit", {
+    watch: purpose.watch,
+    setValue: purpose.setValue,
+    storage: window.sessionStorage,
+  });
+
   function personalSubmit(data) {
     console.log(data);
     setForm((prev) => Object.assign(prev, flattenObject(data)));
     setStep(2);
+  }
+
+  function contactSubmit(data) {
+    console.log(data);
+    setForm((prev) => Object.assign(prev, flattenObject(data)));
+    setStep(3);
+  }
+
+  function purposeSubmit(data) {
+    console.log(data);
+    setForm((prev) => Object.assign(prev, flattenObject(data)));
   }
 
   return (
@@ -317,19 +334,184 @@ export function Thailand() {
             </div>
           </form>
         )}
+
+        {step === 2 && (
+          <form name="contact" autoComplete="off" className="space-y-4" onSubmit={contact.handleSubmit(contactSubmit)}>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <Input
+                label="Current address *"
+                register={contact.register("current-address", {
+                  required: "Current address is required",
+                })}
+                error={contact.formState.errors["current-address"]}
+              />
+
+              <Input
+                label="Telephone number *"
+                register={contact.register("telephone", {
+                  required: "Telephone number is required",
+                })}
+                error={contact.formState.errors["telephone"]}
+              />
+
+              <Input
+                label="Email *"
+                register={contact.register("email", {
+                  required: "Email is required",
+                })}
+                error={contact.formState.errors["email"]}
+              />
+
+              <Input
+                label="Permanent Address (if different from above)"
+                placeholder="Permanent address"
+                register={contact.register("permanent-address")}
+                error={contact.formState.errors["permanent-address"]}
+              />
+
+              <Input
+                label="Permanent telephone"
+                register={contact.register("permanent-telephone")}
+                error={contact.formState.errors["permanent-telephone"]}
+              />
+
+              <div className="col-span-full flex flex-col gap-4 sm:flex-row [&>:first-child]:grow ">
+                <Input
+                  label="Names, dates and places of birth of minor children (if accompanying)"
+                  classNameLabel="line-clamp-none"
+                  register={contact.register("names-dates-and-places-of-birth-of-minor-children")}
+                  error={contact.formState.errors["names-dates-and-places-of-birth-of-minor-children"]}
+                />
+                <Input
+                  label="Date of arrival in and departure from thailand"
+                  classNameLabel="line-clamp-none"
+                  register={contact.register("date-of-arrival-in-and-departure-from-thailand")}
+                  error={contact.formState.errors["date-of-arrival-in-and-departure-from-thailand"]}
+                  type="date"
+                />
+              </div>
+
+              <Select
+                label="Traveling by *"
+                placeholder="Select traveling method"
+                options={travelingByOptions}
+                control={contact.control}
+                name="traveling-by"
+                register={contact.register("traveling-by", { required: "Traveling method is required" })}
+                error={contact.formState.errors["traveling-by"]}
+              />
+
+              <Input
+                label="Flight no or vessel's name"
+                register={contact.register("flight_no_or_vessel_name", {
+                  required: "Flight no or vessel's name is required",
+                })}
+                error={contact.formState.errors["flight_no_or_vessel_name"]}
+              />
+
+              <Input
+                label="Duration of proposed stay"
+                register={contact.register("duration-of-proposed-stay", {
+                  required: "Duration of proposed stay is required",
+                })}
+                error={contact.formState.errors["duration-of-proposed-stay"]}
+              />
+            </div>
+
+            <div className="flex justify-between">
+              <Button type="button" onClick={() => setStep(1)}>
+                <NextIcon className="mr-2 scale-x-[-1]" /> Previous
+              </Button>
+              <Button>
+                Next <NextIcon className="ml-2" />
+              </Button>
+            </div>
+          </form>
+        )}
+
+        {step === 3 && (
+          <form name="purpose" autoComplete="off" className="space-y-4" onSubmit={purpose.handleSubmit(purposeSubmit)}>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <Input
+                label="Date of previous visit to thailand *"
+                register={purpose.register("date-of-previous-visit", {
+                  required: "Date of previous visit to thailand is required",
+                })}
+                error={purpose.formState.errors["date-of-previous-visit"]}
+                type="date"
+              />
+
+              <Select
+                label="Purpose of visit *"
+                placeholder="Select purpose of visit"
+                options={purposeOfVisitOptions}
+                control={purpose.control}
+                name="purpose-of-visit"
+                register={purpose.register("purpose-of-visit", { required: "purpose of visit is required" })}
+                error={purpose.formState.errors["purpose-of-visit"]}
+              />
+
+              <Select
+                label="Countries for which travel document is valid *"
+                placeholder="Select countries"
+                options={validCountryOptions}
+                control={purpose.control}
+                name="countries-for-which-travel-document-is-valid"
+                register={purpose.register("countries-for-which-travel-document-is-valid", {
+                  required: "Countries is required",
+                })}
+                error={purpose.formState.errors["countries-for-which-travel-document-is-valid"]}
+              />
+
+              <Input
+                label="Proposed address in thailand *"
+                register={purpose.register("proposed-address-in-thailand", {
+                  required: "Proposed address in thailand is required",
+                })}
+                error={purpose.formState.errors["proposed-address-in-thailand"]}
+              />
+
+              <Input
+                label="Name and address of local guarantor *"
+                register={purpose.register("name-and-address-of-local-guarantor", {
+                  required: "Name and address of local guarantor is required",
+                })}
+                error={purpose.formState.errors["name-and-address-of-local-guarantor"]}
+              />
+
+              <Input
+                label="Telephone/fax of local guarantor *"
+                register={purpose.register("telephone-fax-of-local-guarantor", {
+                  required: "Telephone/fax is required",
+                })}
+                error={purpose.formState.errors["telephone-fax-of-local-guarantor"]}
+              />
+
+              <Input
+                label="Name and address of guarantor in thailand *"
+                register={purpose.register("name-and-address-of-guarantor-in-thailand")}
+                error={purpose.formState.errors["name-and-address-of-guarantor-in-thailand"]}
+              />
+
+              <Input
+                label="Telephone/fax of thailand guarantor *"
+                register={purpose.register("telephone-fax-of-thailand-guarantor")}
+                error={purpose.formState.errors["telephone-fax-of-thailand-guarantor"]}
+              />
+            </div>
+
+            <div className="flex justify-between">
+              <Button type="button" onClick={() => setStep(2)}>
+                <NextIcon className="mr-2 scale-x-[-1]" /> Previous
+              </Button>
+              <Button>
+                Submit <NextIcon className="ml-2" />
+              </Button>
+            </div>
+          </form>
+        )}
       </div>
     </main>
-  );
-}
-
-export function LeftArrow(props) {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" {...props}>
-      <path
-        fill="currentColor"
-        d="m7.85 13l2.85 2.85q.3.3.288.7t-.288.7q-.3.3-.712.313t-.713-.288L4.7 12.7q-.3-.3-.3-.7t.3-.7l4.575-4.575q.3-.3.713-.287t.712.312q.275.3.288.7t-.288.7L7.85 11H19q.425 0 .713.288T20 12q0 .425-.288.713T19 13H7.85Z"
-      ></path>
-    </svg>
   );
 }
 
