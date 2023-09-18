@@ -10,7 +10,7 @@ export function Radio({ label, title = label, options, error, classNameLabel, re
       <label
         title={title}
         htmlFor={id}
-        className={twMerge("text-base font-medium text-gray-800 line-clamp-1", classNameLabel)}
+        className={twMerge("text-base font-medium text-gray-800 sm:line-clamp-1", classNameLabel)}
       >
         {label}
       </label>

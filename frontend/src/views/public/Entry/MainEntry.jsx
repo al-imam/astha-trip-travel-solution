@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import { twMerge } from "tailwind-merge";
 import { v4 as uuid } from "uuid";
 import { Table } from "./Table";
+import { getNumberSelect } from "./util";
 
 const guestTypeOptions = ["Single", "Family"].map((value) => ({
   value,
@@ -39,19 +40,6 @@ const hotelNameOptions = [
   value,
   label: value,
 }));
-
-function getNumberSelect(start, end) {
-  const resultArray = [];
-
-  for (let i = start; i <= end; i++) {
-    resultArray.push({
-      value: `${i}`,
-      label: `${i}`,
-    });
-  }
-
-  return resultArray;
-}
 
 const guestNumbersOptions = getNumberSelect(2, 9);
 
