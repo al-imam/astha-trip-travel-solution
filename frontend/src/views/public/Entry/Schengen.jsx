@@ -10,6 +10,7 @@ import { twMerge } from "tailwind-merge";
 import countries from "../countries.json";
 import districts from "../districts.json";
 import { Group, Join } from "components/form/Group";
+import axios from "axios";
 
 const countriesOptions = countries.map((e) => ({
   label: e.name,
@@ -88,9 +89,42 @@ const costOfTravelingAndLivingOptions = [
 
 const steps = ["", "", "", ""];
 
+function getValue(anyThing) {
+  if (
+    typeof anyThing === "object" &&
+    anyThing !== null &&
+    !Array.isArray(anyThing) &&
+    "value" in anyThing &&
+    "label" in anyThing
+  ) {
+    return anyThing.value;
+  }
+
+  return anyThing;
+}
+
+function flattenObject(obj) {
+  const result = {};
+
+  for (const key in obj) {
+    if (typeof obj[key] === "object" && obj[key] !== null) {
+      if ("value" in obj[key] && "label" in obj[key]) {
+        result[key] = obj[key].value;
+      } else if (Array.isArray(obj[key])) {
+        result[key] = obj[key].map((item) => getValue(item));
+      }
+    } else {
+      result[key] = obj[key];
+    }
+  }
+
+  return result;
+}
+
 export function Schengen() {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
+  const [form, setForm] = useState({});
 
   const personal = useForm();
   const travel = useForm();
@@ -101,36 +135,59 @@ export function Schengen() {
   const isEuCitizen = travel.watch("have-eu-citizen") === "Yes";
   const isFingerprintsCollectedPreviously = info.watch("fingerprints-collected-previously") === "Yes";
 
-  useFormPersist("personal-visa-data", {
+  const cleanPersonal = useFormPersist("schengen-personal-submit", {
     watch: personal.watch,
     setValue: personal.setValue,
     storage: window.sessionStorage,
   });
 
-  useFormPersist("travel-visa-data", {
+  const cleanTravel = useFormPersist("schengen-travel-submit", {
     watch: travel.watch,
     setValue: travel.setValue,
     storage: window.sessionStorage,
   });
 
+  const cleanContact = useFormPersist("schengen-contact-submit", {
+    watch: contact.watch,
+    setValue: contact.setValue,
+    storage: window.sessionStorage,
+  });
+
+  const cleanInfo = useFormPersist("schengen-info-submit", {
+    watch: info.watch,
+    setValue: info.setValue,
+    storage: window.sessionStorage,
+  });
+
   function personalSubmit(data) {
     console.log(data);
+    setForm((prev) => Object.assign(prev, flattenObject(data)));
     setStep(2);
   }
 
   function travelSubmit(data) {
-    console.log(data);
+    setForm((prev) => Object.assign(prev, flattenObject(data)));
     setStep(3);
   }
 
   function contactSubmit(data) {
-    console.log(data);
+    setForm((prev) => Object.assign(prev, flattenObject(data)));
     setStep(4);
   }
 
-  function infoSubmit(data) {
-    console.log(data);
-    // setStep(4);
+  async function infoSubmit(data) {
+    console.log(Object.assign(form, flattenObject(data)));
+
+    try {
+      await axios.post("/api/visa-form/schengen", Object.assign(form, flattenObject(data)));
+
+      cleanContact.clear();
+      cleanTravel.clear();
+      cleanInfo.clear();
+      cleanContact.clear();
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (
@@ -601,6 +658,7 @@ export function Schengen() {
                   label="Previously collected fingerprints date, if you know"
                   register={info.register("previously-collected-fingerprints-date")}
                   error={info.formState.errors["previously-collected-fingerprints-date"]}
+                  type="date"
                 />
 
                 <Input
@@ -723,7 +781,7 @@ export function LeftArrow(props) {
   );
 }
 
-function NextIcon({ className, ...rest }) {
+export function NextIcon({ className, ...rest }) {
   return (
     <svg
       className={twMerge(" h-3.5 w-3.5", className)}

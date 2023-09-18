@@ -8,8 +8,10 @@ import { twMerge } from "tailwind-merge";
 export function Select({ control, register, name, error, label, options, classNameLabel, ...rest }) {
   const id = useId();
 
+  const identity = name + id.replaceAll(":", "");
+
   return (
-    <div className="flex flex-col gap-1">
+    <div className="flex flex-col gap-1" id={identity}>
       <label htmlFor={id} className={twMerge("text-base font-medium text-gray-800 line-clamp-1", classNameLabel)}>
         {label}
       </label>
@@ -20,6 +22,7 @@ export function Select({ control, register, name, error, label, options, classNa
           <CreatableSelect
             id={id}
             options={options}
+            onMenuClose={() => document.querySelector(`#${identity} input:not([type="hidden"])`)?.blur()}
             name={name}
             menuPosition="fixed"
             styles={{
@@ -77,8 +80,10 @@ export function Select({ control, register, name, error, label, options, classNa
 export function SelectNotCreatable({ control, register, name, error, label, options, classNameLabel, ...rest }) {
   const id = useId();
 
+  const identity = name + id.replaceAll(":", "");
+
   return (
-    <div className="flex flex-col gap-1">
+    <div className="flex flex-col gap-1" id={identity}>
       <label htmlFor={id} className={twMerge("text-base font-medium text-gray-800 line-clamp-1", classNameLabel)}>
         {label}
       </label>
@@ -91,6 +96,7 @@ export function SelectNotCreatable({ control, register, name, error, label, opti
             options={options}
             name={name}
             menuPosition="fixed"
+            onMenuClose={() => document.querySelector(`#${identity} input:not([type="hidden"])`)?.blur()}
             styles={{
               control: (styles, state) => ({
                 ...styles,
