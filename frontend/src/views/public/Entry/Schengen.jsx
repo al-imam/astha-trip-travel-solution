@@ -487,7 +487,7 @@ export function Schengen() {
                 options={["No", "Yes"]}
                 legend="Residence in a country other than the country of current nationality? *"
                 classNameContainer="col-span-full"
-                checked="No"
+                checked={isResidence ? "Yes" : "No"}
                 register={contact.register("residence-in-a-country", { required: "Residence is required" })}
                 error={contact.formState.errors["residence-in-a-country"]}
                 isOpen={isResidence}
@@ -626,7 +626,7 @@ export function Schengen() {
                 options={["No", "Yes"]}
                 legend="Fingerprints collected previously for the purpose of applying for a Schengen visa? *"
                 classNameContainer="col-span-full"
-                checked="No"
+                checked={isFingerprintsCollectedPreviously ? "Yes" : "No"}
                 register={info.register("fingerprints-collected-previously", {
                   required: "Fingerprints collected previously is required",
                 })}
