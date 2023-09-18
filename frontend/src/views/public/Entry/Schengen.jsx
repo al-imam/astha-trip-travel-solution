@@ -1,4 +1,6 @@
+import axios from "axios";
 import { Button } from "components/form/Button";
+import { Group, Join } from "components/form/Group";
 import { Input } from "components/form/Input";
 import { Select, SelectNotCreatable } from "components/form/Select";
 import { StepIndicator } from "components/form/StepIndicator";
@@ -9,8 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 import countries from "../countries.json";
 import districts from "../districts.json";
-import { Group, Join } from "components/form/Group";
-import axios from "axios";
+import { flattenObject } from "./util";
 
 const countriesOptions = countries.map((e) => ({
   label: e.name,
@@ -88,38 +89,6 @@ const costOfTravelingAndLivingOptions = [
 }));
 
 const steps = ["", "", "", ""];
-
-function getValue(anyThing) {
-  if (
-    typeof anyThing === "object" &&
-    anyThing !== null &&
-    !Array.isArray(anyThing) &&
-    "value" in anyThing &&
-    "label" in anyThing
-  ) {
-    return anyThing.value;
-  }
-
-  return anyThing;
-}
-
-function flattenObject(obj) {
-  const result = {};
-
-  for (const key in obj) {
-    if (typeof obj[key] === "object" && obj[key] !== null) {
-      if ("value" in obj[key] && "label" in obj[key]) {
-        result[key] = obj[key].value;
-      } else if (Array.isArray(obj[key])) {
-        result[key] = obj[key].map((item) => getValue(item));
-      }
-    } else {
-      result[key] = obj[key];
-    }
-  }
-
-  return result;
-}
 
 export function Schengen() {
   const navigate = useNavigate();
