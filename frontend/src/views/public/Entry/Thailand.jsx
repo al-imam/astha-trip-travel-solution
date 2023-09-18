@@ -66,34 +66,12 @@ const maritalStatusOptions = ["Single", "Married", "Divorced", "Widowed"].map((v
   value: value.toLocaleUpperCase(),
 }));
 
+const travelingByOptions = ["Ait plane", "Train", "Bus / Car", "Cruise"].map((value) => ({
+  label: value,
+  value: value.toLocaleUpperCase(),
+}));
+
 const sexesOption = ["Male", "Female"].map((value) => ({
-  label: value,
-  value,
-}));
-
-const purposeOfJourneyOptions = [
-  "Tourism",
-  "Business",
-  "Visiting family or friends",
-  "Cultural",
-  "Sports",
-  "Official visit",
-  "Medical reasons",
-  "Study",
-  "Airport transit",
-].map((value) => ({
-  label: value,
-  value,
-}));
-
-const costOfTravelingAndLivingOptions = [
-  "by the applicant himself/herself Means of support",
-  "Cash",
-  "Traveler's cheques",
-  "Credit card",
-  "Prepaid accommodation",
-  "Prepaid transport",
-].map((value) => ({
   label: value,
   value,
 }));
@@ -106,6 +84,7 @@ export function Thailand() {
   const [_, setForm] = useState({});
 
   const personal = useForm();
+  const contact = useForm();
 
   const cleanPersonal = useFormPersist("thailand-personal-submit", {
     watch: personal.watch,
@@ -114,6 +93,12 @@ export function Thailand() {
   });
 
   function personalSubmit(data) {
+    console.log(data);
+    setForm((prev) => Object.assign(prev, flattenObject(data)));
+    setStep(2);
+  }
+
+  function contactSubmit(data) {
     console.log(data);
     setForm((prev) => Object.assign(prev, flattenObject(data)));
     setStep(2);
@@ -317,19 +302,102 @@ export function Thailand() {
             </div>
           </form>
         )}
+
+        {step === 2 && (
+          <form name="contact" autoComplete="off" className="space-y-4" onSubmit={contact.handleSubmit(contactSubmit)}>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <Input
+                label="Current address *"
+                register={contact.register("current-address", {
+                  required: "Current address is required",
+                })}
+                error={contact.formState.errors["current-address"]}
+              />
+
+              <Input
+                label="Telephone number *"
+                register={contact.register("telephone", {
+                  required: "Telephone number is required",
+                })}
+                error={contact.formState.errors["telephone"]}
+              />
+
+              <Input
+                label="Email *"
+                register={contact.register("email", {
+                  required: "Email is required",
+                })}
+                error={contact.formState.errors["email"]}
+              />
+
+              <Input
+                label="Permanent Address (if different from above)"
+                placeholder="Permanent address"
+                register={contact.register("permanent-address")}
+                error={contact.formState.errors["permanent-address"]}
+              />
+
+              <Input
+                label="Permanent telephone"
+                register={contact.register("permanent-telephone")}
+                error={contact.formState.errors["permanent-telephone"]}
+              />
+
+              <div className="col-span-full flex flex-col gap-4 sm:flex-row [&>:first-child]:grow ">
+                <Input
+                  label="Names, dates and places of birth of minor children (if accompanying)"
+                  classNameLabel="line-clamp-none"
+                  register={contact.register("permanent-telephone")}
+                  error={contact.formState.errors["permanent-telephone"]}
+                />
+                <Input
+                  label="Date of Arrival in and Departure from Thailand"
+                  classNameLabel="line-clamp-none"
+                  register={contact.register("permanent-telephone")}
+                  error={contact.formState.errors["permanent-telephone"]}
+                  type="date"
+                />
+              </div>
+
+              <Select
+                label="Traveling by *"
+                placeholder="Select traveling method"
+                options={travelingByOptions}
+                control={contact.control}
+                name="traveling-by"
+                register={contact.register("traveling-by", { required: "Traveling method is required" })}
+                error={contact.formState.errors["traveling-by"]}
+              />
+
+              <Input
+                label="Flight no or vessel's name"
+                register={contact.register("flight_no_or_vessel_name", {
+                  required: "Flight no or vessel's name is required",
+                })}
+                error={contact.formState.errors["flight_no_or_vessel_name"]}
+              />
+
+              <Input
+                label="Duration of proposed stay"
+                register={contact.register("duration-of-proposed-stay", {
+                  required: "Duration of proposed stay is required",
+                })}
+                error={contact.formState.errors["duration-of-proposed-stay"]}
+              />
+            </div>
+
+            <div className="flex justify-between">
+              <Button type="button" onClick={() => setStep(1)}>
+                <NextIcon className="mr-2 scale-x-[-1]" /> Previous
+              </Button>
+              <Button>
+                Next <NextIcon className="ml-2" />
+              </Button>
+            </div>
+          </form>
+        )}
       </div>
     </main>
-  );
-}
-
-export function LeftArrow(props) {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" {...props}>
-      <path
-        fill="currentColor"
-        d="m7.85 13l2.85 2.85q.3.3.288.7t-.288.7q-.3.3-.712.313t-.713-.288L4.7 12.7q-.3-.3-.3-.7t.3-.7l4.575-4.575q.3-.3.713-.287t.712.312q.275.3.288.7t-.288.7L7.85 11H19q.425 0 .713.288T20 12q0 .425-.288.713T19 13H7.85Z"
-      ></path>
-    </svg>
   );
 }
 
