@@ -55,7 +55,9 @@ export function fire(title = "Something Went Wrong!", icon = "warning", position
     timer: 1500,
     showClass: {
       backdrop: "backdrop-blur-[2px]",
-      popup: "shadow-sm border border-gray-200",
+    },
+    customClass: {
+      popup: "ring-1 ring-gray-200/50 shadow",
     },
   });
 }

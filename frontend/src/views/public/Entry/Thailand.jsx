@@ -11,13 +11,8 @@ import { useNavigate } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 import countries from "../countries.json";
 import districts from "../districts.json";
-import { flattenObject, getNumberSelect } from "./util";
+import { fire, flattenObject, getNumberSelect } from "./util";
 import { Spinner } from "./Spinner";
-
-const countriesOptions = countries.map((e) => ({
-  label: e.name,
-  value: e.nationality,
-}));
 
 const placeOfBirthOptions = districts.map((value) => ({
   label: value,
@@ -82,11 +77,6 @@ const validCountryOptions = ["ALL COUNTRIES OF THE WORLD EXCEPT ISRAIL"].map((va
   value,
 }));
 
-const sexesOption = ["Male", "Female"].map((value) => ({
-  label: value,
-  value,
-}));
-
 const steps = ["", "", ""];
 
 export function Thailand() {
@@ -130,10 +120,15 @@ export function Thailand() {
     setStep(3);
   }
 
-  async function purposeSubmit(data) {
+  async function purposeSubmit(__D) {
     await new Promise((r) => setTimeout(r, 1000));
-    console.log(Object.assign(_, flattenObject(data)));
-    setForm((prev) => Object.assign(prev, flattenObject(data)));
+    const data = flattenObject(Object.assign(_, __D));
+    setForm(data);
+
+    const serverRes = await axios.post("/api/visa-form/thailand", data).catch(console.log);
+    if (!serverRes) return fire();
+
+    fire("Successfully Done!", "success");
   }
 
   return (
