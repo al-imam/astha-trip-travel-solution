@@ -455,7 +455,10 @@ export function Singapore() {
             onSubmit={otherDetails.handleSubmit(otherDetailsSubmit)}
             autoComplete="off"
           >
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <fieldset
+              disabled={otherDetails.formState.isSubmitting}
+              className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+            >
               <Input
                 label="Email Address *"
                 register={otherDetails.register("email-address", {
@@ -495,6 +498,7 @@ export function Singapore() {
                 label="Highest Academic/Professional *"
                 options={academicOptions}
                 control={otherDetails.control}
+                isDisabled={otherDetails.formState.isSubmitting}
                 name="highest-academic"
                 placeholder="Select Highest Academic"
                 isSearchable={false}
@@ -508,6 +512,7 @@ export function Singapore() {
                 label="Qualifications Attained *"
                 options={qualificationsAttainedOptions}
                 control={otherDetails.control}
+                isDisabled={otherDetails.formState.isSubmitting}
                 name="qualifications-attained"
                 placeholder="Select Qualifications Attained"
                 isSearchable={false}
@@ -549,6 +554,7 @@ export function Singapore() {
                 label="Type of Visa *"
                 options={typeOfVisaOptions}
                 control={otherDetails.control}
+                isDisabled={otherDetails.formState.isSubmitting}
                 name="type-of-visa"
                 placeholder="Select Type of Visa"
                 isSearchable={false}
@@ -562,6 +568,7 @@ export function Singapore() {
                 label="Purpose of visit *"
                 options={purposeOfVisitOptions}
                 control={otherDetails.control}
+                isDisabled={otherDetails.formState.isSubmitting}
                 name="purpose-of-visit"
                 placeholder="Select purpose of visit"
                 isSearchable={false}
@@ -583,6 +590,7 @@ export function Singapore() {
                 name="stay-location"
                 options={stayLocationOptions}
                 control={otherDetails.control}
+                isDisabled={otherDetails.formState.isSubmitting}
                 register={otherDetails.register("stay-location", {
                   required: "Stay location is required",
                 })}
@@ -597,6 +605,7 @@ export function Singapore() {
                 register={otherDetails.register("days-intend-to-stay", { required: "Answer the question" })}
                 error={otherDetails.formState.errors["days-intend-to-stay"]}
                 isOpen={isStayingMoreThanThirtyDays}
+                disabled={otherDetails.formState.isSubmitting}
               >
                 <Input
                   label="If your intended stay in Singapore is more than 30 days, please state the reason for your intended length of stay and the duration"
@@ -685,6 +694,7 @@ export function Singapore() {
                 error={otherDetails.formState.errors["lived-other-country"]}
                 isOpen={isLivedOtherCountry}
                 className="flex flex-col gap-4"
+                disabled={otherDetails.formState.isSubmitting}
               >
                 {livedOtherCountries.length > 0 && (
                   <div className="flex flex-col gap-1">
@@ -720,6 +730,7 @@ export function Singapore() {
                     })}
                     control={countryForm.control}
                     error={countryForm.formState.errors["country"]}
+                    isDisabled={otherDetails.formState.isSubmitting || countryForm.formState.isSubmitting}
                   />
 
                   <Input
@@ -752,9 +763,10 @@ export function Singapore() {
                 </div>
 
                 <button
-                  className="mr-auto box-border inline-flex items-center rounded border border-brand-100 bg-gray-50 px-5 py-2 text-center text-sm font-medium text-blue-700 shadow transition-all hover:border-blue-700 hover:bg-blue-700 hover:text-white focus:outline-none focus:ring-4 focus:ring-blue-300 "
+                  className="mr-auto box-border inline-flex items-center rounded border border-brand-100 bg-gray-50 px-5 py-2 text-center text-sm font-medium text-blue-700 shadow transition-all hover:border-blue-700 hover:bg-blue-700 hover:text-white focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:pointer-events-none disabled:opacity-50"
                   onClick={countryForm.handleSubmit(submitCountryForm)}
                   type="button"
+                  disabled={otherDetails.formState.isSubmitting || countryForm.formState.isSubmitting}
                 >
                   Add <AddIcon className="ml-1 text-lg " />
                 </button>
@@ -791,6 +803,7 @@ export function Singapore() {
                 <SelectNotCreatable
                   label="Sex (gender)"
                   options={sexesOptions}
+                  isDisabled={otherDetails.formState.isSubmitting}
                   placeholder="Select gender"
                   control={otherDetails.control}
                   isClearable
@@ -805,6 +818,7 @@ export function Singapore() {
                   placeholder="Select nationality/citizenship"
                   options={nationalityOptions}
                   control={otherDetails.control}
+                  isDisabled={otherDetails.formState.isSubmitting}
                   isClearable
                   name="nationality-of-travelling-companion"
                   register={otherDetails.register("nationality-of-travelling-companion")}
@@ -819,14 +833,20 @@ export function Singapore() {
                   error={otherDetails.formState.errors["passport-no-of-travelling-companion"]}
                 />
               </Join>
-            </div>
+            </fieldset>
 
             <div className="flex justify-between">
-              <Button type="button" onClick={() => setStep(1)}>
-                <NextIcon className="mr-2 scale-x-[-1]" /> Previous
+              <Button
+                disabled={otherDetails.formState.isSubmitting}
+                className="disabled:opacity-0"
+                type="button"
+                onClick={() => setStep(1)}
+              >
+                <NextIcon className="mr-2 scale-x-[-1] cursor-none" /> Previous
               </Button>
-              <Button>
-                Next <NextIcon className="ml-2" />
+              <Button disabled={otherDetails.formState.isSubmitting} className="disabled:cursor-pointer">
+                Next
+                {otherDetails.formState.isSubmitting ? <Spinner className="ml-2" /> : <NextIcon className="ml-2" />}
               </Button>
             </div>
           </form>
