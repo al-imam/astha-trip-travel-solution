@@ -14,6 +14,7 @@ import races from "../races.json";
 import { AddIcon, DeleteIcon } from "./MainEntry";
 import { NextIcon } from "./Schengen";
 import { Spinner } from "./Spinner";
+import { flattenObject } from "./util";
 
 const countriesOptions = countries.map((e) => ({
   label: e.name,
@@ -94,6 +95,7 @@ const steps = ["", "", ""];
 export function Singapore() {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
+  const [_, setForm] = useState({});
   const [livedOtherCountries, setLivedOtherCountries] = useState([]);
 
   const particularsOfApplicant = useForm();
@@ -133,21 +135,18 @@ export function Singapore() {
     storage: window.sessionStorage,
   });
 
-  async function particularsOfApplicantSubmit(data) {
-    await new Promise((r) => setTimeout(r, 5000));
-
-    console.log(data);
+  function particularsOfApplicantSubmit(data) {
+    setForm((prev) => Object.assign(prev, flattenObject(data)));
     setStep(2);
   }
 
-  async function otherDetailsSubmit(data) {
-    await new Promise((r) => setTimeout(r, 5000));
+  function otherDetailsSubmit(data) {
     if (isLivedOtherCountry && livedOtherCountries.length < 1) {
       otherDetails.setError("lived-other-country", { type: "required", message: "Add Country or Select No" });
       return countryForm.setFocus("country");
     }
 
-    console.log(data);
+    setForm((prev) => Object.assign(prev, flattenObject(data), { "lived-other-countries": livedOtherCountries }));
     setStep(3);
   }
 
@@ -158,7 +157,8 @@ export function Singapore() {
 
   async function particularsOfLocalContactSubmit(data) {
     await new Promise((r) => setTimeout(r, 5000));
-    console.log(data);
+    console.log(Object.assign(_, flattenObject(data)));
+    setForm((prev) => Object.assign(prev, flattenObject(data)));
   }
 
   function stopSubmitting(event) {
@@ -859,7 +859,10 @@ export function Singapore() {
             onSubmit={particularsOfLocalContact.handleSubmit(particularsOfLocalContactSubmit)}
             autoComplete="off"
           >
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <fieldset
+              disabled={particularsOfLocalContact.formState.isSubmitting}
+              className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+            >
               <Input
                 label="Name of local contact company/hotel *"
                 register={particularsOfLocalContact.register("name-of-local-contact", {
@@ -911,6 +914,7 @@ export function Singapore() {
                     required: "Answer the question",
                   })}
                   classNameLabel="line-clamp-none"
+                  disabled={particularsOfLocalContact.formState.isSubmitting}
                 />
 
                 <Radio
@@ -922,6 +926,7 @@ export function Singapore() {
                     required: "Answer the question",
                   })}
                   classNameLabel="line-clamp-none"
+                  disabled={particularsOfLocalContact.formState.isSubmitting}
                 />
 
                 <Radio
@@ -933,6 +938,7 @@ export function Singapore() {
                     required: "Answer the question",
                   })}
                   classNameLabel="line-clamp-none"
+                  disabled={particularsOfLocalContact.formState.isSubmitting}
                 />
 
                 <Radio
@@ -944,6 +950,7 @@ export function Singapore() {
                     required: "Answer the question",
                   })}
                   classNameLabel="line-clamp-none"
+                  disabled={particularsOfLocalContact.formState.isSubmitting}
                 />
 
                 {isExtraInformationRequired && (
@@ -956,14 +963,24 @@ export function Singapore() {
                   />
                 )}
               </Join>
-            </div>
+            </fieldset>
 
             <div className="flex justify-between">
-              <Button type="button" onClick={() => setStep(2)}>
-                <NextIcon className="mr-2 scale-x-[-1]" /> Previous
+              <Button
+                disabled={particularsOfLocalContact.formState.isSubmitting}
+                className="disabled:opacity-0"
+                type="button"
+                onClick={() => setStep(2)}
+              >
+                <NextIcon className="mr-2 scale-x-[-1] cursor-none" /> Previous
               </Button>
-              <Button>
-                Next <NextIcon className="ml-2" />
+              <Button disabled={particularsOfLocalContact.formState.isSubmitting} className="disabled:cursor-pointer">
+                Submit
+                {particularsOfLocalContact.formState.isSubmitting ? (
+                  <Spinner className="ml-2" />
+                ) : (
+                  <NextIcon className="ml-2" />
+                )}
               </Button>
             </div>
           </form>
