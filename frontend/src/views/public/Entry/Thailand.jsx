@@ -120,20 +120,18 @@ export function Thailand() {
     storage: window.sessionStorage,
   });
 
-  async function personalSubmit(data) {
-    await new Promise((r) => setTimeout(r, 5000));
-    console.log(data);
+  function personalSubmit(data) {
     setForm((prev) => Object.assign(prev, flattenObject(data)));
     setStep(2);
   }
 
   function contactSubmit(data) {
-    console.log(data);
     setForm((prev) => Object.assign(prev, flattenObject(data)));
     setStep(3);
   }
 
-  function purposeSubmit(data) {
+  async function purposeSubmit(data) {
+    await new Promise((r) => setTimeout(r, 1000));
     console.log(Object.assign(_, flattenObject(data)));
     setForm((prev) => Object.assign(prev, flattenObject(data)));
   }
@@ -141,8 +139,9 @@ export function Thailand() {
   return (
     <main className="container mx-auto space-y-4 p-4">
       <button
+        disabled={contact.formState.isSubmitting || personal.formState.isSubmitting || purpose.formState.isSubmitting}
         onClick={() => navigate(-1)}
-        className="my-1 inline-flex items-center rounded-md border-gray-200 bg-white px-5 py-2.5 text-center text-sm font-medium text-blue-700 shadow hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-blue-300 "
+        className="my-1 inline-flex items-center rounded-md border-gray-200 bg-white px-5 py-2.5 text-center text-sm font-medium text-blue-700 shadow hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-blue-300  disabled:opacity-0"
       >
         <NextIcon className="mr-2 scale-x-[-1]" />
         <span>
@@ -339,7 +338,7 @@ export function Thailand() {
             </fieldset>
 
             <div className="flex justify-end">
-              <Button disabled={personal.formState.isSubmitting}>
+              <Button disabled={personal.formState.isSubmitting} className="disabled:cursor-pointer">
                 Next {personal.formState.isSubmitting ? <Spinner className="ml-2" /> : <NextIcon className="ml-2" />}
               </Button>
             </div>
@@ -348,7 +347,7 @@ export function Thailand() {
 
         {step === 2 && (
           <form name="contact" autoComplete="off" className="space-y-4" onSubmit={contact.handleSubmit(contactSubmit)}>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <fieldset disabled={contact.formState.isSubmitting} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <Input
                 label="Current address *"
                 register={contact.register("current-address", {
@@ -386,6 +385,17 @@ export function Thailand() {
                 error={contact.formState.errors["permanent-telephone"]}
               />
 
+              <Select
+                label="Traveling by *"
+                placeholder="Select traveling method"
+                options={travelingByOptions}
+                control={contact.control}
+                isDisabled={contact.formState.isSubmitting}
+                name="traveling-by"
+                register={contact.register("traveling-by", { required: "Traveling method is required" })}
+                error={contact.formState.errors["traveling-by"]}
+              />
+
               <div className="col-span-full flex flex-col gap-4 sm:flex-row [&>:first-child]:grow ">
                 <Input
                   label="Names, dates and places of birth of minor children (if accompanying)"
@@ -402,16 +412,6 @@ export function Thailand() {
                 />
               </div>
 
-              <Select
-                label="Traveling by *"
-                placeholder="Select traveling method"
-                options={travelingByOptions}
-                control={contact.control}
-                name="traveling-by"
-                register={contact.register("traveling-by", { required: "Traveling method is required" })}
-                error={contact.formState.errors["traveling-by"]}
-              />
-
               <Input
                 label="Flight no or vessel's name"
                 register={contact.register("flight_no_or_vessel_name", {
@@ -427,14 +427,19 @@ export function Thailand() {
                 })}
                 error={contact.formState.errors["duration-of-proposed-stay"]}
               />
-            </div>
+            </fieldset>
 
             <div className="flex justify-between">
-              <Button type="button" onClick={() => setStep(1)}>
+              <Button
+                disabled={contact.formState.isSubmitting}
+                className="disabled:opacity-0"
+                type="button"
+                onClick={() => setStep(1)}
+              >
                 <NextIcon className="mr-2 scale-x-[-1]" /> Previous
               </Button>
-              <Button>
-                Next <NextIcon className="ml-2" />
+              <Button disabled={contact.formState.isSubmitting} className="disabled:cursor-pointer">
+                Next {contact.formState.isSubmitting ? <Spinner className="ml-2" /> : <NextIcon className="ml-2" />}
               </Button>
             </div>
           </form>
@@ -442,7 +447,7 @@ export function Thailand() {
 
         {step === 3 && (
           <form name="purpose" autoComplete="off" className="space-y-4" onSubmit={purpose.handleSubmit(purposeSubmit)}>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <fieldset disabled={purpose.formState.isSubmitting} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <Input
                 label="Date of previous visit to thailand *"
                 register={purpose.register("date-of-previous-visit", {
@@ -457,6 +462,7 @@ export function Thailand() {
                 placeholder="Select purpose of visit"
                 options={purposeOfVisitOptions}
                 control={purpose.control}
+                isDisabled={purpose.formState.isSubmitting}
                 name="purpose-of-visit"
                 register={purpose.register("purpose-of-visit", { required: "purpose of visit is required" })}
                 error={purpose.formState.errors["purpose-of-visit"]}
@@ -467,6 +473,7 @@ export function Thailand() {
                 placeholder="Select countries"
                 options={validCountryOptions}
                 control={purpose.control}
+                isDisabled={purpose.formState.isSubmitting}
                 name="countries-for-which-travel-document-is-valid"
                 register={purpose.register("countries-for-which-travel-document-is-valid", {
                   required: "Countries is required",
@@ -509,14 +516,19 @@ export function Thailand() {
                 register={purpose.register("telephone-fax-of-thailand-guarantor")}
                 error={purpose.formState.errors["telephone-fax-of-thailand-guarantor"]}
               />
-            </div>
+            </fieldset>
 
             <div className="flex justify-between">
-              <Button type="button" onClick={() => setStep(2)}>
-                <NextIcon className="mr-2 scale-x-[-1]" /> Previous
+              <Button
+                disabled={purpose.formState.isSubmitting}
+                className="disabled:opacity-0"
+                type="button"
+                onClick={() => setStep(2)}
+              >
+                <NextIcon className="mr-2 scale-x-[-1] cursor-none" /> Previous
               </Button>
-              <Button>
-                Submit <NextIcon className="ml-2" />
+              <Button disabled={purpose.formState.isSubmitting} className="disabled:cursor-pointer">
+                Submit {purpose.formState.isSubmitting ? <Spinner className="ml-2" /> : <NextIcon className="ml-2" />}
               </Button>
             </div>
           </form>
