@@ -145,7 +145,7 @@ export function Schengen() {
   }
 
   async function infoSubmit(__d) {
-    await new Promise((r) => setTimeout(r, 5000));
+    await new Promise((r) => setTimeout(r, 500));
     const data = flattenObject(Object.assign(form, __d));
     setForm(data);
 

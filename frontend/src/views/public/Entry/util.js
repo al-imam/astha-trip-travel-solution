@@ -1,3 +1,4 @@
+import { ClassNames } from "@emotion/react";
 import Swal from "sweetalert2";
 
 export function getValue(anyThing) {
@@ -52,6 +53,15 @@ export function fire(title = "Something Went Wrong!", icon = "warning", position
     title,
     showConfirmButton: false,
     timer: 1500,
-    scrollbarPadding: false,
+    showClass: {
+      backdrop: "backdrop-blur-[2px]",
+      popup: "shadow-sm border border-gray-200",
+    },
   });
+}
+
+export function goToTop(behavior = "instant") {
+  if (typeof window !== "undefined") {
+    window.scrollTo({ top: 0, behavior });
+  }
 }

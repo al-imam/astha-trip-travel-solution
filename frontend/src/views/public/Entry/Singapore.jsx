@@ -14,7 +14,8 @@ import races from "../races.json";
 import { AddIcon, DeleteIcon } from "./MainEntry";
 import { NextIcon } from "./Schengen";
 import { Spinner } from "./Spinner";
-import { flattenObject } from "./util";
+import { fire, flattenObject } from "./util";
+import axios from "axios";
 
 const countriesOptions = countries.map((e) => ({
   label: e.name,
@@ -117,19 +118,19 @@ export function Singapore() {
     (c) => citizenshipOfSpouse && c.value === citizenshipOfSpouse.value
   );
 
-  useFormPersist("particulars_of_applicant", {
+  const clearParticulars = useFormPersist("particulars_of_applicant", {
     watch: particularsOfApplicant.watch,
     setValue: particularsOfApplicant.setValue,
     storage: window.sessionStorage,
   });
 
-  useFormPersist("other_details", {
+  const clearOthers = useFormPersist("other_details", {
     watch: otherDetails.watch,
     setValue: otherDetails.setValue,
     storage: window.sessionStorage,
   });
 
-  useFormPersist("particulars_of_local_contact", {
+  const clearLocal = useFormPersist("particulars_of_local_contact", {
     watch: particularsOfLocalContact.watch,
     setValue: particularsOfLocalContact.setValue,
     storage: window.sessionStorage,
@@ -155,10 +156,20 @@ export function Singapore() {
     countryForm.reset({ country: null, from: "", to: "", address: "" });
   }
 
-  async function particularsOfLocalContactSubmit(data) {
+  async function particularsOfLocalContactSubmit(__d) {
     await new Promise((r) => setTimeout(r, 5000));
-    console.log(Object.assign(_, flattenObject(data)));
-    setForm((prev) => Object.assign(prev, flattenObject(data)));
+    const data = flattenObject(Object.assign(_, __d));
+    setForm(data);
+
+    const serverRes = await axios.post("/api/visa-form/singapore", data).catch(console.log);
+    if (!serverRes) return fire();
+    fire("Successfully Done!", "success");
+
+    /* 
+    clearLocal.clear();
+    clearOthers.clear();
+    clearParticulars.clear(); 
+    */
   }
 
   function stopSubmitting(event) {
