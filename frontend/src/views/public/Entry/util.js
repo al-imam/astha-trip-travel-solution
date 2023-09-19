@@ -1,3 +1,5 @@
+import Swal from "sweetalert2";
+
 export function getValue(anyThing) {
   if (
     typeof anyThing === "object" &&
@@ -41,4 +43,15 @@ export function getNumberSelect(start, end) {
   }
 
   return resultArray;
+}
+
+export function fire(title = "Something Went Wrong!", icon = "warning", position = "center") {
+  return Swal.fire({
+    position,
+    icon,
+    title,
+    showConfirmButton: false,
+    timer: 1500,
+    scrollbarPadding: false,
+  });
 }
