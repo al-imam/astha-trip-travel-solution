@@ -12,6 +12,7 @@ import { twMerge } from "tailwind-merge";
 import countries from "../countries.json";
 import districts from "../districts.json";
 import { flattenObject, getNumberSelect } from "./util";
+import { Spinner } from "./Spinner";
 
 const countriesOptions = countries.map((e) => ({
   label: e.name,
@@ -119,7 +120,8 @@ export function Thailand() {
     storage: window.sessionStorage,
   });
 
-  function personalSubmit(data) {
+  async function personalSubmit(data) {
+    await new Promise((r) => setTimeout(r, 5000));
     console.log(data);
     setForm((prev) => Object.assign(prev, flattenObject(data)));
     setStep(2);
@@ -132,7 +134,7 @@ export function Thailand() {
   }
 
   function purposeSubmit(data) {
-    console.log(data);
+    console.log(Object.assign(_, flattenObject(data)));
     setForm((prev) => Object.assign(prev, flattenObject(data)));
   }
 
@@ -158,12 +160,13 @@ export function Thailand() {
             onSubmit={personal.handleSubmit(personalSubmit)}
             autoComplete="off"
           >
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <fieldset disabled={personal.formState.isSubmitting} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <Select
                 label="Passport number *"
                 placeholder="Select passport number"
                 options={[]}
                 control={personal.control}
+                isDisabled={personal.formState.isSubmitting}
                 name="passport-number"
                 register={personal.register("passport-number", { required: "Travel document number is required" })}
                 error={personal.formState.errors["passport-number"]}
@@ -173,6 +176,7 @@ export function Thailand() {
                 label="Type of visa requested *"
                 placeholder="Select visa type"
                 options={typeOfVisaRequestedOptions}
+                isDisabled={personal.formState.isSubmitting}
                 control={personal.control}
                 name="type-of-visa-requested"
                 register={personal.register("type-of-visa-requested", {
@@ -185,6 +189,7 @@ export function Thailand() {
                 label="Number of entries requested *"
                 placeholder="Select number of entry"
                 options={numberOfEntryOptions}
+                isDisabled={personal.formState.isSubmitting}
                 control={personal.control}
                 name="number-of-entries"
                 register={personal.register("number-of-entries", {
@@ -197,6 +202,7 @@ export function Thailand() {
                 label="Title *"
                 placeholder="Select title"
                 options={nameTitleOptions}
+                isDisabled={personal.formState.isSubmitting}
                 control={personal.control}
                 name="name-title"
                 register={personal.register("name-title", {
@@ -233,6 +239,7 @@ export function Thailand() {
                 label="Nationality *"
                 options={nationalityOptions}
                 control={personal.control}
+                isDisabled={personal.formState.isSubmitting}
                 name="nationality"
                 placeholder="Select nationality"
                 register={personal.register("nationality", { required: "Nationality is required" })}
@@ -243,6 +250,7 @@ export function Thailand() {
                 label="Nationality at birth"
                 placeholder="Select nationality at birth"
                 options={nationalityOptions}
+                isDisabled={personal.formState.isSubmitting}
                 control={personal.control}
                 name="nationality-at-birth"
                 register={personal.register("nationality-at-birth", { required: "Nationality at birth is required" })}
@@ -255,6 +263,7 @@ export function Thailand() {
                 name="place-of-birth"
                 options={placeOfBirthOptions}
                 control={personal.control}
+                isDisabled={personal.formState.isSubmitting}
                 register={personal.register("place-of-birth", { required: "Birth place is required" })}
                 error={personal.formState.errors["place-of-birth"]}
               />
@@ -263,6 +272,7 @@ export function Thailand() {
                 label="Marital Status *"
                 options={maritalStatusOptions}
                 control={personal.control}
+                isDisabled={personal.formState.isSubmitting}
                 name="marital-status"
                 placeholder="Select marital status"
                 register={personal.register("marital-status", { required: "Marital Status is required" })}
@@ -285,6 +295,7 @@ export function Thailand() {
                 options={typeOfPassportOptions}
                 placeholder="Select passport type"
                 control={personal.control}
+                isDisabled={personal.formState.isSubmitting}
                 name="type-of-passport"
                 register={personal.register("type-of-passport", { required: "Type of passport is required" })}
                 error={personal.formState.errors["type-of-passport"]}
@@ -325,11 +336,11 @@ export function Thailand() {
                 })}
                 error={personal.formState.errors["occupation"]}
               />
-            </div>
+            </fieldset>
 
             <div className="flex justify-end">
-              <Button>
-                Next <NextIcon className="ml-2" />
+              <Button disabled={personal.formState.isSubmitting}>
+                Next {personal.formState.isSubmitting ? <Spinner className="ml-2" /> : <NextIcon className="ml-2" />}
               </Button>
             </div>
           </form>
