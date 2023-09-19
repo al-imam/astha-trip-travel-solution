@@ -1,5 +1,7 @@
 import { Button } from "components/form/Button";
+import { Group, Join } from "components/form/Group";
 import { Input } from "components/form/Input";
+import { Radio } from "components/form/Radio";
 import { Select, SelectNotCreatable } from "components/form/Select";
 import { StepIndicator } from "components/form/StepIndicator";
 import { useState } from "react";
@@ -9,10 +11,9 @@ import { useNavigate } from "react-router-dom";
 import countries from "../countries.json";
 import districts from "../districts.json";
 import races from "../races.json";
-import { Group, Join } from "components/form/Group";
-import { NextIcon } from "./Schengen";
 import { AddIcon, DeleteIcon } from "./MainEntry";
-import { Radio } from "components/form/Radio";
+import { NextIcon } from "./Schengen";
+import { Spinner } from "./Spinner";
 
 const countriesOptions = countries.map((e) => ({
   label: e.name,
@@ -132,12 +133,15 @@ export function Singapore() {
     storage: window.sessionStorage,
   });
 
-  function particularsOfApplicantSubmit(data) {
+  async function particularsOfApplicantSubmit(data) {
+    await new Promise((r) => setTimeout(r, 5000));
+
     console.log(data);
     setStep(2);
   }
 
-  function otherDetailsSubmit(data) {
+  async function otherDetailsSubmit(data) {
+    await new Promise((r) => setTimeout(r, 5000));
     if (isLivedOtherCountry && livedOtherCountries.length < 1) {
       otherDetails.setError("lived-other-country", { type: "required", message: "Add Country or Select No" });
       return countryForm.setFocus("country");
@@ -152,7 +156,8 @@ export function Singapore() {
     countryForm.reset({ country: null, from: "", to: "", address: "" });
   }
 
-  function particularsOfLocalContactSubmit(data) {
+  async function particularsOfLocalContactSubmit(data) {
+    await new Promise((r) => setTimeout(r, 5000));
     console.log(data);
   }
 
@@ -164,7 +169,13 @@ export function Singapore() {
     <main className="container mx-auto space-y-4 p-4">
       <button
         onClick={() => navigate(-1)}
-        className="my-1 inline-flex items-center rounded-md border-gray-200 bg-white px-5 py-2.5 text-center text-sm font-medium text-blue-700 shadow hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-blue-300 "
+        disabled={
+          particularsOfApplicant.formState.isSubmitting ||
+          otherDetails.formState.isSubmitting ||
+          countryForm.formState.isSubmitting ||
+          particularsOfLocalContact.formState.isSubmitting
+        }
+        className="my-1 inline-flex items-center rounded-md border-gray-200 bg-white px-5 py-2.5 text-center text-sm font-medium text-blue-700 shadow hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:opacity-0"
       >
         <NextIcon className="mr-2 scale-x-[-1]" />
         <span>
@@ -182,7 +193,10 @@ export function Singapore() {
             onSubmit={particularsOfApplicant.handleSubmit(particularsOfApplicantSubmit)}
             autoComplete="off"
           >
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <fieldset
+              disabled={particularsOfApplicant.formState.isSubmitting}
+              className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+            >
               <Input
                 label="Name (Full name as shown in travel document) *"
                 placeholder="Name"
@@ -217,6 +231,7 @@ export function Singapore() {
                 options={sexesOptions}
                 placeholder="Select your gender"
                 control={particularsOfApplicant.control}
+                isDisabled={particularsOfApplicant.formState.isSubmitting}
                 name="sex"
                 isSearchable={false}
                 register={particularsOfApplicant.register("sex", { required: "Sex (gender) is required" })}
@@ -227,6 +242,7 @@ export function Singapore() {
                 label="Marital Status *"
                 options={maritalStatusOptions}
                 control={particularsOfApplicant.control}
+                isDisabled={particularsOfApplicant.formState.isSubmitting}
                 name="marital-status"
                 placeholder="Select marital status"
                 isSearchable={false}
@@ -240,6 +256,7 @@ export function Singapore() {
                 name="citizenship-of-spouse"
                 options={citizenshipOfSpouseOptions}
                 control={particularsOfApplicant.control}
+                isDisabled={particularsOfApplicant.formState.isSubmitting}
                 register={particularsOfApplicant.register("citizenship-of-spouse", {
                   required: "Citizenship of Spouse is required",
                 })}
@@ -261,6 +278,7 @@ export function Singapore() {
                 label="Country/place of birth *"
                 options={countriesOptions}
                 control={particularsOfApplicant.control}
+                isDisabled={particularsOfApplicant.formState.isSubmitting}
                 placeholder="Select country of birth"
                 name="country-of-birth"
                 register={particularsOfApplicant.register("country-of-birth", {
@@ -273,6 +291,7 @@ export function Singapore() {
                 label="State/province of birth *"
                 options={stateOfBirthOptions}
                 control={particularsOfApplicant.control}
+                isDisabled={particularsOfApplicant.formState.isSubmitting}
                 placeholder="Select state of birth"
                 name="state-of-birth"
                 register={particularsOfApplicant.register("state-of-birth", {
@@ -285,6 +304,7 @@ export function Singapore() {
                 label="Race: (e.g. Malay, Indian, etc) *"
                 options={racesOptions}
                 control={particularsOfApplicant.control}
+                isDisabled={particularsOfApplicant.formState.isSubmitting}
                 name="race"
                 placeholder="Select race"
                 register={particularsOfApplicant.register("race", { required: "Race is required" })}
@@ -296,6 +316,7 @@ export function Singapore() {
                 placeholder="Select nationality/citizenship"
                 options={nationalityOptions}
                 control={particularsOfApplicant.control}
+                isDisabled={particularsOfApplicant.formState.isSubmitting}
                 name="nationality"
                 register={particularsOfApplicant.register("nationality", {
                   required: "Nationality/Citizenship is required",
@@ -308,6 +329,7 @@ export function Singapore() {
                 placeholder="Select passport type"
                 options={documentTypeOptions}
                 control={particularsOfApplicant.control}
+                isDisabled={particularsOfApplicant.formState.isSubmitting}
                 name="type-of-passport"
                 register={particularsOfApplicant.register("type-of-passport", {
                   required: "Type of passport is required",
@@ -372,6 +394,7 @@ export function Singapore() {
                 placeholder="Select country"
                 options={countriesOptions}
                 control={particularsOfApplicant.control}
+                isDisabled={particularsOfApplicant.formState.isSubmitting}
                 name="residence"
                 register={particularsOfApplicant.register("residence", {
                   required: "Country/Place of Origin/Residence is required",
@@ -384,6 +407,7 @@ export function Singapore() {
                 placeholder="Select state"
                 options={stateOfBirthOptions}
                 control={particularsOfApplicant.control}
+                isDisabled={particularsOfApplicant.formState.isSubmitting}
                 name="state-of-residence"
                 register={particularsOfApplicant.register("state-of-residence", {
                   required: "Division/State of Origin/Residence is required",
@@ -409,11 +433,16 @@ export function Singapore() {
                 })}
                 error={particularsOfApplicant.formState.errors["address"]}
               />
-            </div>
+            </fieldset>
 
             <div className="flex justify-end">
-              <Button>
-                Next <NextIcon className="ml-2" />
+              <Button disabled={particularsOfApplicant.formState.isSubmitting} className="disabled:cursor-pointer">
+                Next
+                {particularsOfApplicant.formState.isSubmitting ? (
+                  <Spinner className="ml-2" />
+                ) : (
+                  <NextIcon className="ml-2" />
+                )}
               </Button>
             </div>
           </form>
