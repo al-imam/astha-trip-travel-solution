@@ -165,11 +165,9 @@ export function Singapore() {
     if (!serverRes) return fire();
     fire("Successfully Done!", "success");
 
-    /* 
     clearLocal.clear();
     clearOthers.clear();
-    clearParticulars.clear(); 
-    */
+    clearParticulars.clear();
   }
 
   function stopSubmitting(event) {

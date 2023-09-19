@@ -57,7 +57,9 @@ export function fire(title = "Something Went Wrong!", icon = "warning", position
       backdrop: "backdrop-blur-[2px]",
     },
     customClass: {
-      popup: "ring-1 ring-gray-200/50 shadow",
+      popup: "ring-1 ring-gray-200/50 shadow p-8 gap-4",
+      icon: "m-0 mx-auto",
+      title: "p-0",
     },
   });
 }

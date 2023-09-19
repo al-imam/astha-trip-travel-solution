@@ -153,12 +153,11 @@ export function Schengen() {
     if (!serverRes) return fire();
 
     fire("Successfully Done!", "success");
-    /*
+
     cleanContact.clear();
     cleanTravel.clear();
     cleanInfo.clear();
     cleanContact.clear();
-    */
   }
 
   return (

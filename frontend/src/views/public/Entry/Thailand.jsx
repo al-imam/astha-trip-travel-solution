@@ -129,6 +129,10 @@ export function Thailand() {
     if (!serverRes) return fire();
 
     fire("Successfully Done!", "success");
+
+    cleanContact.clear();
+    cleanPersonal.clear();
+    cleanPurpose.clear();
   }
 
   return (
