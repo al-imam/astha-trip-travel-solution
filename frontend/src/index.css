@@ -28,10 +28,12 @@
     display: none;
   }
 
+
+
   .full-width-div {
-    width: 100vw;
+    width: calc(100vw - 20px);
     position: relative;
-    margin-left: -50vw;
+    margin-left: calc(-50vw - -10px);
     left: 50%;
   }
 

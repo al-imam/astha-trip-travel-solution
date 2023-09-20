@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Table from '../payment/table';
 import useAgent from 'hook/UseAgent';
 import useAllform from 'hook/useAllform';
+import { toast } from 'react-toastify';
+import axios from 'axios';
 
 const StyleSelect = {
     control: (styles, state) => ({
@@ -56,6 +58,8 @@ const Index = () => {
         reloadSingapore
     ] = useAllform('singapore');
 
+    
+
     const [
         allthailand,
         thailandLoad,
@@ -97,10 +101,10 @@ const Index = () => {
                 {
                     Header: "Agent",
                     accessor: "apply_by",
-                    Cell:(prop)=>{
+                    Cell: (prop) => {
                         const User = JSON.parse(prop.row.original.apply_by)
                         return (
-                            <span className={`${(User.type === "Admin")?"text-green-500":"text-red-500"}`}>{User.email}</span>
+                            <span className={`${(User.type === "Admin") ? "text-green-500" : "text-red-500"}`}>{User.email}</span>
                         )
                     }
 
@@ -114,7 +118,29 @@ const Index = () => {
                     Header: "Action",
                     accessor: "action",
                     Cell: (prop) => {
-                        return prop.row.original.id
+                        return (
+                            <div className='flex gap-2 justify-end'>
+                                <button
+                                    title='Reject Request'
+                                    className='p-2 text-red-800 bg-red-200 text-md hover:scale-105 transition-all duration-500 hover:shadow-md rounded-full ring-1 ring-red-700'
+                                >
+                                    <TdesignFileBlocked />
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        Approved(SelectedCountry, prop.row.original.id)
+                                    }}
+                                    title='Accept Request'
+                                    className='p-2 text-green-800 bg-green-200 text-md hover:scale-105 transition-all duration-500 hover:shadow-md rounded-full ring-1 ring-green-700'>
+                                    <TeenyiconsShieldTickOutline />
+                                </button>
+                                <button
+                                    title='Details'
+                                    className='p-2 text-blue-800 bg-blue-200 text-md hover:scale-105 transition-all duration-500 hover:shadow-md rounded-full ring-1 ring-blue-700'>
+                                    <ClarityDetailsLine />
+                                </button>
+                            </div>
+                        )
                     }
                 },
             ],
@@ -142,10 +168,10 @@ const Index = () => {
                 {
                     Header: "Agent",
                     accessor: "apply_by",
-                    Cell:(prop)=>{
+                    Cell: (prop) => {
                         const User = JSON.parse(prop.row.original.apply_by)
                         return (
-                            <span className={`${(User.type === "Admin")?"text-green-500":"text-red-500"}`}>{User.email}</span>
+                            <span className={`${(User.type === "Admin") ? "text-green-500" : "text-red-500"}`}>{User.email}</span>
                         )
                     }
 
@@ -159,33 +185,133 @@ const Index = () => {
                     Header: "Action",
                     accessor: "action",
                     Cell: (prop) => {
-                        return prop.row.original.id
+                        return (
+                            <div className='flex gap-2 justify-end'>
+                                <button
+                                    title='Reject Request'
+                                    className='p-2 text-red-800 bg-red-200 text-md hover:scale-105 transition-all duration-500 hover:shadow-md rounded-full ring-1 ring-red-700'
+                                >
+                                    <TdesignFileBlocked />
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        Approved(SelectedCountry, prop.row.original.id)
+                                    }}
+                                    title='Accept Request'
+                                    className='p-2 text-green-800 bg-green-200 text-md hover:scale-105 transition-all duration-500 hover:shadow-md rounded-full ring-1 ring-green-700'>
+                                    <TeenyiconsShieldTickOutline />
+                                </button>
+                                <button
+                                    title='Details'
+                                    className='p-2 text-blue-800 bg-blue-200 text-md hover:scale-105 transition-all duration-500 hover:shadow-md rounded-full ring-1 ring-blue-700'>
+                                    <ClarityDetailsLine />
+                                </button>
+                            </div>
+                        )
                     }
                 },
-            ]
+            ],
+            singapore: [
+                {
+                    Header: "ID",
+                    accessor: "id", // accessor is the "key" in the data
+                },
+                {
+                    Header: "Name",
+                    accessor: "name",
+                    Cell: (prop) => {
+                        return prop.row.original.name + " " + prop.row.original.alias
+                    }
+                },
+                {
+                    Header: "Passport Number",
+                    accessor: "passport_number",
+
+                },
+                {
+                    Header: "Travel Date",
+                    accessor: "expected_date_of_arrival",
+                },
+                {
+                    Header: "Agent",
+                    accessor: "apply_by",
+                    Cell: (prop) => {
+                        const User = JSON.parse(prop.row.original.apply_by)
+                        return (
+                            <span className={`${(User.type === "Admin") ? "text-green-500" : "text-red-500"}`}>{User.email}</span>
+                        )
+                    }
+
+                },
+                {
+                    Header: "Status",
+                    accessor: "status",
+
+                },
+                {
+                    Header: "Action",
+                    accessor: "action",
+                    Cell: (prop) => {
+                        // return prop.row.original.id
+                        return (
+                            <div className='flex gap-2 justify-end'>
+                                <button
+                                    title='Reject Request'
+                                    className='p-2 text-red-800 bg-red-200 text-md hover:scale-105 transition-all duration-500 hover:shadow-md rounded-full ring-1 ring-red-700'
+                                >
+                                    <TdesignFileBlocked />
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        Approved(SelectedCountry, prop.row.original.id)
+                                    }}
+                                    title='Accept Request'
+                                    className='p-2 text-green-800 bg-green-200 text-md hover:scale-105 transition-all duration-500 hover:shadow-md rounded-full ring-1 ring-green-700'>
+                                    <TeenyiconsShieldTickOutline />
+                                </button>
+                                <button
+                                    title='Details'
+                                    className='p-2 text-blue-800 bg-blue-200 text-md hover:scale-105 transition-all duration-500 hover:shadow-md rounded-full ring-1 ring-blue-700'>
+                                    <ClarityDetailsLine />
+                                </button>
+                            </div>
+                        )
+                    }
+                },
+            ],
         }
-    })
+    }, [SelectedCountry])
     // selected country data 
     const [SelectedCountryData, SetSelectedCountryData] = useState([]);
+    const [SelectedCountryDatatemp, SetSelectedCountryDatatemp] = useState([]);
     useEffect(() => {
 
         if (SelectedCountry === "singapore") {
             SetSelectedCountryData(allSingapore);
+            SetSelectedCountryDatatemp(allSingapore);
+            // SetfilterStatus('')
+            // SetfilterAgent('')
         }
         if (SelectedCountry === "schengen") {
             SetSelectedCountryData(allschengen);
+            SetSelectedCountryDatatemp(allschengen);
+            // SetfilterStatus('')
+            // SetfilterAgent('')
         }
         if (SelectedCountry === "thailand") {
             SetSelectedCountryData(allthailand);
+            SetSelectedCountryDatatemp(allthailand);
+            // SetfilterStatus('')
+            // SetfilterAgent('')
         }
-    }, [SelectedCountry])
+    }, [SelectedCountry,allSingapore, allthailand, allschengen])
 
 
     let col = []
 
     switch (SelectedCountry) {
         case "singapore":
-            col = colunm.schengen
+            col = colunm.singapore
             break;
 
         case "schengen":
@@ -194,10 +320,52 @@ const Index = () => {
         case "thailand":
             col = colunm.thailand
             break;
+        default:
+            col = []
     }
     // filter the data 
-    const [filterStatus, SetfilterStatus] = useState();
-    const [filterAgent, SetfilterAgent] = useState();
+    const [filterStatus, SetfilterStatus] = useState("");
+    const [filterAgent, SetfilterAgent] = useState("");
+
+    const filter = useMemo(() => {
+        
+        return SelectedCountryDatatemp.filter((e) => {
+            if (!filterStatus) {
+                return true
+            }
+            return e.status === filterStatus
+
+        }).filter((e) => {
+            if (!filterAgent) {
+                return true
+            }
+            return JSON.parse(e.apply_by).email === filterAgent
+        })
+        // SetSelectedCountryData(temp)
+
+    }, [filterStatus, filterAgent, SelectedCountryDatatemp])
+
+
+    // approve contrler 
+    const Approved = async (country, id) => {
+        try {
+            const serverRes = await toast.promise(
+                axios.post('/api/visa-form/approved', {
+                    country, id
+                }), {
+                pending: "Please Wait ...",
+                error: "Something is Wrong!",
+                success: "Request Accepted"
+            }
+            );
+            if(country === "singapore"){
+                reloadSingapore()
+            }
+        } catch (error) {
+            console.log("🚀 ~ file: Index.jsx:340 ~ Approved ~ error:", error)
+
+        }
+    }
 
 
     return (
@@ -256,9 +424,18 @@ const Index = () => {
                         }}
                         className='w-full relative'>
                         <div className='w-full relative flex gap-3 justify-between mt-3'>
-                            <Widget icon={<LineMdDocumentList className="text-2xl " />} title={"Total"} subtitle={SelectedCountryData.length} />
-                            <Widget icon={<LineMdDocumentList className="text-2xl " />} title={"Pending"} subtitle={100} />
-                            <Widget icon={<LineMdDocumentList className="text-2xl" />} title={"Canaled"} subtitle={100} />
+                            <Widget icon={<LineMdDocumentList className="text-2xl" />}
+                                title={"Total"}
+                                subtitle={SelectedCountryData.length} />
+                            <Widget icon={<LineMdDocumentList className="text-2xl" />}
+                                title={"Pending"}
+                                subtitle={SelectedCountryData.filter(e => e.status === 'pending').length} />
+                            <Widget icon={<LineMdDocumentList className="text-2xl" />}
+                                title={"Approved"}
+                                subtitle={SelectedCountryData.filter(e => e.status === 'approved').length} />
+                            <Widget icon={<LineMdDocumentList className="text-2xl" />}
+                                title={"Rejected"}
+                                subtitle={SelectedCountryData.filter(e => e.status === 'rejected').length} />
                         </div>
                         {/* table  */}
                         <div className='w-full relative mt-6'>
@@ -270,8 +447,9 @@ const Index = () => {
                                         onChange={(e) => {
                                             SetfilterStatus(e.value);
                                         }}
-                                        value={{label:filterStatus,value:filterStatus}}
+                                        value={{ label: filterStatus, value: filterStatus }}
                                         options={[
+                                            { label: "none", value: "" },
                                             { label: "Pending", value: "pending" },
                                             { label: "Approved", value: "approved" },
                                         ]}
@@ -302,13 +480,13 @@ const Index = () => {
                                             SetfilterAgent(e.value)
                                         }}
                                         value={{ label: filterAgent, value: filterAgent }}
-                                        options={data.length ? data.map(e => ({ label: e.email, value: e.email })) : []}
+                                        options={data.length ? [{ label: "none", value: "" }, ...data.map(e => ({ label: e.email, value: e.email }))] : []}
                                         styles={StyleSelect}
                                     />
                                 </div>
                             </div>
                             {/* // "singapore", "schengen", "thailand" */}
-                            <Table colunm={col} datas={SelectedCountryData} />
+                            <Table colunm={col} datas={filter} />
                         </div>
                     </motion.div>
                     ) : ""
@@ -388,5 +566,25 @@ export function OpenmojiWarning(props) {
 export function SvgSpinnersPulseRings3(props) {
     return (
         <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" {...props}><path fill="currentColor" d="M12,1A11,11,0,1,0,23,12,11,11,0,0,0,12,1Zm0,20a9,9,0,1,1,9-9A9,9,0,0,1,12,21Z" transform="matrix(0 0 0 0 12 12)"><animateTransform id="svgSpinnersPulseRings30" attributeName="transform" begin="0;svgSpinnersPulseRings32.begin+0.4s" calcMode="spline" dur="1.2s" keySplines=".52,.6,.25,.99" type="translate" values="12 12;0 0"></animateTransform><animateTransform additive="sum" attributeName="transform" begin="0;svgSpinnersPulseRings32.begin+0.4s" calcMode="spline" dur="1.2s" keySplines=".52,.6,.25,.99" type="scale" values="0;1"></animateTransform><animate attributeName="opacity" begin="0;svgSpinnersPulseRings32.begin+0.4s" calcMode="spline" dur="1.2s" keySplines=".52,.6,.25,.99" values="1;0"></animate></path><path fill="currentColor" d="M12,1A11,11,0,1,0,23,12,11,11,0,0,0,12,1Zm0,20a9,9,0,1,1,9-9A9,9,0,0,1,12,21Z" transform="matrix(0 0 0 0 12 12)"><animateTransform id="svgSpinnersPulseRings31" attributeName="transform" begin="svgSpinnersPulseRings30.begin+0.4s" calcMode="spline" dur="1.2s" keySplines=".52,.6,.25,.99" type="translate" values="12 12;0 0"></animateTransform><animateTransform additive="sum" attributeName="transform" begin="svgSpinnersPulseRings30.begin+0.4s" calcMode="spline" dur="1.2s" keySplines=".52,.6,.25,.99" type="scale" values="0;1"></animateTransform><animate attributeName="opacity" begin="svgSpinnersPulseRings30.begin+0.4s" calcMode="spline" dur="1.2s" keySplines=".52,.6,.25,.99" values="1;0"></animate></path><path fill="currentColor" d="M12,1A11,11,0,1,0,23,12,11,11,0,0,0,12,1Zm0,20a9,9,0,1,1,9-9A9,9,0,0,1,12,21Z" transform="matrix(0 0 0 0 12 12)"><animateTransform id="svgSpinnersPulseRings32" attributeName="transform" begin="svgSpinnersPulseRings30.begin+0.8s" calcMode="spline" dur="1.2s" keySplines=".52,.6,.25,.99" type="translate" values="12 12;0 0"></animateTransform><animateTransform additive="sum" attributeName="transform" begin="svgSpinnersPulseRings30.begin+0.8s" calcMode="spline" dur="1.2s" keySplines=".52,.6,.25,.99" type="scale" values="0;1"></animateTransform><animate attributeName="opacity" begin="svgSpinnersPulseRings30.begin+0.8s" calcMode="spline" dur="1.2s" keySplines=".52,.6,.25,.99" values="1;0"></animate></path></svg>
+    )
+}
+
+
+export function TeenyiconsShieldTickOutline(props) {
+    return (
+        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 15 15" {...props}><path fill="none" stroke="currentColor" strokeLinejoin="round" d="M4 7.5L7 10l4-5M7.5.5l-7 4v.72a9.651 9.651 0 0 0 7 9.28a9.651 9.651 0 0 0 7-9.28V4.5l-7-4Z"></path></svg>
+    )
+}
+
+
+export function TdesignFileBlocked(props) {
+    return (
+        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" {...props}><path fill="currentColor" d="M3 1h12.414L21 6.586V11h-2V9h-6V3H5v18h6v2H3V1Zm12 2.414V7h3.586L15 3.414ZM18 14.5a3.5 3.5 0 0 0-3.08 5.165l4.745-4.744A3.483 3.483 0 0 0 18 14.5Zm3.08 1.835l-4.745 4.744a3.5 3.5 0 0 0 4.745-4.745ZM12.5 18a5.5 5.5 0 1 1 11 0a5.5 5.5 0 0 1-11 0Z"></path></svg>
+    )
+}
+
+export function ClarityDetailsLine(props) {
+    return (
+        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 36 36" {...props}><path fill="currentColor" d="M32 6H4a2 2 0 0 0-2 2v20a2 2 0 0 0 2 2h28a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2Zm0 22H4V8h28Z" className="clr-i-outline clr-i-outline-path-1"></path><path fill="currentColor" d="M9 14h18a1 1 0 0 0 0-2H9a1 1 0 0 0 0 2Z" className="clr-i-outline clr-i-outline-path-2"></path><path fill="currentColor" d="M9 18h18a1 1 0 0 0 0-2H9a1 1 0 0 0 0 2Z" className="clr-i-outline clr-i-outline-path-3"></path><path fill="currentColor" d="M9 22h10a1 1 0 0 0 0-2H9a1 1 0 0 0 0 2Z" className="clr-i-outline clr-i-outline-path-4"></path><path fill="none" d="M0 0h36v36H0z"></path></svg>
     )
 }
