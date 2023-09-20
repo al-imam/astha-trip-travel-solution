@@ -105,35 +105,31 @@ export function Singapore() {
   const particularsOfLocalContact = useForm();
 
   const citizenshipOfSpouse = particularsOfApplicant.watch("citizenship-of-spouse");
-
-  const a = particularsOfLocalContact.watch("a");
-  const b = particularsOfLocalContact.watch("b");
-  const c = particularsOfLocalContact.watch("c");
-  const d = particularsOfLocalContact.watch("d");
+  const answers = particularsOfLocalContact.watch(["a", "b", "c", "d"]);
 
   const isStayingMoreThanThirtyDays = otherDetails.watch("days-intend-to-stay") === "More than 30 days";
   const isLivedOtherCountry = otherDetails.watch("lived-other-country") === "Yes";
-  const isExtraInformationRequired = [a, b, c, d].includes("Yes");
+  const isExtraInformationRequired = answers.includes("Yes");
   const isSpouseIsSingaporeCitizen = citizenshipOfSpouseOptions.some(
     (c) => citizenshipOfSpouse && c.value === citizenshipOfSpouse.value
   );
 
-  const clearParticulars = useFormPersist("particulars_of_applicant", {
+  const clearParticulars = useFormPersist("singapore-particulars-of-applicant", {
     watch: particularsOfApplicant.watch,
     setValue: particularsOfApplicant.setValue,
-    storage: window.sessionStorage,
+    storage: window.localStorage,
   });
 
-  const clearOthers = useFormPersist("other_details", {
+  const clearOthers = useFormPersist("singapore-other-details", {
     watch: otherDetails.watch,
     setValue: otherDetails.setValue,
-    storage: window.sessionStorage,
+    storage: window.localStorage,
   });
 
-  const clearLocal = useFormPersist("particulars_of_local_contact", {
+  const clearLocal = useFormPersist("singapore-particulars-of-local-contact", {
     watch: particularsOfLocalContact.watch,
     setValue: particularsOfLocalContact.setValue,
-    storage: window.sessionStorage,
+    storage: window.localStorage,
   });
 
   function particularsOfApplicantSubmit(data) {
@@ -164,10 +160,11 @@ export function Singapore() {
     const serverRes = await axios.post("/api/visa-form/singapore", data).catch(console.log);
     if (!serverRes) return fire();
     fire("Successfully Done!", "success");
-
+    /* 
     clearLocal.clear();
     clearOthers.clear();
     clearParticulars.clear();
+    */
   }
 
   function stopSubmitting(event) {

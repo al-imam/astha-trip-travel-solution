@@ -95,19 +95,19 @@ export function Thailand() {
   const cleanPersonal = useFormPersist("thailand-personal-submit", {
     watch: personal.watch,
     setValue: personal.setValue,
-    storage: window.sessionStorage,
+    storage: window.localStorage,
   });
 
   const cleanContact = useFormPersist("thailand-contact-submit", {
     watch: contact.watch,
     setValue: contact.setValue,
-    storage: window.sessionStorage,
+    storage: window.localStorage,
   });
 
   const cleanPurpose = useFormPersist("thailand-purpose-submit", {
     watch: purpose.watch,
     setValue: purpose.setValue,
-    storage: window.sessionStorage,
+    storage: window.localStorage,
   });
 
   function personalSubmit(data) {
@@ -129,10 +129,11 @@ export function Thailand() {
     if (!serverRes) return fire();
 
     fire("Successfully Done!", "success");
-
+    /* 
     cleanContact.clear();
     cleanPersonal.clear();
     cleanPurpose.clear();
+    */
   }
 
   return (

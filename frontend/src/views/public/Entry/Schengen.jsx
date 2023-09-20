@@ -108,25 +108,25 @@ export function Schengen() {
   const cleanPersonal = useFormPersist("schengen-personal-submit", {
     watch: personal.watch,
     setValue: personal.setValue,
-    storage: window.sessionStorage,
+    storage: window.localStorage,
   });
 
   const cleanTravel = useFormPersist("schengen-travel-submit", {
     watch: travel.watch,
     setValue: travel.setValue,
-    storage: window.sessionStorage,
+    storage: window.localStorage,
   });
 
   const cleanContact = useFormPersist("schengen-contact-submit", {
     watch: contact.watch,
     setValue: contact.setValue,
-    storage: window.sessionStorage,
+    storage: window.localStorage,
   });
 
   const cleanInfo = useFormPersist("schengen-info-submit", {
     watch: info.watch,
     setValue: info.setValue,
-    storage: window.sessionStorage,
+    storage: window.localStorage,
   });
 
   function personalSubmit(data) {
@@ -153,11 +153,12 @@ export function Schengen() {
     if (!serverRes) return fire();
 
     fire("Successfully Done!", "success");
-
+    /* 
     cleanContact.clear();
     cleanTravel.clear();
     cleanInfo.clear();
     cleanContact.clear();
+    */
   }
 
   return (
