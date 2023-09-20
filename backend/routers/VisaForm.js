@@ -24,7 +24,9 @@ VisaFormRouter.get("/get-schengen", isAdmin, GetForm().Schengen);
 VisaFormRouter.get("/get-by-agent", isAgent, GetForm().agent);
 
 // action controller
-VisaFormRouter.post("/approved",isAdmin,Approved)
+VisaFormRouter.post("/approved",isAdmin,Approved);
+
+VisaFormRouter.get('/get-by-passport/:passport', isAuthenticate,GetForm().get_by_passport)
 
 
 module.exports = VisaFormRouter;

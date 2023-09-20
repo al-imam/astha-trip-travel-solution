@@ -54,6 +54,25 @@ const GetFormData = () => {
                 console.log("🚀 ~ file: GetForm.js:41 ~ agent: ~ error:", error)
                 res.status(500).send({ error, hint: `⛔ Eroor in GetForm.js > path = backend>controller>VisaForm>GetForm.js : line= 55 ` })
             }
+        },
+        get_by_passport: async (req, res) => {
+            try {
+                const { passport } = req.params;
+
+                const [SingaporeDatabase] = await Singapore.findOne({ passport_number: passport });
+
+                const [ThailandDatabase] = await Thailand.findOne({ passport_number: passport });
+                const [SchengenDatabase] = await Schengen.findOne({ passport_number: passport });
+               
+                res.status(200).json({
+                    singapore:SingaporeDatabase,
+                    Thailand:ThailandDatabase,
+                    schengen:SchengenDatabase
+                })
+            } catch (error) {
+                console.log("🚀 ~ file: GetForm.js:62 ~ get_by_passport: ~ error:", error)
+
+            }
         }
     }
 }
