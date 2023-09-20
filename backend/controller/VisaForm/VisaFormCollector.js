@@ -250,45 +250,6 @@ const VisaFormColector = () => {
 
                 res.send('database Insert done!');
 
-                // let data = {
-                //     'passport-number': '112323',
-                //     'type-of-visa-requested': 'Official Visa',
-                //     'number-of-entries': '2',
-                //     'name-title': 'Mr.',
-                //     'first-name': 'nahid ',
-                //     'middle-name': 'Hasan',
-                //     'last-name': 'sagor',
-                //     'former-name': '',
-                //     nationality: 'Bangladeshi',
-                //     'nationality-at-birth': 'Bangladeshi',
-                //     'place-of-birth': 'Chandpur',
-                //     'marital-status': 'SINGLE',
-                //     'date-of-birth': '2000-11-11',
-                //     'type-of-passport': 'ORDINARY PASSPORT',
-                //     'passport-issued-at': 'Dhaka',
-                //     'passport-date-of-issue': '3000-02-22',
-                //     'passport-expire-date': '2023-09-28',
-                //     occupation: 'no job',
-                //     'current-address': 'dhaka bangladesh',
-                //     telephone: '73847',
-                //     email: 'nahid@gmail.com',
-                //     'permanent-address': 'as provided',
-                //     'permanent-telephone': '798457',
-                //     'traveling-by': 'AIT PLANE',
-                //     'names-dates-and-places-of-birth-of-minor-children': 'fly bagla',
-                //     'date-of-arrival-in-and-departure-from-thailand': '2023-09-21',
-                //     flight_no_or_vessel_name: '7455',
-                //     'duration-of-proposed-stay': 'tour',
-                //     'countries-for-which-travel-document-is-valid': 'ALL COUNTRIES OF THE WORLD EXCEPT ISRAIL',
-                //     'date-of-previous-visit': '2023-09-21',
-                //     'purpose-of-visit': 'Tourist',
-                //     'proposed-address-in-thailand': 'pataya ',
-                //     'name-and-address-of-local-guarantor': 'nahid',
-                //     'telephone-fax-of-local-guarantor': '0148754',
-                //     'name-and-address-of-guarantor-in-thailand': 'pataya thailand',
-                //     'telephone-fax-of-thailand-guarantor': '01741013236'
-                //   }
-
 
             } catch (error) {
                 console.log("🚀 ~ file: VisaFormCollector.js:5 ~ VisaFormColector ~ error:", error)
