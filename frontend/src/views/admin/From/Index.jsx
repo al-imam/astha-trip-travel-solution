@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import NormalSelect from "react-select";
 import Widget from 'components/widget/Widget'
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence  } from 'framer-motion';
 import Table from '../payment/table';
 import useAgent from 'hook/UseAgent';
 import useAllform from 'hook/useAllform';
