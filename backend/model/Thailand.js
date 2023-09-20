@@ -2,6 +2,10 @@ const Schema = require('../database/schema');
 const Model = require('../database/Model');
 
 const ThailandSchema = new Schema({
+    name_title: {
+        type: 'VARCHAR(255)',
+        req: true
+    },
     first_name: {
         type: 'VARCHAR(255)',
         req: true
@@ -150,7 +154,7 @@ const ThailandSchema = new Schema({
     // Address i
     apply_by: {
         // 32
-        type: "VARCHAR(255)",
+        type: "LONGTEXT",
         req: true,
     },
 

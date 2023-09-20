@@ -184,7 +184,7 @@ const SchengenSchema = new Schema({
     },
     apply_by: {
         // 32
-        type: "VARCHAR(255)",
+        type: "LONGTEXT",
         req: true,
     },
     status: {

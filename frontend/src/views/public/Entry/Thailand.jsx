@@ -130,9 +130,9 @@ export function Thailand() {
 
     fire("Successfully Done!", "success");
 
-    cleanContact.clear();
-    cleanPersonal.clear();
-    cleanPurpose.clear();
+    // cleanContact.clear();
+    // cleanPersonal.clear();
+    // cleanPurpose.clear();
   }
 
   return (
@@ -299,13 +299,17 @@ export function Thailand() {
                 error={personal.formState.errors["type-of-passport"]}
               />
 
-              <Input
+              <Select
                 label="Passport issued at *"
+                control={personal.control}
+                name="passport-issued-at"
+                options={placeOfBirthOptions}
                 register={personal.register("passport-issued-at", {
                   required: "Issue at is required",
                 })}
                 error={personal.formState.errors["passport-issued-at"]}
-                type="date"
+                isDisabled={personal.formState.isSubmitting}
+               placeholder="Select Passport issued at"
               />
 
               <Input

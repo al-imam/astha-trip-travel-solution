@@ -1,5 +1,6 @@
 const Schengen = require('../../model/Schengen');
 const Singapore = require('../../model/Singapore');
+const Thailand = require('../../model/Thailand');
 
 const VisaFormColector = () => {
     return {
@@ -175,72 +176,118 @@ const VisaFormColector = () => {
                 res.send('database Insert done!');
 
 
-                // let demo = {
-                //     surname: 'nahid',
-                //     alias: 'hasan',
-                //     'date-of-birth': '2023-09-14',
-                //     sex: 'Male',
-                //     'marital-status': 'Single',
-                //     'citizenship-of-spouse': 'bangladehi',
-                //     'country-of-birth': 'Bangladeshi',
-                //     'state-of-birth': 'Dhaka',
-                //     race: 'Bangladeshi',
+
+
+            } catch (error) {
+                console.log("🚀 ~ file: VisaFormCollector.js:5 ~ VisaFormColector ~ error:", error)
+                res.status(500).send(error)
+            }
+        },
+        thailand: async (req, res) => {
+            let apply = {}
+            if (req.User.Admin) {
+                apply = {
+                    type: "Admin",
+                    email: req.User.Admin.email
+                }
+            } else {
+                apply = {
+                    type: "Agent",
+                    email: req.User.Agent.email
+                }
+            }
+
+
+            try {
+                const { body } = req;
+
+                const DbRe = await Thailand.Add({
+                    
+                        type_of_visa: body['type-of-visa-requested'],
+                        name_title: body['name-title'],
+                        first_name: body['first-name'],
+                        middle_name: body['middle-name'],
+                        family_name: body['last-name'],
+                        former_name: body['former-name'],
+                        nationality: body['nationality'],
+                        nationality_at_birth: body['nationality-at-birth'],
+                        birth_place: body['place-of-birth'],
+                        marital_status: body['marital-status'],
+                        date_of_birth: body['date-of-birth'],
+                        type_of_passport: body['type-of-passport'],
+                        passport_number: body['passport-number'],
+                        passport_issued_at:body['passport-issued-at'],
+                       passport_issue_date: body['passport-date-of-issue'],
+                        passport_expiry_date: body['passport-expire-date'],
+                        occupation: body["occupation"],
+                        current_address:body['current-address'],
+                        phone: body['telephone'],
+                        email: body['email'],
+                        permanent_address:body['permanent-address'],
+                        permanent_phone: body['permanent-telephone'],
+                        minor_children_info: body['names-dates-and-places-of-birth-of-minor-children'],
+                        arrival_date_thailand: body['date-of-arrival-in-and-departure-from-thailand'],
+                        travel_by:body['traveling-by'],
+                        flight_no: body['flight_no_or_vessel_name'],
+                        stay_duration: body['duration-of-proposed-stay'],
+                        date_of_previous_visit:body['date-of-previous-visit'],
+                        purpose_of_visit: body['purpose-of-visit'],
+                        country_of_passport_valid: body['countries-for-which-travel-document-is-valid'],
+                        address_in_thailand: body['proposed-address-in-thailand'],
+                        local_guarantor: body['name-and-address-of-local-guarantor'],
+                        local_contact_phone: body['telephone-fax-of-local-guarantor'],
+                        thailand_guarantor: body['name-and-address-of-guarantor-in-thailand'],
+                        thailand_contact_phone: body['telephone-fax-of-thailand-guarantor'],
+                       
+                        number_of_entry:body['number-of-entries'],
+                        status: "pending",
+                        // Address i
+                        apply_by:  JSON.stringify(apply),
+                    
+                    }
+                )
+                
+
+                res.send('database Insert done!');
+
+                // let data = {
+                //     'passport-number': '112323',
+                //     'type-of-visa-requested': 'Official Visa',
+                //     'number-of-entries': '2',
+                //     'name-title': 'Mr.',
+                //     'first-name': 'nahid ',
+                //     'middle-name': 'Hasan',
+                //     'last-name': 'sagor',
+                //     'former-name': '',
                 //     nationality: 'Bangladeshi',
-                //     'type-of-passport': 'International Passport',
-                //     'passport-no': '123456789',
-                //     'passport-issue-date': '2023-09-05',
-                //     'passport-expiry-date': '2023-09-28',
-                //     'country-of-issue': 'Dhaka',
-                //     'prc-id-number': '',
-                //     residence: 'Bangladeshi',
-                //     'state-of-residence': 'Dhaka',
-                //     'prefecture-of-residence': 'dhaka',
-                //     address: 'Dhaka, Bangladesh',
-                //     'email-address': 'nahidhasan.opt@gmail.com',
-                //     'contact-number': '014563258',
-                //     occupation: 'developper',
-                //     'highest-academic': 'Pre-University',
-                //     'qualifications-attained': 'University',
-                //     'annual-income': '100',
-                //     religion: 'Islam',
-                //     'arrival-date': '2023-09-28',
-                //     'type-of-visa': 'Single Journey',
-                //     'purpose-of-visit': 'Social',
-                //     'details-of-purpose': 'go for tour',
-                //     'stay-location': "Friend's Place",
-                //     'days-intend-to-stay': 'More than 30 days',
-                //     'reason-for-stay': 'go for it',
-                //     'singapore-house-no': 'nahid',
-                //     'singapore-floor-no': '12',
-                //     'singapore-unit-no': '232',
-                //     'singapore-postal-code': '4512',
-                //     'singapore-street-name': 'nahid road',
-                //     'singapore-contact-no': '03213464',
-                //     'singapore-building-name': 'nh plaza',
-                //     'lived-other-country': 'Yes',
-                //     'relationship-of-travelling-companion': 'client',
-                //     'name-of-travelling-companion': 'astha trip',
-                //     'birth-date-of-travelling-companion': '2023-09-21',
-                //     'passport-no-of-travelling-companion': 'f444514d',
-                //     'sex-of-travelling-companion': 'Male',
-                //     'nationality-of-travelling-companion': 'Anguillan',
-                //     'lived-other-countries': [
-                //         {
-                //             from: '2023-09-21',
-                //             to: '2023-09-21',
-                //             address: 'fsdf',
-                //             country: 'Aland Islands'
-                //         }
-                //     ],
-                //     'name-of-local-contact': 'Hotel boos',
-                //     'relationship-of-local-contact': 'client',
-                //     'contact-no-of-local-contact': '021248411',
-                //     'email-of-local-contact': 'hotel@gmail.com',
-                //     a: 'No',
-                //     b: 'No',
-                //     c: 'No',
-                //     d: 'No'
-                // }
+                //     'nationality-at-birth': 'Bangladeshi',
+                //     'place-of-birth': 'Chandpur',
+                //     'marital-status': 'SINGLE',
+                //     'date-of-birth': '2000-11-11',
+                //     'type-of-passport': 'ORDINARY PASSPORT',
+                //     'passport-issued-at': 'Dhaka',
+                //     'passport-date-of-issue': '3000-02-22',
+                //     'passport-expire-date': '2023-09-28',
+                //     occupation: 'no job',
+                //     'current-address': 'dhaka bangladesh',
+                //     telephone: '73847',
+                //     email: 'nahid@gmail.com',
+                //     'permanent-address': 'as provided',
+                //     'permanent-telephone': '798457',
+                //     'traveling-by': 'AIT PLANE',
+                //     'names-dates-and-places-of-birth-of-minor-children': 'fly bagla',
+                //     'date-of-arrival-in-and-departure-from-thailand': '2023-09-21',
+                //     flight_no_or_vessel_name: '7455',
+                //     'duration-of-proposed-stay': 'tour',
+                //     'countries-for-which-travel-document-is-valid': 'ALL COUNTRIES OF THE WORLD EXCEPT ISRAIL',
+                //     'date-of-previous-visit': '2023-09-21',
+                //     'purpose-of-visit': 'Tourist',
+                //     'proposed-address-in-thailand': 'pataya ',
+                //     'name-and-address-of-local-guarantor': 'nahid',
+                //     'telephone-fax-of-local-guarantor': '0148754',
+                //     'name-and-address-of-guarantor-in-thailand': 'pataya thailand',
+                //     'telephone-fax-of-thailand-guarantor': '01741013236'
+                //   }
 
 
             } catch (error) {
