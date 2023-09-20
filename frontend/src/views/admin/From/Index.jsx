@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Table from '../payment/table';
 import useAgent from 'hook/UseAgent';
 import useAllform from 'hook/useAllform';
+import { toast } from 'react-toastify';
+import axios from 'axios';
 
 const StyleSelect = {
     control: (styles, state) => ({
@@ -55,6 +57,9 @@ const Index = () => {
         singaporeError,
         reloadSingapore
     ] = useAllform('singapore');
+    console.log("🚀 ~ file: Index.jsx:56 ~ Index ~ allSingapore:", allSingapore)
+
+    
 
     const [
         allthailand,
@@ -123,6 +128,9 @@ const Index = () => {
                                     <TdesignFileBlocked />
                                 </button>
                                 <button
+                                    onClick={() => {
+                                        Approved(SelectedCountry, prop.row.original.id)
+                                    }}
                                     title='Accept Request'
                                     className='p-2 text-green-800 bg-green-200 text-md hover:scale-105 transition-all duration-500 hover:shadow-md rounded-full ring-1 ring-green-700'>
                                     <TeenyiconsShieldTickOutline />
@@ -187,6 +195,9 @@ const Index = () => {
                                     <TdesignFileBlocked />
                                 </button>
                                 <button
+                                    onClick={() => {
+                                        Approved(SelectedCountry, prop.row.original.id)
+                                    }}
                                     title='Accept Request'
                                     className='p-2 text-green-800 bg-green-200 text-md hover:scale-105 transition-all duration-500 hover:shadow-md rounded-full ring-1 ring-green-700'>
                                     <TeenyiconsShieldTickOutline />
@@ -252,6 +263,9 @@ const Index = () => {
                                     <TdesignFileBlocked />
                                 </button>
                                 <button
+                                    onClick={() => {
+                                        Approved(SelectedCountry, prop.row.original.id)
+                                    }}
                                     title='Accept Request'
                                     className='p-2 text-green-800 bg-green-200 text-md hover:scale-105 transition-all duration-500 hover:shadow-md rounded-full ring-1 ring-green-700'>
                                     <TeenyiconsShieldTickOutline />
@@ -267,7 +281,7 @@ const Index = () => {
                 },
             ],
         }
-    },[])
+    }, [SelectedCountry])
     // selected country data 
     const [SelectedCountryData, SetSelectedCountryData] = useState([]);
     const [SelectedCountryDatatemp, SetSelectedCountryDatatemp] = useState([]);
@@ -276,22 +290,22 @@ const Index = () => {
         if (SelectedCountry === "singapore") {
             SetSelectedCountryData(allSingapore);
             SetSelectedCountryDatatemp(allSingapore);
-            SetfilterStatus('')
-            SetfilterAgent('')
+            // SetfilterStatus('')
+            // SetfilterAgent('')
         }
         if (SelectedCountry === "schengen") {
             SetSelectedCountryData(allschengen);
             SetSelectedCountryDatatemp(allschengen);
-            SetfilterStatus('')
-            SetfilterAgent('')
+            // SetfilterStatus('')
+            // SetfilterAgent('')
         }
         if (SelectedCountry === "thailand") {
             SetSelectedCountryData(allthailand);
             SetSelectedCountryDatatemp(allthailand);
-            SetfilterStatus('')
-            SetfilterAgent('')
+            // SetfilterStatus('')
+            // SetfilterAgent('')
         }
-    }, [SelectedCountry])
+    }, [SelectedCountry,allSingapore, allthailand, allschengen])
 
 
     let col = []
@@ -314,22 +328,45 @@ const Index = () => {
     const [filterStatus, SetfilterStatus] = useState("");
     const [filterAgent, SetfilterAgent] = useState("");
 
- const filter =  useMemo(()=>{
-        return SelectedCountryDatatemp.filter((e)=>{
-            if(!filterStatus){
+    const filter = useMemo(() => {
+        
+        return SelectedCountryDatatemp.filter((e) => {
+            if (!filterStatus) {
                 return true
             }
-            return e.status === filterStatus  
-                
-        }).filter((e)=>{
-            if(!filterAgent){
+            return e.status === filterStatus
+
+        }).filter((e) => {
+            if (!filterAgent) {
                 return true
             }
             return JSON.parse(e.apply_by).email === filterAgent
         })
         // SetSelectedCountryData(temp)
 
-    },[filterStatus,filterAgent,SelectedCountryDatatemp ])
+    }, [filterStatus, filterAgent, SelectedCountryDatatemp])
+
+
+    // approve contrler 
+    const Approved = async (country, id) => {
+        try {
+            const serverRes = await toast.promise(
+                axios.post('/api/visa-form/approved', {
+                    country, id
+                }), {
+                pending: "Please Wait ...",
+                error: "Something is Wrong!",
+                success: "Request Accepted"
+            }
+            );
+            if(country === "singapore"){
+                reloadSingapore()
+            }
+        } catch (error) {
+            console.log("🚀 ~ file: Index.jsx:340 ~ Approved ~ error:", error)
+
+        }
+    }
 
 
     return (
@@ -444,7 +481,7 @@ const Index = () => {
                                             SetfilterAgent(e.value)
                                         }}
                                         value={{ label: filterAgent, value: filterAgent }}
-                                        options={data.length ? [   { label: "none", value: "" }, ...data.map(e => ({ label: e.email, value: e.email }))] : []}
+                                        options={data.length ? [{ label: "none", value: "" }, ...data.map(e => ({ label: e.email, value: e.email }))] : []}
                                         styles={StyleSelect}
                                     />
                                 </div>

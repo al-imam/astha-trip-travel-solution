@@ -7,6 +7,7 @@ const isAdmin = require("../middleware/Auth/isAdmin");
 const VisaFormColector = require('../controller/VisaForm/VisaFormCollector');
 const GetByPassport = require("../controller/VisaForm/GetByPassport")
 const GetForm = require("../controller/VisaForm/GetForm");
+const Approved = require('../controller/VisaForm/Approved');
 
 
 VisaFormRouter.post('/schengen', isAuthenticate, VisaFormColector().schengen);
@@ -19,6 +20,9 @@ VisaFormRouter.post('/get-by-passport', isAdmin, GetByPassport);
 VisaFormRouter.get("/get-singapore", isAdmin, GetForm().Singapore);
 VisaFormRouter.get("/get-thailand", isAdmin, GetForm().Thailand);
 VisaFormRouter.get("/get-schengen", isAdmin, GetForm().Schengen);
+
+// action controller
+VisaFormRouter.post("/approved",isAdmin,Approved)
 
 
 module.exports = VisaFormRouter;
