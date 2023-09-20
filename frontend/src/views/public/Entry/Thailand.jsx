@@ -95,19 +95,19 @@ export function Thailand() {
   const cleanPersonal = useFormPersist("thailand-personal-submit", {
     watch: personal.watch,
     setValue: personal.setValue,
-    storage: window.sessionStorage,
+    storage: window.localStorage,
   });
 
   const cleanContact = useFormPersist("thailand-contact-submit", {
     watch: contact.watch,
     setValue: contact.setValue,
-    storage: window.sessionStorage,
+    storage: window.localStorage,
   });
 
   const cleanPurpose = useFormPersist("thailand-purpose-submit", {
     watch: purpose.watch,
     setValue: purpose.setValue,
-    storage: window.sessionStorage,
+    storage: window.localStorage,
   });
 
   function personalSubmit(data) {
@@ -130,9 +130,11 @@ export function Thailand() {
 
     fire("Successfully Done!", "success");
 
-    // cleanContact.clear();
-    // cleanPersonal.clear();
-    // cleanPurpose.clear();
+    /* 
+    cleanContact.clear();
+    cleanPersonal.clear();
+    cleanPurpose.clear();
+    */
   }
 
   return (
@@ -160,7 +162,7 @@ export function Thailand() {
           >
             <fieldset disabled={personal.formState.isSubmitting} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <Select
-                label="Passport number *"
+                label="Passport Number *"
                 placeholder="Select passport number"
                 options={[]}
                 control={personal.control}
@@ -171,7 +173,7 @@ export function Thailand() {
               />
 
               <SelectNotCreatable
-                label="Type of visa requested *"
+                label="Type Of Visa Requested *"
                 placeholder="Select visa type"
                 options={typeOfVisaRequestedOptions}
                 isDisabled={personal.formState.isSubmitting}
@@ -184,7 +186,7 @@ export function Thailand() {
               />
 
               <Select
-                label="Number of entries requested *"
+                label="Number Of Entries Requested *"
                 placeholder="Select number of entry"
                 options={numberOfEntryOptions}
                 isDisabled={personal.formState.isSubmitting}
@@ -210,25 +212,25 @@ export function Thailand() {
               />
 
               <Input
-                label="First name *"
+                label="First Name *"
                 register={personal.register("first-name", { required: "First name is required" })}
                 error={personal.formState.errors["first-name"]}
               />
 
               <Input
-                label="Middle name"
+                label="Middle Name"
                 register={personal.register("middle-name")}
                 error={personal.formState.errors["middle-name"]}
               />
 
               <Input
-                label="Last name *"
+                label="Last Name *"
                 register={personal.register("last-name", { required: "Last name is required" })}
                 error={personal.formState.errors["last-name"]}
               />
 
               <Input
-                label="Former name"
+                label="Former Name"
                 register={personal.register("former-name")}
                 error={personal.formState.errors["former-name"]}
               />
@@ -245,7 +247,7 @@ export function Thailand() {
               />
 
               <Select
-                label="Nationality at birth"
+                label="Nationality At Birth"
                 placeholder="Select nationality at birth"
                 options={nationalityOptions}
                 isDisabled={personal.formState.isSubmitting}
@@ -256,7 +258,7 @@ export function Thailand() {
               />
 
               <Select
-                label="Birth place *"
+                label="Birth Place *"
                 placeholder="Select birth place"
                 name="place-of-birth"
                 options={placeOfBirthOptions}
@@ -278,7 +280,7 @@ export function Thailand() {
               />
 
               <Input
-                label="Date of birth *"
+                label="Date Of Birth *"
                 placeholder="Date of birth"
                 register={personal.register("date-of-birth", {
                   required: "Birth date is required",
@@ -289,7 +291,7 @@ export function Thailand() {
               />
 
               <SelectNotCreatable
-                label="Type of passport *"
+                label="Type Of Passport *"
                 options={typeOfPassportOptions}
                 placeholder="Select passport type"
                 control={personal.control}
@@ -298,6 +300,7 @@ export function Thailand() {
                 register={personal.register("type-of-passport", { required: "Type of passport is required" })}
                 error={personal.formState.errors["type-of-passport"]}
               />
+
 
               <Select
                 label="Passport issued at *"
@@ -309,11 +312,11 @@ export function Thailand() {
                 })}
                 error={personal.formState.errors["passport-issued-at"]}
                 isDisabled={personal.formState.isSubmitting}
-               placeholder="Select Passport issued at"
+                placeholder="Select Passport issued at"
               />
 
               <Input
-                label="Passport date of issue *"
+                label="Passport Date Of Issue *"
                 register={personal.register("passport-date-of-issue", {
                   required: "Date of issue is required",
                 })}
@@ -322,7 +325,7 @@ export function Thailand() {
               />
 
               <Input
-                label="Passport expire date *"
+                label="Passport Expire Date *"
                 register={personal.register("passport-expire-date", {
                   required: "Expire date is required",
                 })}
@@ -331,7 +334,7 @@ export function Thailand() {
               />
 
               <Input
-                label="Occupation (present position, name of employer) *"
+                label="Occupation (Present Position, Name Of Employer) *"
                 placeholder="Occupation"
                 register={personal.register("occupation", {
                   required: "Occupation is required",
@@ -352,7 +355,7 @@ export function Thailand() {
           <form name="contact" autoComplete="off" className="space-y-4" onSubmit={contact.handleSubmit(contactSubmit)}>
             <fieldset disabled={contact.formState.isSubmitting} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <Input
-                label="Current address *"
+                label="Current Address *"
                 register={contact.register("current-address", {
                   required: "Current address is required",
                 })}
@@ -360,7 +363,7 @@ export function Thailand() {
               />
 
               <Input
-                label="Telephone number *"
+                label="Telephone Number *"
                 register={contact.register("telephone", {
                   required: "Telephone number is required",
                 })}
@@ -376,20 +379,20 @@ export function Thailand() {
               />
 
               <Input
-                label="Permanent Address (if different from above)"
+                label="Permanent Address (If Different From Above)"
                 placeholder="Permanent address"
                 register={contact.register("permanent-address")}
                 error={contact.formState.errors["permanent-address"]}
               />
 
               <Input
-                label="Permanent telephone"
+                label="Permanent Telephone"
                 register={contact.register("permanent-telephone")}
                 error={contact.formState.errors["permanent-telephone"]}
               />
 
               <Select
-                label="Traveling by *"
+                label="Traveling By *"
                 placeholder="Select traveling method"
                 options={travelingByOptions}
                 control={contact.control}
@@ -401,13 +404,13 @@ export function Thailand() {
 
               <div className="col-span-full flex flex-col gap-4 sm:flex-row [&>:first-child]:grow ">
                 <Input
-                  label="Names, dates and places of birth of minor children (if accompanying)"
+                  label="Names, Dates And Places Of Birth Of Minor Children (If Accompanying)"
                   classNameLabel="line-clamp-none"
                   register={contact.register("names-dates-and-places-of-birth-of-minor-children")}
                   error={contact.formState.errors["names-dates-and-places-of-birth-of-minor-children"]}
                 />
                 <Input
-                  label="Date of arrival in and departure from thailand"
+                  label="Date Of Arrival In And Departure From Thailand"
                   classNameLabel="line-clamp-none"
                   register={contact.register("date-of-arrival-in-and-departure-from-thailand")}
                   error={contact.formState.errors["date-of-arrival-in-and-departure-from-thailand"]}
@@ -416,7 +419,7 @@ export function Thailand() {
               </div>
 
               <Input
-                label="Flight no or vessel's name"
+                label="Flight No Or Vessel's Name"
                 register={contact.register("flight_no_or_vessel_name", {
                   required: "Flight no or vessel's name is required",
                 })}
@@ -424,7 +427,7 @@ export function Thailand() {
               />
 
               <Input
-                label="Duration of proposed stay"
+                label="Duration Of Proposed Stay"
                 register={contact.register("duration-of-proposed-stay", {
                   required: "Duration of proposed stay is required",
                 })}
@@ -452,7 +455,7 @@ export function Thailand() {
           <form name="purpose" autoComplete="off" className="space-y-4" onSubmit={purpose.handleSubmit(purposeSubmit)}>
             <fieldset disabled={purpose.formState.isSubmitting} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <Input
-                label="Date of previous visit to thailand *"
+                label="Date Of Previous Visit To Thailand *"
                 register={purpose.register("date-of-previous-visit", {
                   required: "Date of previous visit to thailand is required",
                 })}
@@ -461,7 +464,7 @@ export function Thailand() {
               />
 
               <Select
-                label="Purpose of visit *"
+                label="Purpose Of Visit *"
                 placeholder="Select purpose of visit"
                 options={purposeOfVisitOptions}
                 control={purpose.control}
@@ -472,7 +475,7 @@ export function Thailand() {
               />
 
               <Select
-                label="Countries for which travel document is valid *"
+                label="Countries For Which Travel Document Is Valid *"
                 placeholder="Select countries"
                 options={validCountryOptions}
                 control={purpose.control}
@@ -485,7 +488,7 @@ export function Thailand() {
               />
 
               <Input
-                label="Proposed address in thailand *"
+                label="Proposed Address In Thailand *"
                 register={purpose.register("proposed-address-in-thailand", {
                   required: "Proposed address in thailand is required",
                 })}
@@ -493,7 +496,7 @@ export function Thailand() {
               />
 
               <Input
-                label="Name and address of local guarantor *"
+                label="Name And Address Of Local Guarantor *"
                 register={purpose.register("name-and-address-of-local-guarantor", {
                   required: "Name and address of local guarantor is required",
                 })}
@@ -501,7 +504,7 @@ export function Thailand() {
               />
 
               <Input
-                label="Telephone/fax of local guarantor *"
+                label="Telephone/Fax Of Local Guarantor *"
                 register={purpose.register("telephone-fax-of-local-guarantor", {
                   required: "Telephone/fax is required",
                 })}
@@ -509,13 +512,13 @@ export function Thailand() {
               />
 
               <Input
-                label="Name and address of guarantor in thailand *"
+                label="Name And Address Of Guarantor In Thailand *"
                 register={purpose.register("name-and-address-of-guarantor-in-thailand")}
                 error={purpose.formState.errors["name-and-address-of-guarantor-in-thailand"]}
               />
 
               <Input
-                label="Telephone/fax of thailand guarantor *"
+                label="Telephone/Fax Of Thailand Guarantor *"
                 register={purpose.register("telephone-fax-of-thailand-guarantor")}
                 error={purpose.formState.errors["telephone-fax-of-thailand-guarantor"]}
               />
