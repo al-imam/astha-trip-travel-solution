@@ -12,6 +12,7 @@ import { Schengen } from "views/public/Entry/Schengen";
 import { Singapore } from "views/public/Entry/Singapore";
 import { Thailand } from "views/public/Entry/Thailand";
 import Registration from "./views/agent/Rgistration/Registration";
+import VisaFrom from "./views/agent/VisaApplication/Index"; 
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
       <Route path="/agent" element={<Agent />}>
         <Route index element={<AgentHome />} />
         <Route path="/agent/agentProfile" element={<AgentProfile />} />
+        <Route path="/agent/visa-application" element={<VisaFrom />} />
       </Route>
       <Route path="/" element={<Navigate to="/agent" replace />} />
     </Routes>

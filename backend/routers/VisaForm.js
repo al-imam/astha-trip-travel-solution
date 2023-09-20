@@ -2,6 +2,7 @@ const express = require("express");
 const VisaFormRouter = express.Router();
 const isAuthenticate = require("../middleware/Auth/isAuthenticate");
 const isAdmin = require("../middleware/Auth/isAdmin");
+const isAgent = require('../middleware/Auth/isAgent');
 // controller 
 
 const VisaFormColector = require('../controller/VisaForm/VisaFormCollector');
@@ -20,6 +21,7 @@ VisaFormRouter.post('/get-by-passport', isAdmin, GetByPassport);
 VisaFormRouter.get("/get-singapore", isAdmin, GetForm().Singapore);
 VisaFormRouter.get("/get-thailand", isAdmin, GetForm().Thailand);
 VisaFormRouter.get("/get-schengen", isAdmin, GetForm().Schengen);
+VisaFormRouter.get("/get-by-agent", isAgent, GetForm().agent);
 
 // action controller
 VisaFormRouter.post("/approved",isAdmin,Approved)

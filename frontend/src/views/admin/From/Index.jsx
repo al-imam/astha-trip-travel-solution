@@ -57,7 +57,6 @@ const Index = () => {
         singaporeError,
         reloadSingapore
     ] = useAllform('singapore');
-    console.log("🚀 ~ file: Index.jsx:56 ~ Index ~ allSingapore:", allSingapore)
 
     
 
