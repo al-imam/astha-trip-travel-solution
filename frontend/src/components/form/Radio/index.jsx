@@ -28,11 +28,11 @@ export function Radio({ label, title = label, options, error, classNameLabel, re
   );
 }
 
-export function RadioNoLabel({ options, register, checked, ...rest }) {
+export function RadioNoLabel({ options, register, checked, disabled, ...rest }) {
   const id = useId();
 
   return options.map((v) => (
-    <div key={v} className={twMerge(style.container, " [--dark:rgb(59,130,246)]")}>
+    <div key={v} className={twMerge(style.container, " [--dark:rgb(59,130,246)]", disabled && "opacity-50")}>
       <input
         value={v}
         type="radio"

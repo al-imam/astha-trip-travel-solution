@@ -1,3 +1,6 @@
+import { ClassNames } from "@emotion/react";
+import Swal from "sweetalert2";
+
 export function getValue(anyThing) {
   if (
     typeof anyThing === "object" &&
@@ -41,4 +44,28 @@ export function getNumberSelect(start, end) {
   }
 
   return resultArray;
+}
+
+export function fire(title = "Something Went Wrong!", icon = "warning", position = "center") {
+  return Swal.fire({
+    position,
+    icon,
+    title,
+    showConfirmButton: false,
+    timer: 1500,
+    showClass: {
+      backdrop: "backdrop-blur-[2px]",
+    },
+    customClass: {
+      popup: "ring-1 ring-gray-200/50 shadow p-8 gap-4",
+      icon: "m-0 mx-auto",
+      title: "p-0",
+    },
+  });
+}
+
+export function goToTop(behavior = "instant") {
+  if (typeof window !== "undefined") {
+    window.scrollTo({ top: 0, behavior });
+  }
 }

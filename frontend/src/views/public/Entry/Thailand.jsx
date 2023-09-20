@@ -11,12 +11,8 @@ import { useNavigate } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 import countries from "../countries.json";
 import districts from "../districts.json";
-import { flattenObject, getNumberSelect } from "./util";
-
-const countriesOptions = countries.map((e) => ({
-  label: e.name,
-  value: e.nationality,
-}));
+import { fire, flattenObject, getNumberSelect } from "./util";
+import { Spinner } from "./Spinner";
 
 const placeOfBirthOptions = districts.map((value) => ({
   label: value,
@@ -81,11 +77,6 @@ const validCountryOptions = ["ALL COUNTRIES OF THE WORLD EXCEPT ISRAIL"].map((va
   value,
 }));
 
-const sexesOption = ["Male", "Female"].map((value) => ({
-  label: value,
-  value,
-}));
-
 const steps = ["", "", ""];
 
 export function Thailand() {
@@ -120,27 +111,36 @@ export function Thailand() {
   });
 
   function personalSubmit(data) {
-    console.log(data);
     setForm((prev) => Object.assign(prev, flattenObject(data)));
     setStep(2);
   }
 
   function contactSubmit(data) {
-    console.log(data);
     setForm((prev) => Object.assign(prev, flattenObject(data)));
     setStep(3);
   }
 
-  function purposeSubmit(data) {
-    console.log(data);
-    setForm((prev) => Object.assign(prev, flattenObject(data)));
+  async function purposeSubmit(__D) {
+    await new Promise((r) => setTimeout(r, 1000));
+    const data = flattenObject(Object.assign(_, __D));
+    setForm(data);
+
+    const serverRes = await axios.post("/api/visa-form/thailand", data).catch(console.log);
+    if (!serverRes) return fire();
+
+    fire("Successfully Done!", "success");
+
+    cleanContact.clear();
+    cleanPersonal.clear();
+    cleanPurpose.clear();
   }
 
   return (
     <main className="container mx-auto space-y-4 p-4">
       <button
+        disabled={contact.formState.isSubmitting || personal.formState.isSubmitting || purpose.formState.isSubmitting}
         onClick={() => navigate(-1)}
-        className="my-1 inline-flex items-center rounded-md border-gray-200 bg-white px-5 py-2.5 text-center text-sm font-medium text-blue-700 shadow hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-blue-300 "
+        className="my-1 inline-flex items-center rounded-md border-gray-200 bg-white px-5 py-2.5 text-center text-sm font-medium text-blue-700 shadow hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-blue-300  disabled:opacity-0"
       >
         <NextIcon className="mr-2 scale-x-[-1]" />
         <span>
@@ -158,12 +158,13 @@ export function Thailand() {
             onSubmit={personal.handleSubmit(personalSubmit)}
             autoComplete="off"
           >
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <fieldset disabled={personal.formState.isSubmitting} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <Select
                 label="Passport number *"
                 placeholder="Select passport number"
                 options={[]}
                 control={personal.control}
+                isDisabled={personal.formState.isSubmitting}
                 name="passport-number"
                 register={personal.register("passport-number", { required: "Travel document number is required" })}
                 error={personal.formState.errors["passport-number"]}
@@ -173,6 +174,7 @@ export function Thailand() {
                 label="Type of visa requested *"
                 placeholder="Select visa type"
                 options={typeOfVisaRequestedOptions}
+                isDisabled={personal.formState.isSubmitting}
                 control={personal.control}
                 name="type-of-visa-requested"
                 register={personal.register("type-of-visa-requested", {
@@ -185,6 +187,7 @@ export function Thailand() {
                 label="Number of entries requested *"
                 placeholder="Select number of entry"
                 options={numberOfEntryOptions}
+                isDisabled={personal.formState.isSubmitting}
                 control={personal.control}
                 name="number-of-entries"
                 register={personal.register("number-of-entries", {
@@ -197,6 +200,7 @@ export function Thailand() {
                 label="Title *"
                 placeholder="Select title"
                 options={nameTitleOptions}
+                isDisabled={personal.formState.isSubmitting}
                 control={personal.control}
                 name="name-title"
                 register={personal.register("name-title", {
@@ -233,6 +237,7 @@ export function Thailand() {
                 label="Nationality *"
                 options={nationalityOptions}
                 control={personal.control}
+                isDisabled={personal.formState.isSubmitting}
                 name="nationality"
                 placeholder="Select nationality"
                 register={personal.register("nationality", { required: "Nationality is required" })}
@@ -243,6 +248,7 @@ export function Thailand() {
                 label="Nationality at birth"
                 placeholder="Select nationality at birth"
                 options={nationalityOptions}
+                isDisabled={personal.formState.isSubmitting}
                 control={personal.control}
                 name="nationality-at-birth"
                 register={personal.register("nationality-at-birth", { required: "Nationality at birth is required" })}
@@ -255,6 +261,7 @@ export function Thailand() {
                 name="place-of-birth"
                 options={placeOfBirthOptions}
                 control={personal.control}
+                isDisabled={personal.formState.isSubmitting}
                 register={personal.register("place-of-birth", { required: "Birth place is required" })}
                 error={personal.formState.errors["place-of-birth"]}
               />
@@ -263,6 +270,7 @@ export function Thailand() {
                 label="Marital Status *"
                 options={maritalStatusOptions}
                 control={personal.control}
+                isDisabled={personal.formState.isSubmitting}
                 name="marital-status"
                 placeholder="Select marital status"
                 register={personal.register("marital-status", { required: "Marital Status is required" })}
@@ -285,6 +293,7 @@ export function Thailand() {
                 options={typeOfPassportOptions}
                 placeholder="Select passport type"
                 control={personal.control}
+                isDisabled={personal.formState.isSubmitting}
                 name="type-of-passport"
                 register={personal.register("type-of-passport", { required: "Type of passport is required" })}
                 error={personal.formState.errors["type-of-passport"]}
@@ -325,11 +334,11 @@ export function Thailand() {
                 })}
                 error={personal.formState.errors["occupation"]}
               />
-            </div>
+            </fieldset>
 
             <div className="flex justify-end">
-              <Button>
-                Next <NextIcon className="ml-2" />
+              <Button disabled={personal.formState.isSubmitting} className="disabled:cursor-pointer">
+                Next {personal.formState.isSubmitting ? <Spinner className="ml-2" /> : <NextIcon className="ml-2" />}
               </Button>
             </div>
           </form>
@@ -337,7 +346,7 @@ export function Thailand() {
 
         {step === 2 && (
           <form name="contact" autoComplete="off" className="space-y-4" onSubmit={contact.handleSubmit(contactSubmit)}>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <fieldset disabled={contact.formState.isSubmitting} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <Input
                 label="Current address *"
                 register={contact.register("current-address", {
@@ -375,6 +384,17 @@ export function Thailand() {
                 error={contact.formState.errors["permanent-telephone"]}
               />
 
+              <Select
+                label="Traveling by *"
+                placeholder="Select traveling method"
+                options={travelingByOptions}
+                control={contact.control}
+                isDisabled={contact.formState.isSubmitting}
+                name="traveling-by"
+                register={contact.register("traveling-by", { required: "Traveling method is required" })}
+                error={contact.formState.errors["traveling-by"]}
+              />
+
               <div className="col-span-full flex flex-col gap-4 sm:flex-row [&>:first-child]:grow ">
                 <Input
                   label="Names, dates and places of birth of minor children (if accompanying)"
@@ -391,16 +411,6 @@ export function Thailand() {
                 />
               </div>
 
-              <Select
-                label="Traveling by *"
-                placeholder="Select traveling method"
-                options={travelingByOptions}
-                control={contact.control}
-                name="traveling-by"
-                register={contact.register("traveling-by", { required: "Traveling method is required" })}
-                error={contact.formState.errors["traveling-by"]}
-              />
-
               <Input
                 label="Flight no or vessel's name"
                 register={contact.register("flight_no_or_vessel_name", {
@@ -416,14 +426,19 @@ export function Thailand() {
                 })}
                 error={contact.formState.errors["duration-of-proposed-stay"]}
               />
-            </div>
+            </fieldset>
 
             <div className="flex justify-between">
-              <Button type="button" onClick={() => setStep(1)}>
+              <Button
+                disabled={contact.formState.isSubmitting}
+                className="disabled:opacity-0"
+                type="button"
+                onClick={() => setStep(1)}
+              >
                 <NextIcon className="mr-2 scale-x-[-1]" /> Previous
               </Button>
-              <Button>
-                Next <NextIcon className="ml-2" />
+              <Button disabled={contact.formState.isSubmitting} className="disabled:cursor-pointer">
+                Next {contact.formState.isSubmitting ? <Spinner className="ml-2" /> : <NextIcon className="ml-2" />}
               </Button>
             </div>
           </form>
@@ -431,7 +446,7 @@ export function Thailand() {
 
         {step === 3 && (
           <form name="purpose" autoComplete="off" className="space-y-4" onSubmit={purpose.handleSubmit(purposeSubmit)}>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <fieldset disabled={purpose.formState.isSubmitting} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <Input
                 label="Date of previous visit to thailand *"
                 register={purpose.register("date-of-previous-visit", {
@@ -446,6 +461,7 @@ export function Thailand() {
                 placeholder="Select purpose of visit"
                 options={purposeOfVisitOptions}
                 control={purpose.control}
+                isDisabled={purpose.formState.isSubmitting}
                 name="purpose-of-visit"
                 register={purpose.register("purpose-of-visit", { required: "purpose of visit is required" })}
                 error={purpose.formState.errors["purpose-of-visit"]}
@@ -456,6 +472,7 @@ export function Thailand() {
                 placeholder="Select countries"
                 options={validCountryOptions}
                 control={purpose.control}
+                isDisabled={purpose.formState.isSubmitting}
                 name="countries-for-which-travel-document-is-valid"
                 register={purpose.register("countries-for-which-travel-document-is-valid", {
                   required: "Countries is required",
@@ -498,14 +515,19 @@ export function Thailand() {
                 register={purpose.register("telephone-fax-of-thailand-guarantor")}
                 error={purpose.formState.errors["telephone-fax-of-thailand-guarantor"]}
               />
-            </div>
+            </fieldset>
 
             <div className="flex justify-between">
-              <Button type="button" onClick={() => setStep(2)}>
-                <NextIcon className="mr-2 scale-x-[-1]" /> Previous
+              <Button
+                disabled={purpose.formState.isSubmitting}
+                className="disabled:opacity-0"
+                type="button"
+                onClick={() => setStep(2)}
+              >
+                <NextIcon className="mr-2 scale-x-[-1] cursor-none" /> Previous
               </Button>
-              <Button>
-                Submit <NextIcon className="ml-2" />
+              <Button disabled={purpose.formState.isSubmitting} className="disabled:cursor-pointer">
+                Submit {purpose.formState.isSubmitting ? <Spinner className="ml-2" /> : <NextIcon className="ml-2" />}
               </Button>
             </div>
           </form>

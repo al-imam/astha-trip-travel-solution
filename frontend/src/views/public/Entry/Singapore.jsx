@@ -1,5 +1,7 @@
 import { Button } from "components/form/Button";
+import { Group, Join } from "components/form/Group";
 import { Input } from "components/form/Input";
+import { Radio } from "components/form/Radio";
 import { Select, SelectNotCreatable } from "components/form/Select";
 import { StepIndicator } from "components/form/StepIndicator";
 import { useState } from "react";
@@ -9,10 +11,11 @@ import { useNavigate } from "react-router-dom";
 import countries from "../countries.json";
 import districts from "../districts.json";
 import races from "../races.json";
-import { Group, Join } from "components/form/Group";
-import { NextIcon } from "./Schengen";
 import { AddIcon, DeleteIcon } from "./MainEntry";
-import { Radio } from "components/form/Radio";
+import { NextIcon } from "./Schengen";
+import { Spinner } from "./Spinner";
+import { fire, flattenObject } from "./util";
+import axios from "axios";
 
 const countriesOptions = countries.map((e) => ({
   label: e.name,
@@ -93,6 +96,7 @@ const steps = ["", "", ""];
 export function Singapore() {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
+  const [_, setForm] = useState({});
   const [livedOtherCountries, setLivedOtherCountries] = useState([]);
 
   const particularsOfApplicant = useForm();
@@ -114,26 +118,26 @@ export function Singapore() {
     (c) => citizenshipOfSpouse && c.value === citizenshipOfSpouse.value
   );
 
-  useFormPersist("particulars_of_applicant", {
+  const clearParticulars = useFormPersist("particulars_of_applicant", {
     watch: particularsOfApplicant.watch,
     setValue: particularsOfApplicant.setValue,
     storage: window.sessionStorage,
   });
 
-  useFormPersist("other_details", {
+  const clearOthers = useFormPersist("other_details", {
     watch: otherDetails.watch,
     setValue: otherDetails.setValue,
     storage: window.sessionStorage,
   });
 
-  useFormPersist("particulars_of_local_contact", {
+  const clearLocal = useFormPersist("particulars_of_local_contact", {
     watch: particularsOfLocalContact.watch,
     setValue: particularsOfLocalContact.setValue,
     storage: window.sessionStorage,
   });
 
   function particularsOfApplicantSubmit(data) {
-    console.log(data);
+    setForm((prev) => Object.assign(prev, flattenObject(data)));
     setStep(2);
   }
 
@@ -143,7 +147,7 @@ export function Singapore() {
       return countryForm.setFocus("country");
     }
 
-    console.log(data);
+    setForm((prev) => Object.assign(prev, flattenObject(data), { "lived-other-countries": livedOtherCountries }));
     setStep(3);
   }
 
@@ -152,8 +156,18 @@ export function Singapore() {
     countryForm.reset({ country: null, from: "", to: "", address: "" });
   }
 
-  function particularsOfLocalContactSubmit(data) {
-    console.log(data);
+  async function particularsOfLocalContactSubmit(__d) {
+    await new Promise((r) => setTimeout(r, 5000));
+    const data = flattenObject(Object.assign(_, __d));
+    setForm(data);
+
+    const serverRes = await axios.post("/api/visa-form/singapore", data).catch(console.log);
+    if (!serverRes) return fire();
+    fire("Successfully Done!", "success");
+
+    clearLocal.clear();
+    clearOthers.clear();
+    clearParticulars.clear();
   }
 
   function stopSubmitting(event) {
@@ -164,7 +178,13 @@ export function Singapore() {
     <main className="container mx-auto space-y-4 p-4">
       <button
         onClick={() => navigate(-1)}
-        className="my-1 inline-flex items-center rounded-md border-gray-200 bg-white px-5 py-2.5 text-center text-sm font-medium text-blue-700 shadow hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-blue-300 "
+        disabled={
+          particularsOfApplicant.formState.isSubmitting ||
+          otherDetails.formState.isSubmitting ||
+          countryForm.formState.isSubmitting ||
+          particularsOfLocalContact.formState.isSubmitting
+        }
+        className="my-1 inline-flex items-center rounded-md border-gray-200 bg-white px-5 py-2.5 text-center text-sm font-medium text-blue-700 shadow hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:opacity-0"
       >
         <NextIcon className="mr-2 scale-x-[-1]" />
         <span>
@@ -182,7 +202,10 @@ export function Singapore() {
             onSubmit={particularsOfApplicant.handleSubmit(particularsOfApplicantSubmit)}
             autoComplete="off"
           >
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <fieldset
+              disabled={particularsOfApplicant.formState.isSubmitting}
+              className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+            >
               <Input
                 label="Name (Full name as shown in travel document) *"
                 placeholder="Name"
@@ -217,6 +240,7 @@ export function Singapore() {
                 options={sexesOptions}
                 placeholder="Select your gender"
                 control={particularsOfApplicant.control}
+                isDisabled={particularsOfApplicant.formState.isSubmitting}
                 name="sex"
                 isSearchable={false}
                 register={particularsOfApplicant.register("sex", { required: "Sex (gender) is required" })}
@@ -227,6 +251,7 @@ export function Singapore() {
                 label="Marital Status *"
                 options={maritalStatusOptions}
                 control={particularsOfApplicant.control}
+                isDisabled={particularsOfApplicant.formState.isSubmitting}
                 name="marital-status"
                 placeholder="Select marital status"
                 isSearchable={false}
@@ -240,6 +265,7 @@ export function Singapore() {
                 name="citizenship-of-spouse"
                 options={citizenshipOfSpouseOptions}
                 control={particularsOfApplicant.control}
+                isDisabled={particularsOfApplicant.formState.isSubmitting}
                 register={particularsOfApplicant.register("citizenship-of-spouse", {
                   required: "Citizenship of Spouse is required",
                 })}
@@ -261,6 +287,7 @@ export function Singapore() {
                 label="Country/place of birth *"
                 options={countriesOptions}
                 control={particularsOfApplicant.control}
+                isDisabled={particularsOfApplicant.formState.isSubmitting}
                 placeholder="Select country of birth"
                 name="country-of-birth"
                 register={particularsOfApplicant.register("country-of-birth", {
@@ -273,6 +300,7 @@ export function Singapore() {
                 label="State/province of birth *"
                 options={stateOfBirthOptions}
                 control={particularsOfApplicant.control}
+                isDisabled={particularsOfApplicant.formState.isSubmitting}
                 placeholder="Select state of birth"
                 name="state-of-birth"
                 register={particularsOfApplicant.register("state-of-birth", {
@@ -285,6 +313,7 @@ export function Singapore() {
                 label="Race: (e.g. Malay, Indian, etc) *"
                 options={racesOptions}
                 control={particularsOfApplicant.control}
+                isDisabled={particularsOfApplicant.formState.isSubmitting}
                 name="race"
                 placeholder="Select race"
                 register={particularsOfApplicant.register("race", { required: "Race is required" })}
@@ -296,6 +325,7 @@ export function Singapore() {
                 placeholder="Select nationality/citizenship"
                 options={nationalityOptions}
                 control={particularsOfApplicant.control}
+                isDisabled={particularsOfApplicant.formState.isSubmitting}
                 name="nationality"
                 register={particularsOfApplicant.register("nationality", {
                   required: "Nationality/Citizenship is required",
@@ -308,6 +338,7 @@ export function Singapore() {
                 placeholder="Select passport type"
                 options={documentTypeOptions}
                 control={particularsOfApplicant.control}
+                isDisabled={particularsOfApplicant.formState.isSubmitting}
                 name="type-of-passport"
                 register={particularsOfApplicant.register("type-of-passport", {
                   required: "Type of passport is required",
@@ -372,6 +403,7 @@ export function Singapore() {
                 placeholder="Select country"
                 options={countriesOptions}
                 control={particularsOfApplicant.control}
+                isDisabled={particularsOfApplicant.formState.isSubmitting}
                 name="residence"
                 register={particularsOfApplicant.register("residence", {
                   required: "Country/Place of Origin/Residence is required",
@@ -384,6 +416,7 @@ export function Singapore() {
                 placeholder="Select state"
                 options={stateOfBirthOptions}
                 control={particularsOfApplicant.control}
+                isDisabled={particularsOfApplicant.formState.isSubmitting}
                 name="state-of-residence"
                 register={particularsOfApplicant.register("state-of-residence", {
                   required: "Division/State of Origin/Residence is required",
@@ -409,11 +442,16 @@ export function Singapore() {
                 })}
                 error={particularsOfApplicant.formState.errors["address"]}
               />
-            </div>
+            </fieldset>
 
             <div className="flex justify-end">
-              <Button>
-                Next <NextIcon className="ml-2" />
+              <Button disabled={particularsOfApplicant.formState.isSubmitting} className="disabled:cursor-pointer">
+                Next
+                {particularsOfApplicant.formState.isSubmitting ? (
+                  <Spinner className="ml-2" />
+                ) : (
+                  <NextIcon className="ml-2" />
+                )}
               </Button>
             </div>
           </form>
@@ -426,7 +464,10 @@ export function Singapore() {
             onSubmit={otherDetails.handleSubmit(otherDetailsSubmit)}
             autoComplete="off"
           >
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <fieldset
+              disabled={otherDetails.formState.isSubmitting}
+              className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+            >
               <Input
                 label="Email Address *"
                 register={otherDetails.register("email-address", {
@@ -466,6 +507,7 @@ export function Singapore() {
                 label="Highest Academic/Professional *"
                 options={academicOptions}
                 control={otherDetails.control}
+                isDisabled={otherDetails.formState.isSubmitting}
                 name="highest-academic"
                 placeholder="Select Highest Academic"
                 isSearchable={false}
@@ -479,6 +521,7 @@ export function Singapore() {
                 label="Qualifications Attained *"
                 options={qualificationsAttainedOptions}
                 control={otherDetails.control}
+                isDisabled={otherDetails.formState.isSubmitting}
                 name="qualifications-attained"
                 placeholder="Select Qualifications Attained"
                 isSearchable={false}
@@ -520,6 +563,7 @@ export function Singapore() {
                 label="Type of Visa *"
                 options={typeOfVisaOptions}
                 control={otherDetails.control}
+                isDisabled={otherDetails.formState.isSubmitting}
                 name="type-of-visa"
                 placeholder="Select Type of Visa"
                 isSearchable={false}
@@ -533,6 +577,7 @@ export function Singapore() {
                 label="Purpose of visit *"
                 options={purposeOfVisitOptions}
                 control={otherDetails.control}
+                isDisabled={otherDetails.formState.isSubmitting}
                 name="purpose-of-visit"
                 placeholder="Select purpose of visit"
                 isSearchable={false}
@@ -554,6 +599,7 @@ export function Singapore() {
                 name="stay-location"
                 options={stayLocationOptions}
                 control={otherDetails.control}
+                isDisabled={otherDetails.formState.isSubmitting}
                 register={otherDetails.register("stay-location", {
                   required: "Stay location is required",
                 })}
@@ -568,6 +614,7 @@ export function Singapore() {
                 register={otherDetails.register("days-intend-to-stay", { required: "Answer the question" })}
                 error={otherDetails.formState.errors["days-intend-to-stay"]}
                 isOpen={isStayingMoreThanThirtyDays}
+                disabled={otherDetails.formState.isSubmitting}
               >
                 <Input
                   label="If your intended stay in Singapore is more than 30 days, please state the reason for your intended length of stay and the duration"
@@ -656,6 +703,7 @@ export function Singapore() {
                 error={otherDetails.formState.errors["lived-other-country"]}
                 isOpen={isLivedOtherCountry}
                 className="flex flex-col gap-4"
+                disabled={otherDetails.formState.isSubmitting}
               >
                 {livedOtherCountries.length > 0 && (
                   <div className="flex flex-col gap-1">
@@ -691,6 +739,7 @@ export function Singapore() {
                     })}
                     control={countryForm.control}
                     error={countryForm.formState.errors["country"]}
+                    isDisabled={otherDetails.formState.isSubmitting || countryForm.formState.isSubmitting}
                   />
 
                   <Input
@@ -723,9 +772,10 @@ export function Singapore() {
                 </div>
 
                 <button
-                  className="mr-auto box-border inline-flex items-center rounded border border-brand-100 bg-gray-50 px-5 py-2 text-center text-sm font-medium text-blue-700 shadow transition-all hover:border-blue-700 hover:bg-blue-700 hover:text-white focus:outline-none focus:ring-4 focus:ring-blue-300 "
+                  className="mr-auto box-border inline-flex items-center rounded border border-brand-100 bg-gray-50 px-5 py-2 text-center text-sm font-medium text-blue-700 shadow transition-all hover:border-blue-700 hover:bg-blue-700 hover:text-white focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:pointer-events-none disabled:opacity-50"
                   onClick={countryForm.handleSubmit(submitCountryForm)}
                   type="button"
+                  disabled={otherDetails.formState.isSubmitting || countryForm.formState.isSubmitting}
                 >
                   Add <AddIcon className="ml-1 text-lg " />
                 </button>
@@ -762,6 +812,7 @@ export function Singapore() {
                 <SelectNotCreatable
                   label="Sex (gender)"
                   options={sexesOptions}
+                  isDisabled={otherDetails.formState.isSubmitting}
                   placeholder="Select gender"
                   control={otherDetails.control}
                   isClearable
@@ -776,6 +827,7 @@ export function Singapore() {
                   placeholder="Select nationality/citizenship"
                   options={nationalityOptions}
                   control={otherDetails.control}
+                  isDisabled={otherDetails.formState.isSubmitting}
                   isClearable
                   name="nationality-of-travelling-companion"
                   register={otherDetails.register("nationality-of-travelling-companion")}
@@ -790,14 +842,20 @@ export function Singapore() {
                   error={otherDetails.formState.errors["passport-no-of-travelling-companion"]}
                 />
               </Join>
-            </div>
+            </fieldset>
 
             <div className="flex justify-between">
-              <Button type="button" onClick={() => setStep(1)}>
-                <NextIcon className="mr-2 scale-x-[-1]" /> Previous
+              <Button
+                disabled={otherDetails.formState.isSubmitting}
+                className="disabled:opacity-0"
+                type="button"
+                onClick={() => setStep(1)}
+              >
+                <NextIcon className="mr-2 scale-x-[-1] cursor-none" /> Previous
               </Button>
-              <Button>
-                Next <NextIcon className="ml-2" />
+              <Button disabled={otherDetails.formState.isSubmitting} className="disabled:cursor-pointer">
+                Next
+                {otherDetails.formState.isSubmitting ? <Spinner className="ml-2" /> : <NextIcon className="ml-2" />}
               </Button>
             </div>
           </form>
@@ -810,7 +868,10 @@ export function Singapore() {
             onSubmit={particularsOfLocalContact.handleSubmit(particularsOfLocalContactSubmit)}
             autoComplete="off"
           >
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <fieldset
+              disabled={particularsOfLocalContact.formState.isSubmitting}
+              className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+            >
               <Input
                 label="Name of local contact company/hotel *"
                 register={particularsOfLocalContact.register("name-of-local-contact", {
@@ -862,6 +923,7 @@ export function Singapore() {
                     required: "Answer the question",
                   })}
                   classNameLabel="line-clamp-none"
+                  disabled={particularsOfLocalContact.formState.isSubmitting}
                 />
 
                 <Radio
@@ -873,6 +935,7 @@ export function Singapore() {
                     required: "Answer the question",
                   })}
                   classNameLabel="line-clamp-none"
+                  disabled={particularsOfLocalContact.formState.isSubmitting}
                 />
 
                 <Radio
@@ -884,6 +947,7 @@ export function Singapore() {
                     required: "Answer the question",
                   })}
                   classNameLabel="line-clamp-none"
+                  disabled={particularsOfLocalContact.formState.isSubmitting}
                 />
 
                 <Radio
@@ -895,6 +959,7 @@ export function Singapore() {
                     required: "Answer the question",
                   })}
                   classNameLabel="line-clamp-none"
+                  disabled={particularsOfLocalContact.formState.isSubmitting}
                 />
 
                 {isExtraInformationRequired && (
@@ -907,14 +972,24 @@ export function Singapore() {
                   />
                 )}
               </Join>
-            </div>
+            </fieldset>
 
             <div className="flex justify-between">
-              <Button type="button" onClick={() => setStep(2)}>
-                <NextIcon className="mr-2 scale-x-[-1]" /> Previous
+              <Button
+                disabled={particularsOfLocalContact.formState.isSubmitting}
+                className="disabled:opacity-0"
+                type="button"
+                onClick={() => setStep(2)}
+              >
+                <NextIcon className="mr-2 scale-x-[-1] cursor-none" /> Previous
               </Button>
-              <Button>
-                Next <NextIcon className="ml-2" />
+              <Button disabled={particularsOfLocalContact.formState.isSubmitting} className="disabled:cursor-pointer">
+                Submit
+                {particularsOfLocalContact.formState.isSubmitting ? (
+                  <Spinner className="ml-2" />
+                ) : (
+                  <NextIcon className="ml-2" />
+                )}
               </Button>
             </div>
           </form>

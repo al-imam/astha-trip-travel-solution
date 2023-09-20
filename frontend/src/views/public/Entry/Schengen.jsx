@@ -11,7 +11,8 @@ import { useNavigate } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 import countries from "../countries.json";
 import districts from "../districts.json";
-import { flattenObject } from "./util";
+import { fire, flattenObject } from "./util";
+import { Spinner } from "./Spinner";
 
 const countriesOptions = countries.map((e) => ({
   label: e.name,
@@ -143,23 +144,33 @@ export function Schengen() {
     setStep(4);
   }
 
-  async function infoSubmit(data) {
-    try {
-      await axios.post("/api/visa-form/schengen", Object.assign(form, flattenObject(data)));  
-      cleanContact.clear();
-      cleanTravel.clear();
-      cleanInfo.clear();
-      cleanContact.clear();
-    } catch (error) {
-      console.log(error);
-    }
+  async function infoSubmit(__d) {
+    await new Promise((r) => setTimeout(r, 500));
+    const data = flattenObject(Object.assign(form, __d));
+    setForm(data);
+
+    const serverRes = await axios.post("/api/visa-form/schengen", data).catch(console.log);
+    if (!serverRes) return fire();
+
+    fire("Successfully Done!", "success");
+
+    cleanContact.clear();
+    cleanTravel.clear();
+    cleanInfo.clear();
+    cleanContact.clear();
   }
 
   return (
     <main className="container mx-auto space-y-4 p-4">
       <button
+        disabled={
+          personal.formState.isSubmitting ||
+          travel.formState.isSubmitting ||
+          info.formState.isSubmitting ||
+          contact.formState.isSubmitting
+        }
         onClick={() => navigate(-1)}
-        className="my-1 inline-flex items-center rounded-md border-gray-200 bg-white px-5 py-2.5 text-center text-sm font-medium text-blue-700 shadow hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-blue-300 "
+        className="my-1 inline-flex items-center rounded-md border-gray-200 bg-white px-5 py-2.5 text-center text-sm font-medium text-blue-700 shadow hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:opacity-0"
       >
         <NextIcon className="mr-2 scale-x-[-1]" />
         <span>
@@ -177,12 +188,13 @@ export function Schengen() {
             onSubmit={personal.handleSubmit(personalSubmit)}
             autoComplete="off"
           >
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <fieldset disabled={personal.formState.isSubmitting} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <Select
-                label="Number of travel document *"
+                label="Passport number *"
                 placeholder="Select passport number"
                 options={[]}
                 control={personal.control}
+                isDisabled={personal.formState.isSubmitting}
                 name="passport-number"
                 register={personal.register("passport-number", { required: "Travel document number is required" })}
                 error={personal.formState.errors["passport-number"]}
@@ -225,6 +237,7 @@ export function Schengen() {
                 name="place-of-birth"
                 options={placeOfBirthOptions}
                 control={personal.control}
+                isDisabled={personal.formState.isSubmitting}
                 register={personal.register("place-of-birth", { required: "Place of birth is required" })}
                 error={personal.formState.errors["place-of-birth"]}
               />
@@ -233,6 +246,7 @@ export function Schengen() {
                 label="Country of birth *"
                 options={countriesOptions}
                 control={personal.control}
+                isDisabled={personal.formState.isSubmitting}
                 placeholder="Select country of birth"
                 name="country-of-birth"
                 register={personal.register("country-of-birth", { required: "Country of birth is required" })}
@@ -243,6 +257,7 @@ export function Schengen() {
                 label="Current nationality *"
                 options={nationalityOptions}
                 control={personal.control}
+                isDisabled={personal.formState.isSubmitting}
                 name="current-nationality"
                 placeholder="Select current nationality"
                 register={personal.register("current-nationality", { required: "Current nationality is required" })}
@@ -254,6 +269,7 @@ export function Schengen() {
                 placeholder="Select nationality at birth"
                 options={nationalityOptions}
                 control={personal.control}
+                isDisabled={personal.formState.isSubmitting}
                 name="nationality-at-birth"
                 isClearable
                 register={personal.register("nationality-at-birth")}
@@ -265,6 +281,7 @@ export function Schengen() {
                 placeholder="Select other nationalities "
                 options={nationalityOptions}
                 control={personal.control}
+                isDisabled={personal.formState.isSubmitting}
                 name="other-nationalities"
                 isClearable
                 isMulti
@@ -277,6 +294,7 @@ export function Schengen() {
                 options={sexesOption}
                 placeholder="Select your gender"
                 control={personal.control}
+                isDisabled={personal.formState.isSubmitting}
                 name="sex"
                 isSearchable={false}
                 register={personal.register("sex", { required: "Sex (gender) is required" })}
@@ -286,11 +304,13 @@ export function Schengen() {
                 label="Civil status *"
                 options={civilStatusOptions}
                 control={personal.control}
+                isDisabled={personal.formState.isSubmitting}
                 name="civil-status"
                 placeholder="Select civil status"
                 register={personal.register("civil-status", { required: "Civil status is required" })}
                 error={personal.formState.errors["civil-status"]}
               />
+
               <div className="col-span-full">
                 <Input
                   label="Parental authority (in case of minors) /legal guardian (surname, first name, address, if different from applicant's, telephone no., e-mail address, and nationality)"
@@ -300,11 +320,12 @@ export function Schengen() {
                   error={personal.formState.errors["parental-authority"]}
                 />
               </div>
-            </div>
+            </fieldset>
 
             <div className="flex justify-end">
-              <Button>
-                Next <NextIcon className="ml-2" />
+              <Button disabled={personal.formState.isSubmitting} className="disabled:cursor-pointer">
+                Next
+                {personal.formState.isSubmitting ? <Spinner className="ml-2" /> : <NextIcon className="ml-2" />}
               </Button>
             </div>
           </form>
@@ -312,7 +333,7 @@ export function Schengen() {
 
         {step === 2 && (
           <form name="document" autoComplete="off" className="space-y-4" onSubmit={travel.handleSubmit(travelSubmit)}>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <fieldset disabled={travel.formState.isSubmitting} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <Input
                 label="National identity number *"
                 placeholder="National identity number"
@@ -326,6 +347,7 @@ export function Schengen() {
                 label="Type of travel document *"
                 options={documentTypeOptions}
                 control={travel.control}
+                isDisabled={travel.formState.isSubmitting}
                 placeholder="Select passport type"
                 name="travel-document-type"
                 register={travel.register("travel-document-type", { required: "Travel document type is required" })}
@@ -354,6 +376,7 @@ export function Schengen() {
                 label="Issued by (country) *"
                 options={countriesOptions}
                 control={travel.control}
+                isDisabled={travel.formState.isSubmitting}
                 placeholder="Select Issued by country"
                 name="issued-country"
                 register={travel.register("issued-country", { required: "Issued by (country) is required" })}
@@ -399,9 +422,10 @@ export function Schengen() {
                 error={travel.formState.errors["have-eu-citizen"]}
                 isOpen={isEuCitizen}
                 className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+                disabled={travel.formState.isSubmitting}
               >
                 <Input
-                  label="Surname"
+                  label="Surname *"
                   register={travel.register("citizen-surname", {
                     required: { value: isEuCitizen, message: "Surname is required" },
                   })}
@@ -409,7 +433,7 @@ export function Schengen() {
                 />
 
                 <Input
-                  label="Fist name"
+                  label="Fist name *"
                   register={travel.register("citizen-first-name", {
                     required: { value: isEuCitizen, message: "First name is required" },
                   })}
@@ -417,7 +441,7 @@ export function Schengen() {
                 />
 
                 <Input
-                  label="Date of birth"
+                  label="Date of birth *"
                   register={travel.register("citizen-date-of-birth", {
                     required: { value: isEuCitizen, message: "Date of birth is required" },
                   })}
@@ -426,9 +450,10 @@ export function Schengen() {
                 />
 
                 <Select
-                  label="Nationality"
+                  label="Nationality *"
                   options={nationalityOptions}
                   control={travel.control}
+                  isDisabled={travel.formState.isSubmitting}
                   name="citizen-nationality"
                   placeholder="Select nationality"
                   register={travel.register("citizen-nationality", {
@@ -439,10 +464,10 @@ export function Schengen() {
 
                 <div className="col-span-full md:col-span-2">
                   <Input
-                    label="Number of travel document or ID card"
+                    label="Passport number or ID card *"
                     placeholder="Travel document number"
                     register={travel.register("citizen-travel-document-number", {
-                      required: { value: isEuCitizen, message: "Number of travel document or ID card is required" },
+                      required: { value: isEuCitizen, message: "Passport number or ID card is required" },
                     })}
                     error={travel.formState.errors["citizen-travel-document-number"]}
                   />
@@ -450,9 +475,10 @@ export function Schengen() {
 
                 <div className="col-span-full">
                   <Select
-                    label="Family relationship with an EU, EEA or CH citizen or an UK national who is a Withdrawal Agreement beneficiary, if applicable"
+                    label="Family relationship with an EU, EEA or CH citizen or an UK national who is a Withdrawal Agreement beneficiary, if applicable *"
                     options={citizenRelationshipOptions}
                     control={travel.control}
+                    isDisabled={travel.formState.isSubmitting}
                     name="citizen-relationship"
                     isClearable
                     classNameLabel="line-clamp-none"
@@ -464,14 +490,20 @@ export function Schengen() {
                   />
                 </div>
               </Group>
-            </div>
+            </fieldset>
 
             <div className="flex justify-between">
-              <Button type="button" onClick={() => setStep(1)}>
-                <NextIcon className="mr-2 scale-x-[-1]" /> Previous
+              <Button
+                disabled={travel.formState.isSubmitting}
+                className="disabled:opacity-0"
+                type="button"
+                onClick={() => setStep(1)}
+              >
+                <NextIcon className="mr-2 scale-x-[-1] cursor-none" /> Previous
               </Button>
-              <Button>
-                Next <NextIcon className="ml-2" />
+              <Button disabled={travel.formState.isSubmitting} className="disabled:cursor-pointer">
+                Next
+                {travel.formState.isSubmitting ? <Spinner className="ml-2" /> : <NextIcon className="ml-2" />}
               </Button>
             </div>
           </form>
@@ -479,7 +511,7 @@ export function Schengen() {
 
         {step === 3 && (
           <form name="document" autoComplete="off" className="space-y-4" onSubmit={contact.handleSubmit(contactSubmit)}>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <fieldset disabled={contact.formState.isSubmitting} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <Group
                 options={["No", "Yes"]}
                 legend="Residence in a country other than the country of current nationality? *"
@@ -487,6 +519,7 @@ export function Schengen() {
                 checked={isResidence ? 2 : 1}
                 register={contact.register("residence-in-a-country", { required: "Residence is required" })}
                 error={contact.formState.errors["residence-in-a-country"]}
+                disabled={contact.formState.isSubmitting}
                 isOpen={isResidence}
                 className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
               >
@@ -539,6 +572,7 @@ export function Schengen() {
                 label="Purpose(s) of the journey *"
                 control={contact.control}
                 options={purposeOfJourneyOptions}
+                isDisabled={contact.formState.isSubmitting}
                 name="purpose-of-journey"
                 register={contact.register("purpose-of-journey", {
                   required: "Purpose(s) of the journey is required",
@@ -575,20 +609,27 @@ export function Schengen() {
                 placeholder="Select Number of entries requested"
                 options={numberOfEntryRequestOptions}
                 control={contact.control}
+                isDisabled={contact.formState.isSubmitting}
                 name="number-of-entries-requested"
                 register={contact.register("number-of-entries-requested", {
                   required: "Number of entries requested is required",
                 })}
                 error={contact.formState.errors["number-of-entries-requested"]}
               />
-            </div>
+            </fieldset>
 
             <div className="flex justify-between">
-              <Button type="button" onClick={() => setStep(2)}>
-                <NextIcon className="mr-2 scale-x-[-1]" /> Previous
+              <Button
+                disabled={contact.formState.isSubmitting}
+                className="disabled:opacity-0"
+                type="button"
+                onClick={() => setStep(2)}
+              >
+                <NextIcon className="mr-2 scale-x-[-1] cursor-none" /> Previous
               </Button>
-              <Button>
-                Next <NextIcon className="ml-2" />
+              <Button disabled={contact.formState.isSubmitting} className="disabled:cursor-pointer">
+                Next
+                {contact.formState.isSubmitting ? <Spinner className="ml-2" /> : <NextIcon className="ml-2" />}
               </Button>
             </div>
           </form>
@@ -596,7 +637,7 @@ export function Schengen() {
 
         {step === 4 && (
           <form name="document" autoComplete="off" className="space-y-4" onSubmit={info.handleSubmit(infoSubmit)}>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <fieldset disabled={info.formState.isSubmitting} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <div className="col-span-full flex flex-col gap-4 md:flex-row [&>*]:flex-1">
                 <Input
                   label="Intended date of arrival of first intended stay in the Schengen area *"
@@ -630,6 +671,7 @@ export function Schengen() {
                 error={info.formState.errors["fingerprints-collected-previously"]}
                 isOpen={isFingerprintsCollectedPreviously}
                 className="flex flex-col gap-4 md:flex-row [&>*]:flex-1"
+                disabled={info.formState.isSubmitting}
               >
                 <Input
                   label="Previously collected fingerprints date, if you know"
@@ -723,6 +765,7 @@ export function Schengen() {
                   classNameLabel="line-clamp-none"
                   options={costOfTravelingAndLivingOptions}
                   control={info.control}
+                  isDisabled={info.formState.isSubmitting}
                   isMulti
                   name="cost-of-traveling-and-living"
                   register={info.register("cost-of-traveling-and-living", {
@@ -731,31 +774,26 @@ export function Schengen() {
                   error={info.formState.errors["cost-of-traveling-and-living"]}
                 />
               </div>
-            </div>
+            </fieldset>
 
             <div className="flex justify-between">
-              <Button type="button" onClick={() => setStep(2)}>
-                <NextIcon className="mr-2 scale-x-[-1]" /> Previous
+              <Button
+                disabled={info.formState.isSubmitting}
+                className="disabled:opacity-0"
+                type="button"
+                onClick={() => setStep(3)}
+              >
+                <NextIcon className="mr-2 scale-x-[-1] cursor-none" /> Previous
               </Button>
-              <Button>
-                Next <NextIcon className="ml-2" />
+              <Button disabled={info.formState.isSubmitting} className="disabled:cursor-pointer">
+                Submit
+                {info.formState.isSubmitting ? <Spinner className="ml-2" /> : <NextIcon className="ml-2" />}
               </Button>
             </div>
           </form>
         )}
       </div>
     </main>
-  );
-}
-
-export function LeftArrow(props) {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" {...props}>
-      <path
-        fill="currentColor"
-        d="m7.85 13l2.85 2.85q.3.3.288.7t-.288.7q-.3.3-.712.313t-.713-.288L4.7 12.7q-.3-.3-.3-.7t.3-.7l4.575-4.575q.3-.3.713-.287t.712.312q.275.3.288.7t-.288.7L7.85 11H19q.425 0 .713.288T20 12q0 .425-.288.713T19 13H7.85Z"
-      ></path>
-    </svg>
   );
 }
 
