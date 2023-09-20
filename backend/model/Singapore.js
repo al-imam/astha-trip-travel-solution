@@ -42,6 +42,10 @@ const SingaporeSchema = new Schema({
         type: 'VARCHAR(255)',
         req: true
     },
+    nric: {
+        type: 'VARCHAR(255)',
+        req: true
+    },
     type_of_passport: {
         type: 'VARCHAR(255)',
         req: true
@@ -131,7 +135,15 @@ const SingaporeSchema = new Schema({
         req: true
     },
     // Address in singapore 
+    stay_in_duration_singapore: {
+        type: 'VARCHAR(255)',
+        req: true
+    },
     stay_in_singapore: {
+        type: 'VARCHAR(255)',
+        req: true
+    },
+    where_stay: {
         type: 'VARCHAR(255)',
         req: true
     },

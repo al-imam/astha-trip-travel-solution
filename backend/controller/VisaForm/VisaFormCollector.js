@@ -1,7 +1,7 @@
 const Schengen = require('../../model/Schengen');
+const Singapore = require('../../model/Singapore');
 
 const VisaFormColector = () => {
-
     return {
         schengen: async (req, res) => {
             let apply = {}
@@ -80,72 +80,174 @@ const VisaFormColector = () => {
                 res.send('database Insert done!');
 
 
+            } catch (error) {
+                console.log("🚀 ~ file: VisaFormCollector.js:5 ~ VisaFormColector ~ error:", error)
+                res.status(500).send(error)
+            }
+        },
+        singapore: async (req, res) => {
+            let apply = {}
+            if (req.User.Admin) {
+                apply = {
+                    type: "Admin",
+                    email: req.User.Admin.email
+                }
+            } else {
+                apply = {
+                    type: "Agent",
+                    email: req.User.Agent.email
+                }
+            }
 
-                // const demo = {
-                //     "passport-number": "A23422347",
-                //     "surname": "Al",
-                //     "surname-at-birth": "",
-                //     "first-name": "Imam",
-                //     "date-of-birth": "2023-09-11",
-                //     "place-of-birth": "Noakhali",
-                //     "country-of-birth": "Bangladeshi",
-                //     "current-nationality": "Bangladeshi",
-                //     "nationality-at-birth": "Bangladeshi",
-                //     "other-nationalities": [
-                //         "Saudi",
-                //         "Kuwaiti"
+
+            try {
+                const { body } = req;
+                const DbRes = await Singapore.Add({
+                    name: body['name'],
+                    alias: body['alias'],
+                    date_of_birth: body['date-of-birth'],
+                    sex: body["sex"],
+                    marital_status: body['marital-status'],
+                    nationality: body["nationality"],
+                    country_place_of_birth: body['country-of-birth'],
+                    state_place_of_birth: body['state-of-birth'],
+                    race: body['race'],
+                    citizenship: body['citizenship-of-spouse'],
+                    nric: body['nric-no'],
+                    type_of_passport: body['type-of-passport'],
+                    passport_number: body['passport-no'],
+                    passport_issue_date: body['passport-issue-date'],
+                    passport_expire_date: body['passport-expiry-date'],
+                    passport_issue_country: body['country-of-issue'],
+                    prc_id_number: body['prc-id-number'],
+                    residence_country: body['residence'],
+                    residence_state: body['state-of-residence'],
+                    residence_origin: body['prefecture-of-residence'],
+                    residence_district: body['state-of-residence'],
+                    residence_address: body['address'],
+                    email: body['email-address'],
+                    contact_number: body['contact-number'],
+                    occupation: body['occupation'],
+                    high_academic: body['highest-academic'],
+                    qualifications_attained: body['qualifications-attained'],
+                    annual_income: body['annual-income'],
+                    religion: body['religion'],
+                    expected_date_of_arrival: body['arrival-date'],
+                    type_of_visa: body['type-of-visa'],
+                    purpose_of_visit: body['purpose-of-visit'],
+                    details_of_purpose: body['details-of-purpose'],
+                    // Address in singapore 
+                    stay_in_duration_singapore: body['days-intend-to-stay'],
+                    stay_in_singapore: body['reason-for-stay'],
+                    where_stay: body['stay-location'],
+                    block: body['singapore-house-no'],
+                    floor: body['singapore-floor-no'],
+                    unit_number: body['singapore-unit-no'],
+                    postal_code: body['singapore-postal-code'],
+                    street_name: body['singapore-street-name'],
+                    singapore_contact_number: body['singapore-contact-no'],
+                    building_name: body['singapore-building-name'],
+                    did_you_reside_in_other_countries: JSON.stringify(body['lived-other-countries']),
+                    relationship_of_travel_companion: body['relationship-of-travelling-companion'],
+                    companion_name: body['name-of-travelling-companion'],
+                    companion_date_of_birth: body['birth-date-of-travelling-companion'],
+                    companion_sex: body['sex-of-travelling-companion'],
+                    companion_nationality: body['nationality-of-travelling-companion'],
+                    companion_passport_number: body['passport-no-of-travelling-companion'],
+                    // local contact 
+                    local_contact_name: body['name-of-local-contact'],
+                    local_contact_relation: body['relationship-of-local-contact'],
+                    local_contact_contact_number: body['contact-no-of-local-contact'],
+                    local_contact_email: body['email-of-local-contact'],
+                    antecedent_of_applicant: JSON.stringify({
+                        a:body['a'],
+                        a:body['b'],
+                        a:body['c'],
+                        a:body['d'],
+                        details: body['details-why-yes'] || ""
+                    }),
+
+
+                    status: "pending",
+                    apply_by: JSON.stringify(apply),
+                })
+
+                res.send('database Insert done!');
+
+
+                // let demo = {
+                //     surname: 'nahid',
+                //     alias: 'hasan',
+                //     'date-of-birth': '2023-09-14',
+                //     sex: 'Male',
+                //     'marital-status': 'Single',
+                //     'citizenship-of-spouse': 'bangladehi',
+                //     'country-of-birth': 'Bangladeshi',
+                //     'state-of-birth': 'Dhaka',
+                //     race: 'Bangladeshi',
+                //     nationality: 'Bangladeshi',
+                //     'type-of-passport': 'International Passport',
+                //     'passport-no': '123456789',
+                //     'passport-issue-date': '2023-09-05',
+                //     'passport-expiry-date': '2023-09-28',
+                //     'country-of-issue': 'Dhaka',
+                //     'prc-id-number': '',
+                //     residence: 'Bangladeshi',
+                //     'state-of-residence': 'Dhaka',
+                //     'prefecture-of-residence': 'dhaka',
+                //     address: 'Dhaka, Bangladesh',
+                //     'email-address': 'nahidhasan.opt@gmail.com',
+                //     'contact-number': '014563258',
+                //     occupation: 'developper',
+                //     'highest-academic': 'Pre-University',
+                //     'qualifications-attained': 'University',
+                //     'annual-income': '100',
+                //     religion: 'Islam',
+                //     'arrival-date': '2023-09-28',
+                //     'type-of-visa': 'Single Journey',
+                //     'purpose-of-visit': 'Social',
+                //     'details-of-purpose': 'go for tour',
+                //     'stay-location': "Friend's Place",
+                //     'days-intend-to-stay': 'More than 30 days',
+                //     'reason-for-stay': 'go for it',
+                //     'singapore-house-no': 'nahid',
+                //     'singapore-floor-no': '12',
+                //     'singapore-unit-no': '232',
+                //     'singapore-postal-code': '4512',
+                //     'singapore-street-name': 'nahid road',
+                //     'singapore-contact-no': '03213464',
+                //     'singapore-building-name': 'nh plaza',
+                //     'lived-other-country': 'Yes',
+                //     'relationship-of-travelling-companion': 'client',
+                //     'name-of-travelling-companion': 'astha trip',
+                //     'birth-date-of-travelling-companion': '2023-09-21',
+                //     'passport-no-of-travelling-companion': 'f444514d',
+                //     'sex-of-travelling-companion': 'Male',
+                //     'nationality-of-travelling-companion': 'Anguillan',
+                //     'lived-other-countries': [
+                //         {
+                //             from: '2023-09-21',
+                //             to: '2023-09-21',
+                //             address: 'fsdf',
+                //             country: 'Aland Islands'
+                //         }
                 //     ],
-                //     "sex": "Male",
-                //     "civil-status": "Single",
-                //     "parental-authority": "lol, lol, lol, lol, lol, lol, lol, lol",
-                //     "national-identity-number": "349574857",
-                //     "travel-document-type": "Ordinary passport",
-                //     "date-of-issue": "2023-09-12",
-                //     "valid-until": "2023-09-30",
-                //     "issued-country": "Bangladeshi",
-                //     "home-address": "Noakhali",
-                //     "email-address": "alimam01828@gmal.com",
-                //     "telephone-no": "01881614926",
-                //     "have-eu-citizen": "Yes",
-                //     "citizen-surname": "Terror",
-                //     "citizen-first-name": "Srabon",
-                //     "citizen-date-of-birth": "2004-01-03",
-                //     "citizen-nationality": "American",
-                //     "citizen-travel-document-number": "234234234234",
-                //     "citizen-relationship": "Child",
-                //     "residence-in-a-country": "Yes",
-                //     "resident-permit-or-equivalent": "lol",
-                //     "resident-no": "342234",
-                //     "resident-valid-until": "2023-09-30",
-                //     "employers-address-telephone-number": "terror, 2034, america",
-                //     "current-occupation": "software engineer",
-                //     "purpose-of-journey": "Tourism",
-                //     "purpose-of-journey-additional": "i want to fresh my mind",
-                //     "main-destination": "schengen, ...",
-                //     "first-entry": "dhaka",
-                //     "number-of-entries-requested": "Single entry",
-                //     "intended-date-of-arrival": "2023-09-19",
-                //     "intended-date-of-departure": "2023-09-30",
-                //     "fingerprints-collected-previously": "Yes",
-                //     "previously-collected-fingerprints-date": "2023-09-03",
-                //     "previously-collected-fingerprints-visa-no": "324345345",
-                //     "destination-issue-by": "astha",
-                //     "destination-valid-from": "2023-09-04",
-                //     "destination-valid-to": "2023-09-30",
-                //     "surname-and-first-name-of-inviting-persons": "al, imam, nirob, srabon, seju",
-                //     "address-email-of-inviting-persons": "alimam@gmail.com",
-                //     "telephone-no-of-inviting-persons": "45345345",
-                //     "name-address-of-inviting-company": "Imam, schengen city",
-                //     "telephone-no-of-inviting-company": "453534534545",
-                //     "surname-and-first-name-of-contact-persons": "Kovir khan, main city",
-                //     "cost-of-traveling-and-living": "Cash"
+                //     'name-of-local-contact': 'Hotel boos',
+                //     'relationship-of-local-contact': 'client',
+                //     'contact-no-of-local-contact': '021248411',
+                //     'email-of-local-contact': 'hotel@gmail.com',
+                //     a: 'No',
+                //     b: 'No',
+                //     c: 'No',
+                //     d: 'No'
                 // }
+
 
             } catch (error) {
                 console.log("🚀 ~ file: VisaFormCollector.js:5 ~ VisaFormColector ~ error:", error)
                 res.status(500).send(error)
             }
-        }
+        },
     }
 
 }

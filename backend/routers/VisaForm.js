@@ -10,6 +10,7 @@ const GetForm = require("../controller/VisaForm/GetForm");
 
 
 VisaFormRouter.post('/schengen', isAuthenticate, VisaFormColector().schengen);
+VisaFormRouter.post('/singapore', isAuthenticate, VisaFormColector().singapore);
 
 // get data by passport 
 VisaFormRouter.post('/get-by-passport', isAdmin, GetByPassport);

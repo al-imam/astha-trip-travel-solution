@@ -160,14 +160,15 @@ export function Singapore() {
     await new Promise((r) => setTimeout(r, 5000));
     const data = flattenObject(Object.assign(_, __d));
     setForm(data);
+    // console.log(data);
 
     const serverRes = await axios.post("/api/visa-form/singapore", data).catch(console.log);
     if (!serverRes) return fire();
     fire("Successfully Done!", "success");
 
-    clearLocal.clear();
-    clearOthers.clear();
-    clearParticulars.clear();
+    // clearLocal.clear();
+    // clearOthers.clear();
+    // clearParticulars.clear();
   }
 
   function stopSubmitting(event) {
@@ -209,11 +210,11 @@ export function Singapore() {
               <Input
                 label="Name (Full name as shown in travel document) *"
                 placeholder="Name"
-                register={particularsOfApplicant.register("surname", {
+                register={particularsOfApplicant.register("name", {
                   required: "Name is required",
                   maxLength: { value: 50, message: "Exceeds 50 character limit" },
                 })}
-                error={particularsOfApplicant.formState.errors["surname"]}
+                error={particularsOfApplicant.formState.errors["name"]}
               />
 
               <Input
@@ -887,14 +888,14 @@ export function Singapore() {
 
               <Input
                 label="Relationship of local contact/company/hotel to applicant *"
-                register={particularsOfLocalContact.register("Relationship-of-local-contact", {
+                register={particularsOfLocalContact.register("relationship-of-local-contact", {
                   required: "Relationship of local contact to applicant is required",
                   maxLength: {
                     value: 25,
                     message: "Exceeds 25 character limit",
                   },
                 })}
-                error={particularsOfLocalContact.formState.errors["Relationship-of-local-contact"]}
+                error={particularsOfLocalContact.formState.errors["relationship-of-local-contact"]}
               />
 
               <Input
