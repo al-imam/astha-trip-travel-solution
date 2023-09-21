@@ -64,6 +64,8 @@ const GetFormData = () => {
                 const [ThailandDatabase] = await Thailand.findOne({ passport_number: passport });
                 const [SchengenDatabase] = await Schengen.findOne({ passport_number: passport });
                
+                SchengenDatabase && (SchengenDatabase['other_nationalities'] = JSON.parse(SchengenDatabase['other_nationalities']))
+                
                 res.status(200).json({
                     singapore:SingaporeDatabase,
                     Thailand:ThailandDatabase,

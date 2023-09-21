@@ -131,7 +131,7 @@ const Index = () => {
                                         Approved(SelectedCountry, prop.row.original.id)
                                     }}
                                     title='Accept Request'
-                                    className='p-2 text-green-800 bg-green-200 text-md hover:scale-105 transition-all duration-500 hover:shadow-md rounded-full ring-1 ring-green-700'>
+                                    className={`p-2 text-green-800 bg-green-200 text-md hover:scale-105 transition-all duration-500 hover:shadow-md rounded-full ring-1 ring-green-700 ${prop.row.original.status === "approved"? "hidden":""}`}>
                                     <TeenyiconsShieldTickOutline />
                                 </button>
                                 <button
@@ -198,7 +198,7 @@ const Index = () => {
                                         Approved(SelectedCountry, prop.row.original.id)
                                     }}
                                     title='Accept Request'
-                                    className='p-2 text-green-800 bg-green-200 text-md hover:scale-105 transition-all duration-500 hover:shadow-md rounded-full ring-1 ring-green-700'>
+                                    className={`p-2 text-green-800 bg-green-200 text-md hover:scale-105 transition-all duration-500 hover:shadow-md rounded-full ring-1 ring-green-700 ${prop.row.original.status === "approved"? "hidden":""}`}>
                                     <TeenyiconsShieldTickOutline />
                                 </button>
                                 <button
@@ -266,7 +266,7 @@ const Index = () => {
                                         Approved(SelectedCountry, prop.row.original.id)
                                     }}
                                     title='Accept Request'
-                                    className='p-2 text-green-800 bg-green-200 text-md hover:scale-105 transition-all duration-500 hover:shadow-md rounded-full ring-1 ring-green-700'>
+                                    className={`p-2 text-green-800 bg-green-200 text-md hover:scale-105 transition-all duration-500 hover:shadow-md rounded-full ring-1 ring-green-700 ${prop.row.original.status === "approved"? "hidden":""}`}>
                                     <TeenyiconsShieldTickOutline />
                                 </button>
                                 <button
