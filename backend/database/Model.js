@@ -3,6 +3,7 @@ dotenv.config();
 const DataBase = require("./DBpoll");
 const dbname = process.env.DB_NAME;
 
+<<<<<<< HEAD
 function skipSingleQuotes(inputString) {
   let result = "";
   for (let i = 0; i < inputString.length; i++) {
@@ -15,6 +16,8 @@ function skipSingleQuotes(inputString) {
   return result;
 }
 
+=======
+>>>>>>> 373b83821b8bac2d89167497b881fdca85f5a893
 // check if table exist or not
 const chCash = {
   name: null,
@@ -152,6 +155,7 @@ class Model {
       const DB = await DataBase();
       const query = `SELECT * FROM ${this.name} WHERE ${q}`;
 
+      console.log(query);
       const sql = await DB.execute(query);
       return sql[0];
     } catch (error) {
@@ -171,8 +175,9 @@ class Model {
       }
 
       let keys = Object.keys(data);
-      let valus = Object.values(data).map((e) => {
-        return skipSingleQuotes(e);
+      let valus = Object.values(data).map((value) => {
+        if (typeof value !== "string") return value;
+        return value.replace(/(['"])/g, "\\$1");
       });
 
       const DB = await DataBase();
