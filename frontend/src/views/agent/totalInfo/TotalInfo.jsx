@@ -1,8 +1,8 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import Table from "../../public/Entry/ComplexTable";
-
+// import Table from "../../public/Entry/ComplexTable";
+import Table from "../../admin/agent/table";
 function TotalInfo() {
   const [loiData, setLoiData] = useState([]);
   const [openGuest, setOpenGuest] = useState(false);
@@ -75,6 +75,26 @@ function TotalInfo() {
                   <span>Submitted On</span>:{" "}
                   <span>{new Date(openGuest.createdAt).toLocaleString().replaceAll("/", "-")}</span>
                 </div>
+              </div>
+              <div className="relative w-full ">
+                {openGuest.visa_application ? (
+                  <button className="float-right mt-2 flex items-center rounded-xl bg-brand-600 py-3 px-5 font-bold text-white transition-all  duration-300 hover:scale-105 hover:shadow-xl active:scale-95">
+                    <span className="pr-2 text-2xl">
+                      <LineMdDownloadOutlineLoop />
+                    </span>
+                    Download Visa Application Form
+                  </button>
+                ) : (
+                  <Link
+                    to={`/entry/${openGuest.country.toLowerCase()}?ref=${openGuest.id}`}
+                    className="float-right mt-2 flex items-center rounded-xl bg-brand-600 py-3 px-5 font-bold text-white transition-all  duration-300 hover:scale-105 hover:shadow-xl active:scale-95"
+                  >
+                    <span className="pr-2 text-2xl">
+                      <LucideFileEdit />
+                    </span>
+                    Fill Visa Application Form
+                  </Link>
+                )}
               </div>
             </div>
           </div>
@@ -153,11 +173,16 @@ function TotalInfo() {
       </div>
 
       <div className="mt-5">
+        {/* <Table
+          columnsData={}
+          tableData={loiData}
+        /> */}
+
         <Table
-          columnsData={[
+          colunm={[
             {
               Header: "Guest Name",
-              accessor: "guestName",
+              accessor: "guest_name",
               Cell: (prop) => {
                 return (
                   <div>
@@ -169,14 +194,14 @@ function TotalInfo() {
             },
             {
               Header: "Travel Date",
-              accessor: "travelDate",
+              accessor: "pasport_number",
               Cell: (prop) => {
                 return <p>{prop.row.original?.travel_date}</p>;
               },
             },
             {
               Header: "Country Name",
-              accessor: "countryName",
+              accessor: "country",
               Cell: (prop) => {
                 return <p>{prop.row.original?.country}</p>;
               },
@@ -279,13 +304,13 @@ function TotalInfo() {
                 );
               },
             },
-            {
-              Header: "Agent email",
-              accessor: "AgentDate",
-              Cell: (prop) => {
-                return <p>{prop.row.original?.agent ? JSON.parse(prop.row.original?.agent)?.username : ""}</p>;
-              },
-            },
+            // {
+            //   Header: "Agent email",
+            //   accessor: "AgentDate",
+            //   Cell: (prop) => {
+            //     return <p>{prop.row.original?.agent ? JSON.parse(prop.row.original?.agent)?.username : ""}</p>;
+            //   },
+            // },
             {
               Header: "Status",
               accessor: "status",
@@ -310,7 +335,7 @@ function TotalInfo() {
               },
             },
           ]}
-          tableData={loiData}
+          datas={loiData}
         />
       </div>
     </div>
@@ -466,6 +491,40 @@ export function BytesizeSettings(props) {
       <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
         <path d="M13 2v4l-2 1l-3-3l-4 4l3 3l-1 2H2v6h4l1 2l-3 3l4 4l3-3l2 1v4h6v-4l2-1l3 3l4-4l-3-3l1-2h4v-6h-4l-1-2l3-3l-4-4l-3 3l-2-1V2Z"></path>
         <circle cx="16" cy="16" r="4"></circle>
+      </g>
+    </svg>
+  );
+}
+
+export function LineMdDownloadOutlineLoop(props) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" {...props}>
+      <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
+        <path strokeDasharray="14" strokeDashoffset="14" d="M6 19h12">
+          <animate fill="freeze" attributeName="stroke-dashoffset" begin="0.5s" dur="0.4s" values="14;0"></animate>
+        </path>
+        <path strokeDasharray="18" strokeDashoffset="18" d="M12 4 h2 v6 h2.5 L12 14.5M12 4 h-2 v6 h-2.5 L12 14.5">
+          <animate fill="freeze" attributeName="stroke-dashoffset" dur="0.4s" values="18;0"></animate>
+          <animate
+            attributeName="d"
+            calcMode="linear"
+            dur="1.5s"
+            keyTimes="0;0.7;1"
+            repeatCount="indefinite"
+            values="M12 4 h2 v6 h2.5 L12 14.5M12 4 h-2 v6 h-2.5 L12 14.5;M12 4 h2 v3 h2.5 L12 11.5M12 4 h-2 v3 h-2.5 L12 11.5;M12 4 h2 v6 h2.5 L12 14.5M12 4 h-2 v6 h-2.5 L12 14.5"
+          ></animate>
+        </path>
+      </g>
+    </svg>
+  );
+}
+
+export function LucideFileEdit(props) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" {...props}>
+      <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
+        <path d="M4 13.5V4a2 2 0 0 1 2-2h8.5L20 7.5V20a2 2 0 0 1-2 2h-5.5"></path>
+        <path d="M14 2v6h6m-9.58 4.61a2.1 2.1 0 1 1 2.97 2.97L7.95 21L4 22l.99-3.95l5.43-5.44Z"></path>
       </g>
     </svg>
   );
