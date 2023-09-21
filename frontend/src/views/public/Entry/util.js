@@ -1,4 +1,3 @@
-import { ClassNames } from "@emotion/react";
 import axios from "axios";
 import Swal from "sweetalert2";
 
@@ -80,8 +79,14 @@ export function removeDuplicated(arrayOfObjects = [], filterBy) {
 
 export async function populate(id, cb = () => {}) {
   const serverRes = await axios.get(`/api/visa-form/get-by-passport/${id}`).catch(console.log);
-  console.log(serverRes);
   if (!serverRes) return null;
   cb(serverRes.data);
   return serverRes.data;
+}
+
+export function setValue(value, callback = () => {}, select = false) {
+  if (!value) return;
+  if (!select) return callback(value);
+  if (Array.isArray(value)) return callback(value.map((value) => ({ value, label: value })));
+  callback({ label: value, value });
 }

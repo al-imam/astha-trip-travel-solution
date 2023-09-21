@@ -12,7 +12,7 @@ import { twMerge } from "tailwind-merge";
 import countries from "../countries.json";
 import districts from "../districts.json";
 import { Spinner } from "./Spinner";
-import { fire, flattenObject, populate } from "./util";
+import { fire, flattenObject, populate, setValue } from "./util";
 import { useAuth } from "hook/useAuth";
 
 const countriesOptions = countries.map((e) => ({
@@ -173,7 +173,31 @@ export function Schengen() {
 
   useEffect(() => {
     if (number.__isNew__ || !number.value) return;
-    populate(number.value, console.log);
+
+    populate(number.value, (_value) => {
+      const db = _value.schengen;
+      if (!db) return;
+
+      setValue(db["surname"], (_v) => personal.setValue("surname", _v));
+      setValue(db["surname_at_birth"], (_v) => personal.setValue("surname-at-birth", _v));
+      setValue(db["first_name"], (_v) => personal.setValue("first-name", _v));
+      setValue(db["date_of_birth"], (_v) => personal.setValue("date-of-birth", _v));
+      setValue(db["place_of_birth"], (_v) => personal.setValue("place-of-birth", _v), true);
+      setValue(db["country_of_birth"], (_v) => personal.setValue("country-of-birth", _v), true);
+      setValue(db["current_nationality"], (_v) => personal.setValue("current-nationality", _v), true);
+      setValue(db["civil_status"], (_v) => personal.setValue("civil-status", _v), true);
+      setValue(db["sex"], (_v) => personal.setValue("sex", _v), true);
+      setValue(db["nationality_at_birth"], (_v) => personal.setValue("nationality-at-birth", _v), true);
+      setValue(db["other_nationalities"], (_v) => personal.setValue("other-nationalities", _v), true);
+      setValue(db["parental_authority"], (_v) => personal.setValue("parental-authority", _v), true);
+
+      setValue(db["national_identity_number"], (_v) => travel.setValue("national-identity-number", _v));
+      setValue(db["type_of_travel_document"], (_v) => travel.setValue("travel-document-type", _v), true);
+      setValue(db["passport_issue_date"], (_v) => travel.setValue("date-of-issue", _v));
+      setValue(db["passport_expire_date"], (_v) => travel.setValue("valid-until", _v));
+      setValue(db["passport_issued_country"], (_v) => travel.setValue("issued-country", _v), true);
+      setValue(db["passport_issued_country"], (_v) => travel.setValue("home-address", _v));
+    });
   }, [number.value]);
 
   return (
