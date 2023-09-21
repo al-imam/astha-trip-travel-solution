@@ -3,21 +3,6 @@ dotenv.config();
 const DataBase = require("./DBpoll");
 const dbname = process.env.DB_NAME;
 
-<<<<<<< HEAD
-function skipSingleQuotes(inputString) {
-  let result = "";
-  for (let i = 0; i < inputString.length; i++) {
-    if (inputString[i] === "'") {
-      result += "\\'"; // Replace single quote with backslash and single quote
-    } else {
-      result += inputString[i];
-    }
-  }
-  return result;
-}
-
-=======
->>>>>>> 373b83821b8bac2d89167497b881fdca85f5a893
 // check if table exist or not
 const chCash = {
   name: null,

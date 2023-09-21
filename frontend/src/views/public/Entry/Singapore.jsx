@@ -16,7 +16,7 @@ import { NextIcon } from "./Schengen";
 import { Spinner } from "./Spinner";
 import { fire, flattenObject } from "./util";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
 const religionOptions = ["Islam", "Christianity", "Hinduism", "Buddhism", "Sikhism", "Spiritism", "Judaism"].map(
   (value) => ({
@@ -103,7 +103,7 @@ const steps = ["", "", ""];
 
 export function Singapore() {
   const navigate = useNavigate();
-  const reference = useParams().ref;
+  const [url] = useSearchParams();
   const [step, setStep] = useState(1);
   const [_, setForm] = useState({});
   const [livedOtherCountries, setLivedOtherCountries] = useState([]);
@@ -162,12 +162,10 @@ export function Singapore() {
   }
 
   async function particularsOfLocalContactSubmit(__d) {
-    await new Promise((r) => setTimeout(r, 5000));
-    const data = flattenObject(Object.assign(_, __d));
+    const data = flattenObject(Object.assign(_, Object.assign(__d, { reference: url.get("ref") })));
     setForm(data);
-    // console.log(data);
 
-    const serverRes = await axios.post("/api/visa-form/singapore", { ...data, reference }).catch(console.log);
+    const serverRes = await axios.post("/api/visa-form/singapore", data).catch(console.log);
     if (!serverRes) return fire();
     fire("Successfully Done!", "success");
 

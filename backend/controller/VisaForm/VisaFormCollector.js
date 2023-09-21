@@ -1,14 +1,11 @@
 const Schengen = require("../../model/Schengen");
 const Singapore = require("../../model/Singapore");
 const Thailand = require("../../model/Thailand");
+const LOI_DATA = require("../../model/LOI");
 
 const VisaFormColector = () => {
   return {
-<<<<<<< HEAD
-    schengen: async (req, res) => {
-=======
     schengen: async (req, res, next) => {
->>>>>>> 373b83821b8bac2d89167497b881fdca85f5a893
       let apply = {};
       if (req.User.Admin) {
         apply = {
@@ -25,11 +22,7 @@ const VisaFormColector = () => {
       try {
         const { body } = req;
 
-<<<<<<< HEAD
-        const resdb = await Schengen.Add({
-=======
         const resDb = await Schengen.Add({
->>>>>>> 373b83821b8bac2d89167497b881fdca85f5a893
           surname: body["surname"],
           first_name: body["first-name"],
           date_of_birth: body["date-of-birth"],
@@ -94,114 +87,6 @@ const VisaFormColector = () => {
           status: "pending",
         });
 
-<<<<<<< HEAD
-        res.send("database Insert done!");
-      } catch (error) {
-        console.log(
-          "🚀 ~ file: VisaFormCollector.js:5 ~ VisaFormColector ~ error:",
-          error
-        );
-        res.status(500).send(error);
-      }
-    },
-    singapore: async (req, res) => {
-      let apply = {};
-      if (req.User.Admin) {
-        apply = {
-          type: "Admin",
-          email: req.User.Admin.email,
-        };
-      } else {
-        apply = {
-          type: "Agent",
-          email: req.User.Agent.email,
-        };
-      }
-
-      try {
-        const { body } = req;
-        const DbRes = await Singapore.Add({
-          name: body["name"],
-          alias: body["alias"],
-          date_of_birth: body["date-of-birth"],
-          sex: body["sex"],
-          marital_status: body["marital-status"],
-          nationality: body["nationality"],
-          country_place_of_birth: body["country-of-birth"],
-          state_place_of_birth: body["state-of-birth"],
-          race: body["race"],
-          citizenship: body["citizenship-of-spouse"],
-          nric: body["nric-no"],
-          type_of_passport: body["type-of-passport"],
-          passport_number: body["passport-no"],
-          passport_issue_date: body["passport-issue-date"],
-          passport_expire_date: body["passport-expiry-date"],
-          passport_issue_country: body["country-of-issue"],
-          prc_id_number: body["prc-id-number"],
-          residence_country: body["residence"],
-          residence_state: body["state-of-residence"],
-          residence_origin: body["prefecture-of-residence"],
-          residence_district: body["state-of-residence"],
-          residence_address: body["address"],
-          email: body["email-address"],
-          contact_number: body["contact-number"],
-          occupation: body["occupation"],
-          high_academic: body["highest-academic"],
-          qualifications_attained: body["qualifications-attained"],
-          annual_income: body["annual-income"],
-          religion: body["religion"],
-          expected_date_of_arrival: body["arrival-date"],
-          type_of_visa: body["type-of-visa"],
-          purpose_of_visit: body["purpose-of-visit"],
-          details_of_purpose: body["details-of-purpose"],
-          // Address in singapore
-          stay_in_duration_singapore: body["days-intend-to-stay"],
-          stay_in_singapore: body["reason-for-stay"],
-          where_stay: body["stay-location"],
-          block: body["singapore-house-no"],
-          floor: body["singapore-floor-no"],
-          unit_number: body["singapore-unit-no"],
-          postal_code: body["singapore-postal-code"],
-          street_name: body["singapore-street-name"],
-          singapore_contact_number: body["singapore-contact-no"],
-          building_name: body["singapore-building-name"],
-          did_you_reside_in_other_countries: JSON.stringify(
-            body["lived-other-countries"]
-          ),
-          relationship_of_travel_companion:
-            body["relationship-of-travelling-companion"],
-          companion_name: body["name-of-travelling-companion"],
-          companion_date_of_birth: body["birth-date-of-travelling-companion"],
-          companion_sex: body["sex-of-travelling-companion"],
-          companion_nationality: body["nationality-of-travelling-companion"],
-          companion_passport_number:
-            body["passport-no-of-travelling-companion"],
-          // local contact
-          local_contact_name: body["name-of-local-contact"],
-          local_contact_relation: body["relationship-of-local-contact"],
-          local_contact_contact_number: body["contact-no-of-local-contact"],
-          local_contact_email: body["email-of-local-contact"],
-          antecedent_of_applicant: JSON.stringify({
-            a: body["a"],
-            a: body["b"],
-            a: body["c"],
-            a: body["d"],
-            details: body["details-why-yes"] || "",
-          }),
-          status: "pending",
-          apply_by: JSON.stringify(apply),
-        });
-
-        console.log(
-          "🚀 ~ file: VisaFormCollector.js:186 ~ singapore: ~ DbRes:",
-          DbRes
-        );
-
-        console.log(
-          "🚀 ~ file: VisaFormCollector.js:187 ~ singapore: ~ body.reference:",
-          body.reference
-        );
-=======
         if (typeof resDb.errno === "number" || resDb.errno) {
           return res.status(406).json({ message: "Something went wrong" });
         }
@@ -300,7 +185,12 @@ const VisaFormColector = () => {
           status: "pending",
           apply_by: JSON.stringify(apply),
         });
->>>>>>> 373b83821b8bac2d89167497b881fdca85f5a893
+
+        if (body.reference) {
+          const Loi_res = await LOI_DATA.findByIdAndUpdate(body.reference, {
+            visa_application: DbRes.insertId,
+          });
+        }
 
         res.send("database Insert done!");
       } catch (error) {
