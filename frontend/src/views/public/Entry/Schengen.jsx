@@ -4,7 +4,7 @@ import { Group, Join } from "components/form/Group";
 import { Input } from "components/form/Input";
 import { AsyncSelect, Select, SelectNotCreatable } from "components/form/Select";
 import { StepIndicator } from "components/form/StepIndicator";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import useFormPersist from "react-hook-form-persist";
 import { useNavigate } from "react-router-dom";
@@ -95,12 +95,13 @@ export function Schengen() {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [form, setForm] = useState({});
-  const [passportNumberOptions, setPassportNumberOptions] = useState([]);
 
   const personal = useForm();
   const travel = useForm();
   const contact = useForm();
   const info = useForm();
+
+  const number = personal.watch("passport-number") || {};
 
   const isResidence = contact.watch("residence-in-a-country") === "Yes";
   const isEuCitizen = travel.watch("have-eu-citizen") === "Yes";
@@ -110,6 +111,7 @@ export function Schengen() {
     watch: personal.watch,
     setValue: personal.setValue,
     storage: window.localStorage,
+    exclude: ["passport-number"],
   });
 
   const cleanTravel = useFormPersist("schengen-travel-submit", {
@@ -161,6 +163,11 @@ export function Schengen() {
     cleanContact.clear();
     */
   }
+
+  useEffect(() => {
+    if (number.__isNew__) return;
+    console.log(number);
+  }, [number.value]);
 
   return (
     <main className="container mx-auto space-y-4 p-4">
