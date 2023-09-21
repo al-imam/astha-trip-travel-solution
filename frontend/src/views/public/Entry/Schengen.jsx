@@ -2,17 +2,18 @@ import axios from "axios";
 import { Button } from "components/form/Button";
 import { Group, Join } from "components/form/Group";
 import { Input } from "components/form/Input";
-import { Select, SelectNotCreatable } from "components/form/Select";
+import { AsyncSelect, Select, SelectNotCreatable } from "components/form/Select";
 import { StepIndicator } from "components/form/StepIndicator";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import useFormPersist from "react-hook-form-persist";
 import { useNavigate } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 import countries from "../countries.json";
 import districts from "../districts.json";
-import { fire, flattenObject } from "./util";
 import { Spinner } from "./Spinner";
+import { fire, flattenObject, populate, setValue } from "./util";
+import { useAuth } from "hook/useAuth";
 
 const countriesOptions = countries.map((e) => ({
   label: e.name,
@@ -91,39 +92,48 @@ const costOfTravelingAndLivingOptions = [
 
 const steps = ["", "", "", ""];
 
+const localPersonal = "schengen-personal-submit";
+const localTravel = "schengen-travel-submit";
+const localContact = "schengen-contact-submit";
+const localInfo = "schengen-info-submit";
+
 export function Schengen() {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [form, setForm] = useState({});
+  const auth = useAuth();
 
   const personal = useForm();
   const travel = useForm();
   const contact = useForm();
   const info = useForm();
 
+  const number = personal.watch("passport-number") || {};
+
   const isResidence = contact.watch("residence-in-a-country") === "Yes";
   const isEuCitizen = travel.watch("have-eu-citizen") === "Yes";
   const isFingerprintsCollectedPreviously = info.watch("fingerprints-collected-previously") === "Yes";
 
-  const cleanPersonal = useFormPersist("schengen-personal-submit", {
+  useFormPersist(localPersonal, {
     watch: personal.watch,
     setValue: personal.setValue,
     storage: window.localStorage,
+    exclude: ["passport-number"],
   });
 
-  const cleanTravel = useFormPersist("schengen-travel-submit", {
+  useFormPersist(localTravel, {
     watch: travel.watch,
     setValue: travel.setValue,
     storage: window.localStorage,
   });
 
-  const cleanContact = useFormPersist("schengen-contact-submit", {
+  useFormPersist(localContact, {
     watch: contact.watch,
     setValue: contact.setValue,
     storage: window.localStorage,
   });
 
-  const cleanInfo = useFormPersist("schengen-info-submit", {
+  useFormPersist(localInfo, {
     watch: info.watch,
     setValue: info.setValue,
     storage: window.localStorage,
@@ -145,21 +155,50 @@ export function Schengen() {
   }
 
   async function infoSubmit(__d) {
-    await new Promise((r) => setTimeout(r, 500));
+    await new Promise((r) => setTimeout(r, 5000));
     const data = flattenObject(Object.assign(form, __d));
-    setForm(data);
 
     const serverRes = await axios.post("/api/visa-form/schengen", data).catch(console.log);
     if (!serverRes) return fire();
-
     fire("Successfully Done!", "success");
-    /* 
-    cleanContact.clear();
-    cleanTravel.clear();
-    cleanInfo.clear();
-    cleanContact.clear();
-    */
+
+    setForm({});
+    localStorage.removeItem(localContact);
+    localStorage.removeItem(localInfo);
+    localStorage.removeItem(localTravel);
+    localStorage.removeItem(localPersonal);
+    if (auth.admin) return navigate("/admin");
+    navigate("/agent");
   }
+
+  useEffect(() => {
+    if (number.__isNew__ || !number.value) return;
+
+    populate(number.value, (_value) => {
+      const db = _value.schengen;
+      if (!db) return;
+
+      setValue(db["surname"], (_v) => personal.setValue("surname", _v));
+      setValue(db["surname_at_birth"], (_v) => personal.setValue("surname-at-birth", _v));
+      setValue(db["first_name"], (_v) => personal.setValue("first-name", _v));
+      setValue(db["date_of_birth"], (_v) => personal.setValue("date-of-birth", _v));
+      setValue(db["place_of_birth"], (_v) => personal.setValue("place-of-birth", _v), true);
+      setValue(db["country_of_birth"], (_v) => personal.setValue("country-of-birth", _v), true);
+      setValue(db["current_nationality"], (_v) => personal.setValue("current-nationality", _v), true);
+      setValue(db["civil_status"], (_v) => personal.setValue("civil-status", _v), true);
+      setValue(db["sex"], (_v) => personal.setValue("sex", _v), true);
+      setValue(db["nationality_at_birth"], (_v) => personal.setValue("nationality-at-birth", _v), true);
+      setValue(db["other_nationalities"], (_v) => personal.setValue("other-nationalities", _v), true);
+      setValue(db["parental_authority"], (_v) => personal.setValue("parental-authority", _v), true);
+
+      setValue(db["national_identity_number"], (_v) => travel.setValue("national-identity-number", _v));
+      setValue(db["type_of_travel_document"], (_v) => travel.setValue("travel-document-type", _v), true);
+      setValue(db["passport_issue_date"], (_v) => travel.setValue("date-of-issue", _v));
+      setValue(db["passport_expire_date"], (_v) => travel.setValue("valid-until", _v));
+      setValue(db["passport_issued_country"], (_v) => travel.setValue("issued-country", _v), true);
+      setValue(db["passport_issued_country"], (_v) => travel.setValue("home-address", _v));
+    });
+  }, [number.value]);
 
   return (
     <main className="container mx-auto space-y-4 p-4">
@@ -190,10 +229,9 @@ export function Schengen() {
             autoComplete="off"
           >
             <fieldset disabled={personal.formState.isSubmitting} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              <Select
+              <AsyncSelect
                 label="Passport Number *"
                 placeholder="Select passport number"
-                options={[]}
                 control={personal.control}
                 isDisabled={personal.formState.isSubmitting}
                 name="passport-number"
