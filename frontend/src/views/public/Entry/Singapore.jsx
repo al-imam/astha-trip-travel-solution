@@ -17,6 +17,13 @@ import { Spinner } from "./Spinner";
 import { fire, flattenObject } from "./util";
 import axios from "axios";
 
+const religionOptions = ["Islam", "Christianity", "Hinduism", "Buddhism", "Sikhism", "Spiritism", "Judaism"].map(
+  (value) => ({
+    label: value,
+    value,
+  })
+);
+
 const countriesOptions = countries.map((e) => ({
   label: e.name,
   value: e.nationality,
@@ -105,35 +112,31 @@ export function Singapore() {
   const particularsOfLocalContact = useForm();
 
   const citizenshipOfSpouse = particularsOfApplicant.watch("citizenship-of-spouse");
-
-  const a = particularsOfLocalContact.watch("a");
-  const b = particularsOfLocalContact.watch("b");
-  const c = particularsOfLocalContact.watch("c");
-  const d = particularsOfLocalContact.watch("d");
+  const answers = particularsOfLocalContact.watch(["a", "b", "c", "d"]);
 
   const isStayingMoreThanThirtyDays = otherDetails.watch("days-intend-to-stay") === "More than 30 days";
   const isLivedOtherCountry = otherDetails.watch("lived-other-country") === "Yes";
-  const isExtraInformationRequired = [a, b, c, d].includes("Yes");
+  const isExtraInformationRequired = answers.includes("Yes");
   const isSpouseIsSingaporeCitizen = citizenshipOfSpouseOptions.some(
     (c) => citizenshipOfSpouse && c.value === citizenshipOfSpouse.value
   );
 
-  const clearParticulars = useFormPersist("particulars_of_applicant", {
+  const clearParticulars = useFormPersist("singapore-particulars-of-applicant", {
     watch: particularsOfApplicant.watch,
     setValue: particularsOfApplicant.setValue,
-    storage: window.sessionStorage,
+    storage: window.localStorage,
   });
 
-  const clearOthers = useFormPersist("other_details", {
+  const clearOthers = useFormPersist("singapore-other-details", {
     watch: otherDetails.watch,
     setValue: otherDetails.setValue,
-    storage: window.sessionStorage,
+    storage: window.localStorage,
   });
 
-  const clearLocal = useFormPersist("particulars_of_local_contact", {
+  const clearLocal = useFormPersist("singapore-particulars-of-local-contact", {
     watch: particularsOfLocalContact.watch,
     setValue: particularsOfLocalContact.setValue,
-    storage: window.sessionStorage,
+    storage: window.localStorage,
   });
 
   function particularsOfApplicantSubmit(data) {
@@ -166,9 +169,11 @@ export function Singapore() {
     if (!serverRes) return fire();
     fire("Successfully Done!", "success");
 
-    // clearLocal.clear();
-    // clearOthers.clear();
-    // clearParticulars.clear();
+    /* 
+    clearLocal.clear();
+    clearOthers.clear();
+    clearParticulars.clear();
+    */
   }
 
   function stopSubmitting(event) {
@@ -208,7 +213,7 @@ export function Singapore() {
               className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
             >
               <Input
-                label="Name (Full name as shown in travel document) *"
+                label="Name (Full Name As Shown In Travel Document) *"
                 placeholder="Name"
                 register={particularsOfApplicant.register("name", {
                   required: "Name is required",
@@ -227,7 +232,7 @@ export function Singapore() {
               />
 
               <Input
-                label="Date of birth *"
+                label="Date Of Birth *"
                 register={particularsOfApplicant.register("date-of-birth", {
                   required: "Birth date is required",
                   max: { value: new Date().toISOString().split("T")[0], message: "Birth date cannot be future date" },
@@ -237,7 +242,7 @@ export function Singapore() {
               />
 
               <SelectNotCreatable
-                label="Sex (gender) *"
+                label="Sex (Gender) *"
                 options={sexesOptions}
                 placeholder="Select your gender"
                 control={particularsOfApplicant.control}
@@ -261,8 +266,8 @@ export function Singapore() {
               />
 
               <Select
-                label="Ationality/Citizenship of Spouse *"
-                placeholder="Select Ationality/Citizenship"
+                label="Ationality/Citizenship Of Spouse *"
+                placeholder="Select ationality/citizenship"
                 name="citizenship-of-spouse"
                 options={citizenshipOfSpouseOptions}
                 control={particularsOfApplicant.control}
@@ -285,7 +290,7 @@ export function Singapore() {
               )}
 
               <Select
-                label="Country/place of birth *"
+                label="Country/Place Of Birth *"
                 options={countriesOptions}
                 control={particularsOfApplicant.control}
                 isDisabled={particularsOfApplicant.formState.isSubmitting}
@@ -298,7 +303,7 @@ export function Singapore() {
               />
 
               <Select
-                label="State/province of birth *"
+                label="State/Province Of Birth *"
                 options={stateOfBirthOptions}
                 control={particularsOfApplicant.control}
                 isDisabled={particularsOfApplicant.formState.isSubmitting}
@@ -311,7 +316,7 @@ export function Singapore() {
               />
 
               <Select
-                label="Race: (e.g. Malay, Indian, etc) *"
+                label="Race: (example - Malay, Indian, etc) *"
                 options={racesOptions}
                 control={particularsOfApplicant.control}
                 isDisabled={particularsOfApplicant.formState.isSubmitting}
@@ -335,7 +340,7 @@ export function Singapore() {
               />
 
               <Select
-                label="Type of passport *"
+                label="Type Of Passport *"
                 placeholder="Select passport type"
                 options={documentTypeOptions}
                 control={particularsOfApplicant.control}
@@ -348,7 +353,7 @@ export function Singapore() {
               />
 
               <Input
-                label="Passport no *"
+                label="Passport No *"
                 register={particularsOfApplicant.register("passport-no", {
                   required: "Passport no is required",
                   maxLength: { value: 15, message: "Exceeds 15 character limit" },
@@ -357,7 +362,7 @@ export function Singapore() {
               />
 
               <Input
-                label="Passport issue date *"
+                label="Passport Issue Date *"
                 register={particularsOfApplicant.register("passport-issue-date", {
                   required: "Passport issue date no is required",
                 })}
@@ -366,7 +371,7 @@ export function Singapore() {
               />
 
               <Input
-                label="Passport expiry date *"
+                label="Passport Expiry Date *"
                 register={particularsOfApplicant.register("passport-expiry-date", {
                   required: "Passport expiry date no is required",
                 })}
@@ -375,7 +380,7 @@ export function Singapore() {
               />
 
               <Input
-                label="Place/Country of Issue *"
+                label="Place/Country Of Issue *"
                 placeholder="State, Country"
                 register={particularsOfApplicant.register("country-of-issue", {
                   required: "Place/Country of Issue is required",
@@ -400,7 +405,7 @@ export function Singapore() {
               />
 
               <Select
-                label="Country/Place of Origin/Residence *"
+                label="Country/Place Of Origin/Residence *"
                 placeholder="Select country"
                 options={countriesOptions}
                 control={particularsOfApplicant.control}
@@ -413,7 +418,7 @@ export function Singapore() {
               />
 
               <Select
-                label="Division/State of Origin/Residence *"
+                label="Division/State Of Origin/Residence *"
                 placeholder="Select state"
                 options={stateOfBirthOptions}
                 control={particularsOfApplicant.control}
@@ -426,7 +431,7 @@ export function Singapore() {
               />
 
               <Input
-                label="Prefecture of Origin/Residence *"
+                label="Prefecture Of Origin/Residence *"
                 register={particularsOfApplicant.register("prefecture-of-residence", {
                   maxLength: {
                     value: 25,
@@ -486,7 +491,7 @@ export function Singapore() {
               />
 
               <Input
-                label="Contact number *"
+                label="Contact Number *"
                 register={otherDetails.register("contact-number", {
                   required: "Contact number is required",
                   pattern: { value: /^(\+\d{1,})?(\d+)$/, message: "Contact number is not valid" },
@@ -533,7 +538,7 @@ export function Singapore() {
               />
 
               <Input
-                label="Annual Income in Singapore dollars (SGD) *"
+                label="Annual Income In Singapore Dollars (SGD) *"
                 register={otherDetails.register("annual-income", {
                   required: "Annual Income is required",
                   pattern: { value: /^\d+$/, message: "Annual Income is not valid (only number)" },
@@ -542,17 +547,21 @@ export function Singapore() {
                 error={otherDetails.formState.errors["annual-income"]}
               />
 
-              <Input
+              <Select
                 label="Religion *"
+                control={otherDetails.control}
+                placeholder="Select religion"
+                options={religionOptions}
+                isDisabled={otherDetails.formState.isSubmitting}
+                name="religion"
                 register={otherDetails.register("religion", {
                   required: "Religion is required",
-                  maxLength: { value: 25, message: "Exceeds 25 character limit" },
                 })}
                 error={otherDetails.formState.errors["religion"]}
               />
 
               <Input
-                label="Expected Date of Arrival in Singapore *"
+                label="Expected Date Of Arrival In Singapore *"
                 register={otherDetails.register("arrival-date", {
                   required: "Date of Arrival in Singapore is required",
                 })}
@@ -561,21 +570,21 @@ export function Singapore() {
               />
 
               <SelectNotCreatable
-                label="Type of Visa *"
+                label="Type Of Visa *"
                 options={typeOfVisaOptions}
                 control={otherDetails.control}
                 isDisabled={otherDetails.formState.isSubmitting}
                 name="type-of-visa"
-                placeholder="Select Type of Visa"
+                placeholder="Select type of Visa"
                 isSearchable={false}
                 register={otherDetails.register("type-of-visa", {
-                  required: "Type of Visa is required",
+                  required: "Type of visa is required",
                 })}
                 error={otherDetails.formState.errors["type-of-visa"]}
               />
 
               <SelectNotCreatable
-                label="Purpose of visit *"
+                label="Purpose Of Visit *"
                 options={purposeOfVisitOptions}
                 control={otherDetails.control}
                 isDisabled={otherDetails.formState.isSubmitting}
@@ -589,13 +598,13 @@ export function Singapore() {
               />
 
               <Input
-                label="Details of purpose"
+                label="Details Of Purpose"
                 register={otherDetails.register("details-of-purpose")}
                 error={otherDetails.formState.errors["details-of-purpose"]}
               />
 
               <Select
-                label="Where will you be staying in Singapore? *"
+                label="Where Will You Be Staying In Singapore? *"
                 placeholder="Select location"
                 name="stay-location"
                 options={stayLocationOptions}
@@ -609,7 +618,7 @@ export function Singapore() {
 
               <Group
                 options={["Less than 30 days", "More than 30 days"]}
-                legend="How long do you intend to stay in Singapore *"
+                legend="How Long Do You Intend To Stay In Singapore *"
                 classNameContainer="col-span-full"
                 checked={isStayingMoreThanThirtyDays ? 2 : 1}
                 register={otherDetails.register("days-intend-to-stay", { required: "Answer the question" })}
@@ -618,7 +627,7 @@ export function Singapore() {
                 disabled={otherDetails.formState.isSubmitting}
               >
                 <Input
-                  label="If your intended stay in Singapore is more than 30 days, please state the reason for your intended length of stay and the duration"
+                  label="If Your Intended Stay In Singapore Is More Than 30 Days, Please State The Reason For Your Intended Length Of Stay And The Duration"
                   classNameLabel="line-clamp-none"
                   placeholder="Describe why ..."
                   register={otherDetails.register("reason-for-stay")}
@@ -627,12 +636,12 @@ export function Singapore() {
               </Group>
 
               <Join
-                legend="Address in Singapore"
+                legend="Address In Singapore"
                 classNameContainer="col-span-full"
                 className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 xl:flex xl:flex-wrap xl:[&>*]:flex-1"
               >
                 <Input
-                  label="Block/House no *"
+                  label="Block/House No *"
                   register={otherDetails.register("singapore-house-no", {
                     required: "Block/House no is required",
                     maxLength: { value: 5, message: "Exceeds 5 character limit" },
@@ -641,7 +650,7 @@ export function Singapore() {
                 />
 
                 <Input
-                  label="Floor no *"
+                  label="Floor No *"
                   register={otherDetails.register("singapore-floor-no", {
                     required: "Floor no is required",
                     maxLength: { value: 2, message: "Exceeds 2 character limit" },
@@ -650,7 +659,7 @@ export function Singapore() {
                 />
 
                 <Input
-                  label="Unit no *"
+                  label="Unit No *"
                   register={otherDetails.register("singapore-unit-no", {
                     required: "Unit no is required",
                     maxLength: { value: 4, message: "Exceeds 4 character limit" },
@@ -659,7 +668,7 @@ export function Singapore() {
                 />
 
                 <Input
-                  label="Postal code *"
+                  label="Postal Code *"
                   register={otherDetails.register("singapore-postal-code", {
                     required: "Postal code is required",
                     maxLength: { value: 4, message: "Exceeds 4 character limit" },
@@ -668,7 +677,7 @@ export function Singapore() {
                 />
 
                 <Input
-                  label="Street name *"
+                  label="Street Name *"
                   register={otherDetails.register("singapore-street-name", {
                     required: "Street name is required",
                     maxLength: { value: 20, message: "Exceeds 20 character limit" },
@@ -676,7 +685,7 @@ export function Singapore() {
                   error={otherDetails.formState.errors["singapore-street-name"]}
                 />
                 <Input
-                  label="Contact no *"
+                  label="Contact No *"
                   register={otherDetails.register("singapore-contact-no", {
                     required: "Contact no is required",
                     maxLength: { value: 20, message: "Exceeds 20 character limit" },
@@ -686,7 +695,7 @@ export function Singapore() {
 
                 <div className="col-span-full md:col-span-2">
                   <Input
-                    label="Building name *"
+                    label="Building Name *"
                     register={otherDetails.register("singapore-building-name", {
                       required: "Building name is required",
                     })}
@@ -697,7 +706,7 @@ export function Singapore() {
 
               <Group
                 options={["No", "Yes"]}
-                legend="Did you reside in other countries/places, other than your country/place of origin, for one year or more during the last 5 years? *"
+                legend="Did you Reside in other Countries/Places, other than your Country/Place of Origin, for one year or more during the last 5 years? *"
                 classNameContainer="col-span-full"
                 checked={isLivedOtherCountry ? 2 : 1}
                 register={otherDetails.register("lived-other-country", { required: "Answer the question" })}
@@ -788,7 +797,7 @@ export function Singapore() {
                 className="grid gap-4 sm:grid-cols-2 md:grid-cols-3"
               >
                 <Input
-                  label="Relationship of Travelling Companion To Applicant"
+                  label="Relationship Of Travelling Companion To Applicant"
                   register={otherDetails.register("relationship-of-travelling-companion", {
                     maxLength: { value: 25, message: "Exceeds 25 character limit" },
                   })}
@@ -804,14 +813,14 @@ export function Singapore() {
                 />
 
                 <Input
-                  label="Date of birth"
+                  label="Date Of Birth"
                   register={otherDetails.register("birth-date-of-travelling-companion")}
                   error={otherDetails.formState.errors["birth-date-of-travelling-companion"]}
                   type="date"
                 />
 
                 <SelectNotCreatable
-                  label="Sex (gender)"
+                  label="Sex (Gender)"
                   options={sexesOptions}
                   isDisabled={otherDetails.formState.isSubmitting}
                   placeholder="Select gender"
@@ -836,7 +845,7 @@ export function Singapore() {
                 />
 
                 <Input
-                  label="Passport no"
+                  label="Passport No"
                   register={otherDetails.register("passport-no-of-travelling-companion", {
                     maxLength: { value: 15, message: "Exceeds 15 character limit" },
                   })}
@@ -874,7 +883,7 @@ export function Singapore() {
               className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
             >
               <Input
-                label="Name of local contact company/hotel *"
+                label="Name Of Local Contact Company/Hotel *"
                 register={particularsOfLocalContact.register("name-of-local-contact", {
                   required: "Name of local contact company/hotel is required",
 
@@ -899,7 +908,7 @@ export function Singapore() {
               />
 
               <Input
-                label="Contact no *"
+                label="Contact No *"
                 register={particularsOfLocalContact.register("contact-no-of-local-contact", {
                   required: "Contact no is required",
                 })}
@@ -907,16 +916,16 @@ export function Singapore() {
               />
 
               <Input
-                label="Email address *"
+                label="Email Address *"
                 register={particularsOfLocalContact.register("email-of-local-contact", {
                   required: "Email address is required",
                 })}
                 error={particularsOfLocalContact.formState.errors["email-of-local-contact"]}
               />
 
-              <Join legend="Antecedent of applicant" classNameContainer="col-span-full" className="flex flex-col gap-4">
+              <Join legend="Antecedent Of Applicant" classNameContainer="col-span-full" className="flex flex-col gap-4">
                 <Radio
-                  label="Have you ever been refused entry into or deported from any country/place, including Singapore?"
+                  label="Have You Ever Been Refused Entry Into Or Deported From Any Country/Place, Including Singapore?"
                   options={["No", "Yes"]}
                   checked={1}
                   error={particularsOfLocalContact.formState.errors["a"]}
@@ -928,7 +937,7 @@ export function Singapore() {
                 />
 
                 <Radio
-                  label="Have you ever been convicted in a court of law in any country/place, including Singapore?"
+                  label="Have You Ever Been Convicted In A Court Of Law In Any Country/Place, Including Singapore?"
                   options={["No", "Yes"]}
                   checked={1}
                   error={particularsOfLocalContact.formState.errors["b"]}
@@ -940,7 +949,7 @@ export function Singapore() {
                 />
 
                 <Radio
-                  label="Have you ever been prohibited from entering Singapore?"
+                  label="Have You Ever Been Prohibited From Entering Singapore?"
                   options={["No", "Yes"]}
                   checked={1}
                   error={particularsOfLocalContact.formState.errors["c"]}
@@ -952,7 +961,7 @@ export function Singapore() {
                 />
 
                 <Radio
-                  label="Have you ever entered Singapore using a different passport or name?"
+                  label="Have You Ever Entered Singapore Using A Different Passport Or Name?"
                   options={["No", "Yes"]}
                   checked={1}
                   error={particularsOfLocalContact.formState.errors["d"]}
