@@ -3,9 +3,8 @@ dotenv.config();
 const DataBase = require("./DBpoll");
 const dbname = process.env.DB_NAME;
 
-
 function skipSingleQuotes(inputString) {
-  let result = '';
+  let result = "";
   for (let i = 0; i < inputString.length; i++) {
     if (inputString[i] === "'") {
       result += "\\'"; // Replace single quote with backslash and single quote
@@ -62,25 +61,28 @@ class Model {
       const sql = `CREATE TABLE ${dbname}.${this.name} (
                 id INT NOT NULL AUTO_INCREMENT ,
                 ${this.schema
-          .map((e) => {
-            e.reference
-              ? FOReign.push({ name: e.name, ref: e.reference })
-              : "";
-            return `${e.name} ${e.type} ${e.req ? " NOT NULL" : "NULL"
-              } ${e.defaults ? "DEFAULT '" + e.defaults + "'" : ""} ${e.unique ? "UNIQUE" : ""
-              }`;
-          })
-          .join(",")},
+                  .map((e) => {
+                    e.reference
+                      ? FOReign.push({ name: e.name, ref: e.reference })
+                      : "";
+                    return `${e.name} ${e.type} ${
+                      e.req ? " NOT NULL" : "NULL"
+                    } ${e.defaults ? "DEFAULT '" + e.defaults + "'" : ""} ${
+                      e.unique ? "UNIQUE" : ""
+                    }`;
+                  })
+                  .join(",")},
                
                 createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
                 updateAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                 PRIMARY KEY (id)
-                ${FOReign.length
-          ? `${FOReign.map((e) => {
-            return `,FOREIGN KEY (${e.name}) REFERENCES ${e.ref} ON DELETE CASCADE ON UPDATE CASCADE`;
-          }).join(",")}`
-          : ""
-        }
+                ${
+                  FOReign.length
+                    ? `${FOReign.map((e) => {
+                        return `,FOREIGN KEY (${e.name}) REFERENCES ${e.ref} ON DELETE CASCADE ON UPDATE CASCADE`;
+                      }).join(",")}`
+                    : ""
+                }
                 ) ENGINE = InnoDB;`;
 
       return DB.execute(sql);
@@ -147,9 +149,12 @@ class Model {
         .map(([key, value]) => `${key}='${value}'`)
         .join(" AND ");
 
+      console.log(q);
+
       const DB = await DataBase();
       const query = `SELECT * FROM ${this.name} WHERE ${q}`;
 
+      console.log(query);
       const sql = await DB.execute(query);
       return sql[0];
     } catch (error) {
@@ -198,8 +203,9 @@ class Model {
           // add new colunm that add in schema
           let alter = `ALTER TABLE ${this.name} ${notindb
             .map((w) => {
-              return `ADD ${w.name} ${w.type} ${w.req ? " NOT NULL" : "NULL"} ${w.defaults ? "DEFAULT '" + w.defaults + "'" : ""
-                } ${w.unique ? "UNIQUE" : ""}`;
+              return `ADD ${w.name} ${w.type} ${w.req ? " NOT NULL" : "NULL"} ${
+                w.defaults ? "DEFAULT '" + w.defaults + "'" : ""
+              } ${w.unique ? "UNIQUE" : ""}`;
             })
             .join(" , ")};`;
 

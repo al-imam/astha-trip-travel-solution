@@ -77,3 +77,11 @@ export function removeDuplicated(arrayOfObjects = [], filterBy) {
     return acc;
   }, []);
 }
+
+export async function populate(id, cb = () => {}) {
+  const serverRes = await axios.get(`/api/visa-form/get-by-passport/${id}`).catch(console.log);
+  console.log(serverRes);
+  if (!serverRes) return null;
+  cb(serverRes.data);
+  return serverRes.data;
+}

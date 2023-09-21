@@ -12,7 +12,7 @@ import { twMerge } from "tailwind-merge";
 import countries from "../countries.json";
 import districts from "../districts.json";
 import { Spinner } from "./Spinner";
-import { fire, flattenObject } from "./util";
+import { fire, flattenObject, populate } from "./util";
 
 const countriesOptions = countries.map((e) => ({
   label: e.name,
@@ -165,8 +165,9 @@ export function Schengen() {
   }
 
   useEffect(() => {
-    if (number.__isNew__) return;
-    console.log(number);
+    if (number.__isNew__ || !number.value) return;
+
+    populate(number.value, console.log);
   }, [number.value]);
 
   return (
