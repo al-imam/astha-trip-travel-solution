@@ -13,6 +13,7 @@ import countries from "../countries.json";
 import districts from "../districts.json";
 import { Spinner } from "./Spinner";
 import { fire, flattenObject, populate } from "./util";
+import { useAuth } from "hook/useAuth";
 
 const countriesOptions = countries.map((e) => ({
   label: e.name,
@@ -91,10 +92,16 @@ const costOfTravelingAndLivingOptions = [
 
 const steps = ["", "", "", ""];
 
+const localPersonal = "schengen-personal-submit";
+const localTravel = "schengen-travel-submit";
+const localContact = "schengen-contact-submit";
+const localInfo = "schengen-info-submit";
+
 export function Schengen() {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [form, setForm] = useState({});
+  const auth = useAuth();
 
   const personal = useForm();
   const travel = useForm();
@@ -107,26 +114,26 @@ export function Schengen() {
   const isEuCitizen = travel.watch("have-eu-citizen") === "Yes";
   const isFingerprintsCollectedPreviously = info.watch("fingerprints-collected-previously") === "Yes";
 
-  const cleanPersonal = useFormPersist("schengen-personal-submit", {
+  useFormPersist(localPersonal, {
     watch: personal.watch,
     setValue: personal.setValue,
     storage: window.localStorage,
     exclude: ["passport-number"],
   });
 
-  const cleanTravel = useFormPersist("schengen-travel-submit", {
+  useFormPersist(localTravel, {
     watch: travel.watch,
     setValue: travel.setValue,
     storage: window.localStorage,
   });
 
-  const cleanContact = useFormPersist("schengen-contact-submit", {
+  useFormPersist(localContact, {
     watch: contact.watch,
     setValue: contact.setValue,
     storage: window.localStorage,
   });
 
-  const cleanInfo = useFormPersist("schengen-info-submit", {
+  useFormPersist(localInfo, {
     watch: info.watch,
     setValue: info.setValue,
     storage: window.localStorage,
@@ -148,23 +155,20 @@ export function Schengen() {
   }
 
   async function infoSubmit(__d) {
-    await new Promise((r) => setTimeout(r, 500));
+    await new Promise((r) => setTimeout(r, 5000));
     const data = flattenObject(Object.assign(form, __d));
-
-    console.log("Lol");
 
     const serverRes = await axios.post("/api/visa-form/schengen", data).catch(console.log);
     if (!serverRes) return fire();
     fire("Successfully Done!", "success");
 
-    console.log(cleanContact, "clead");
-
     setForm({});
-    cleanContact.clear();
-    cleanTravel.clear();
-    cleanInfo.clear();
-    cleanContact.clear();
-    navigate(-1);
+    localStorage.removeItem(localContact);
+    localStorage.removeItem(localInfo);
+    localStorage.removeItem(localTravel);
+    localStorage.removeItem(localPersonal);
+    if (auth.admin) return navigate("/admin");
+    navigate("/agent");
   }
 
   useEffect(() => {
