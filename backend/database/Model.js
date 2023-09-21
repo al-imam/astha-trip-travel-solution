@@ -137,8 +137,6 @@ class Model {
         .map(([key, value]) => `${key}='${value}'`)
         .join(" AND ");
 
-      console.log(q);
-
       const DB = await DataBase();
       const query = `SELECT * FROM ${this.name} WHERE ${q}`;
 

@@ -2,7 +2,7 @@ const Schengen = require("../../model/Schengen");
 const Singapore = require("../../model/Singapore");
 const Thailand = require("../../model/Thailand");
 
-async function passportNumbers(_, res) {
+async function passportNumbers(_, res, next) {
   try {
     const [numbersSchengen] = await Schengen.RayQuery(
       "SELECT passport_number AS 'passport-number' FROM schengen_data"

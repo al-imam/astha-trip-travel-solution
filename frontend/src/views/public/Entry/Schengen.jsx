@@ -150,23 +150,25 @@ export function Schengen() {
   async function infoSubmit(__d) {
     await new Promise((r) => setTimeout(r, 500));
     const data = flattenObject(Object.assign(form, __d));
-    setForm(data);
+
+    console.log("Lol");
 
     const serverRes = await axios.post("/api/visa-form/schengen", data).catch(console.log);
     if (!serverRes) return fire();
-
     fire("Successfully Done!", "success");
-    /* 
+
+    console.log(cleanContact, "clead");
+
+    setForm({});
     cleanContact.clear();
     cleanTravel.clear();
     cleanInfo.clear();
     cleanContact.clear();
-    */
+    navigate(-1);
   }
 
   useEffect(() => {
     if (number.__isNew__ || !number.value) return;
-
     populate(number.value, console.log);
   }, [number.value]);
 
