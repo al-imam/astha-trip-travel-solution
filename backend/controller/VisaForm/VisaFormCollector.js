@@ -24,6 +24,7 @@ const VisaFormColector = () => {
         const resDb = await Schengen.Add({
           surname: body["surname"],
           first_name: body["first-name"],
+          surname_at_birth: body["first-name"],
           date_of_birth: body["date-of-birth"],
           place_of_birth: body["place-of-birth"],
           country_of_birth: body["country-of-birth"],

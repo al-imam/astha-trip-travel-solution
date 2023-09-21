@@ -114,6 +114,7 @@ export function Schengen() {
   const isEuCitizen = travel.watch("have-eu-citizen") === "Yes";
   const isFingerprintsCollectedPreviously = info.watch("fingerprints-collected-previously") === "Yes";
 
+  /* 
   useFormPersist(localPersonal, {
     watch: personal.watch,
     setValue: personal.setValue,
@@ -138,7 +139,7 @@ export function Schengen() {
     setValue: info.setValue,
     storage: window.localStorage,
   });
-
+ */
   function personalSubmit(data) {
     setForm((prev) => Object.assign(prev, flattenObject(data)));
     setStep(2);
@@ -189,14 +190,36 @@ export function Schengen() {
       setValue(db["sex"], (_v) => personal.setValue("sex", _v), true);
       setValue(db["nationality_at_birth"], (_v) => personal.setValue("nationality-at-birth", _v), true);
       setValue(db["other_nationalities"], (_v) => personal.setValue("other-nationalities", _v), true);
-      setValue(db["parental_authority"], (_v) => personal.setValue("parental-authority", _v), true);
+      setValue(db["parental_authority"], (_v) => personal.setValue("parental-authority", _v));
 
       setValue(db["national_identity_number"], (_v) => travel.setValue("national-identity-number", _v));
       setValue(db["type_of_travel_document"], (_v) => travel.setValue("travel-document-type", _v), true);
       setValue(db["passport_issue_date"], (_v) => travel.setValue("date-of-issue", _v));
       setValue(db["passport_expire_date"], (_v) => travel.setValue("valid-until", _v));
       setValue(db["passport_issued_country"], (_v) => travel.setValue("issued-country", _v), true);
-      setValue(db["passport_issued_country"], (_v) => travel.setValue("home-address", _v));
+      setValue(db["home_address"], (_v) => travel.setValue("home-address", _v));
+      setValue(db["home_email"], (_v) => travel.setValue("email-address", _v));
+      setValue(db["phone"], (_v) => travel.setValue("telephone-no", _v));
+
+      setValue(db["uk_family_surname"] ? "Yes" : "No", (_v) => travel.setValue("have-eu-citizen", _v));
+      setValue(db["uk_family_surname"], (_v) => travel.setValue("citizen-surname", _v));
+      setValue(db["uk_family_first_name"], (_v) => travel.setValue("citizen-first-name", _v));
+      setValue(db["uk_family_date_of_birth"], (_v) => travel.setValue("citizen-date-of-birth", _v));
+      setValue(db["uk_family_passport_or_id"], (_v) => travel.setValue("citizen-travel-document-number", _v));
+      setValue(db["uk_family_nationality"], (_v) => travel.setValue("citizen-nationality", _v), true);
+      setValue(db["uk_family_relationship"], (_v) => travel.setValue("citizen-relationship", _v), true);
+
+      setValue(db["residence_in_a_country_no"] ? "Yes" : "No", (_v) => contact.setValue("residence-in-a-country", _v));
+      setValue(db["residence_in_a_country_equivalent"], (_v) => contact.setValue("resident-permit-or-equivalent", _v));
+      setValue(db["residence_in_a_country_no"], (_v) => contact.setValue("resident-no", _v));
+      setValue(db["residence_in_a_country_valid"], (_v) => contact.setValue("resident-valid-until", _v));
+
+      setValue(db["employer_and_employers_address"], (v) => contact.setValue("employers-address-telephone-number", v));
+      setValue(db["current_occupation"], (_v) => contact.setValue("current-occupation", _v));
+      setValue(db["purpose_of_the_journey"], (_v) => contact.setValue("purpose-of-journey", _v), true);
+      setValue(db["additional_info_purpose"], (_v) => contact.setValue("purpose-of-journey-additional", _v));
+      setValue(db["member_state_of_main_destination"], (_v) => contact.setValue("main-destination", _v));
+      setValue(db["member_state_of_first_entry"], (_v) => contact.setValue("first-entry", _v));
     });
   }, [number.value]);
 
