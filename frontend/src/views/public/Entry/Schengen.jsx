@@ -2,7 +2,7 @@ import axios from "axios";
 import { Button } from "components/form/Button";
 import { Group, Join } from "components/form/Group";
 import { Input } from "components/form/Input";
-import { Select, SelectNotCreatable } from "components/form/Select";
+import { AsyncSelect, Select, SelectNotCreatable } from "components/form/Select";
 import { StepIndicator } from "components/form/StepIndicator";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -11,8 +11,8 @@ import { useNavigate } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 import countries from "../countries.json";
 import districts from "../districts.json";
-import { fire, flattenObject } from "./util";
 import { Spinner } from "./Spinner";
+import { fire, flattenObject } from "./util";
 
 const countriesOptions = countries.map((e) => ({
   label: e.name,
@@ -95,6 +95,7 @@ export function Schengen() {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [form, setForm] = useState({});
+  const [passportNumberOptions, setPassportNumberOptions] = useState([]);
 
   const personal = useForm();
   const travel = useForm();
@@ -190,10 +191,9 @@ export function Schengen() {
             autoComplete="off"
           >
             <fieldset disabled={personal.formState.isSubmitting} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              <Select
+              <AsyncSelect
                 label="Passport Number *"
                 placeholder="Select passport number"
-                options={[]}
                 control={personal.control}
                 isDisabled={personal.formState.isSubmitting}
                 name="passport-number"
