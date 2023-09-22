@@ -2,6 +2,98 @@ const Singapore = require("../../model/Singapore");
 const Thailand = require("../../model/Thailand");
 const Schengen = require("../../model/Schengen");
 
+function combineData(...objects) {
+  const commonKeys = {
+    name: ["name", "first_name", "first_name & surname"],
+    date_of_birth: ["date_of_birth", "date_of_birth", "date_of_birth"],
+    place_of_birth: [null, null, "place_of_birth"],
+    nationality: ["nationality", "nationality", "current_nationality"],
+    current_nationality: ["nationality", "nationality", "current_nationality"],
+    nationality_at_birth: [
+      null,
+      "nationality_at_birth",
+      "nationality_at_birth",
+    ],
+    type_of_passport: [
+      "type_of_passport",
+      "type_of_passport",
+      "type_of_travel_document",
+    ],
+    type_of_travel_document: [
+      "type_of_passport",
+      "type_of_passport",
+      "type_of_travel_document",
+    ],
+    passport_number: ["passport_number", "passport_number", "passport_number"],
+    passport_issue_date: [
+      "passport_issue_date",
+      "passport_issue_date",
+      "passport_issue_date",
+    ],
+    passport_expiry_date: [
+      "passport_expire_date",
+      "passport_expiry_date",
+      "passport_expire_date",
+    ],
+    passport_expire_date: [
+      "passport_expire_date",
+      "passport_expiry_date",
+      "passport_expire_date",
+    ],
+    passport_issued_country: [null, null, "passport_issued_country"],
+    email: ["email", "email", "home_email"],
+    home_email: ["email", "email", "home_email"],
+    phone: ["phone", "phone", "phone"],
+    occupation: ["occupation", "occupation", "current_occupation"],
+    current_occupation: ["occupation", "occupation", "current_occupation"],
+    employer_and_employers_address: [
+      null,
+      null,
+      "employer_and_employers_address",
+    ],
+    purpose_of_visit: [
+      "purpose_of_visit",
+      "purpose_of_visit",
+      "purpose_of_the_journey",
+    ],
+    purpose_of_the_journey: [
+      "purpose_of_visit",
+      "purpose_of_visit",
+      "purpose_of_the_journey",
+    ],
+    marital_status: ["marital_status", "marital_status", "civil_status"],
+    civil_status: ["marital_status", "marital_status", "civil_status"],
+    arrival_date_thailand: [null, "arrival_date_thailand", null],
+    stay_duration: [null, "stay_duration", null],
+    date_of_previous_visit: [null, "date_of_previous_visit", null],
+    country_of_passport_valid: [null, "country_of_passport_valid", null],
+    address_in_thailand: [null, "address_in_thailand", null],
+    local_guarantor: [null, "local_guarantor", null],
+    local_contact_phone: [null, "local_contact_phone", null],
+    thailand_guarantor: [null, "thailand_guarantor", null],
+    thailand_contact_phone: [null, "thailand_contact_phone", null],
+    type_of_visa: [null, "type_of_visa", null],
+    number_of_entry: [null, "number_of_entry", null],
+    name_title: [null, "name_title", null],
+    sex: ["sex", "sex", "sex"],
+  };
+
+  const combinedData = {};
+  for (const key in commonKeys) {
+    if (commonKeys && key in commonKeys) {
+      for (let i = 0; i < objects.length; i++) {
+        const obj = objects[i];
+        if (obj && key in obj && obj[key] !== null) {
+          combinedData[key] = obj[key];
+          break;
+        }
+      }
+    }
+  }
+
+  return combinedData;
+}
+
 const GetFormData = () => {
   return {
     Singapore: async (req, res) => {
@@ -81,6 +173,11 @@ const GetFormData = () => {
           singapore: SingaporeDatabase,
           thailand: ThailandDatabase,
           schengen: SchengenDatabase,
+          common: combineData(
+            SingaporeDatabase,
+            ThailandDatabase,
+            SchengenDatabase
+          ),
         });
       } catch (error) {
         console.log("🚀 get_by_passport ~ error", error);

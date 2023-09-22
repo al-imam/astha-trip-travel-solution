@@ -4,6 +4,7 @@ import { Group, Join } from "components/form/Group";
 import { Input } from "components/form/Input";
 import { AsyncSelect, Select, SelectNotCreatable } from "components/form/Select";
 import { StepIndicator } from "components/form/StepIndicator";
+import { useAuth } from "hook/useAuth";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import useFormPersist from "react-hook-form-persist";
@@ -13,7 +14,6 @@ import countries from "../countries.json";
 import districts from "../districts.json";
 import { Spinner } from "./Spinner";
 import { fire, flattenObject, populate, setValue } from "./util";
-import { useAuth } from "hook/useAuth";
 
 const countriesOptions = countries.map((e) => ({
   label: e.name,
@@ -97,6 +97,13 @@ const localTravel = "schengen-travel-submit";
 const localContact = "schengen-contact-submit";
 const localInfo = "schengen-info-submit";
 
+function clearLocalStore() {
+  localStorage.removeItem(localContact);
+  localStorage.removeItem(localInfo);
+  localStorage.removeItem(localTravel);
+  localStorage.removeItem(localPersonal);
+}
+
 export function Schengen() {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
@@ -118,7 +125,6 @@ export function Schengen() {
     watch: personal.watch,
     setValue: personal.setValue,
     storage: window.localStorage,
-    exclude: ["passport-number"],
   });
 
   useFormPersist(localTravel, {
@@ -163,10 +169,7 @@ export function Schengen() {
     fire("Successfully Done!", "success");
 
     setForm({});
-    localStorage.removeItem(localContact);
-    localStorage.removeItem(localInfo);
-    localStorage.removeItem(localTravel);
-    localStorage.removeItem(localPersonal);
+    clearLocalStore();
     if (auth.admin) return navigate("/admin");
     navigate("/agent");
   }
@@ -175,7 +178,7 @@ export function Schengen() {
     if (number.__isNew__ || !number.value) return;
 
     populate(number.value, (_value) => {
-      const db = _value.schengen;
+      const db = Object.assign(_value.common, _value.schengen);
       if (!db) return;
 
       setValue(db["surname"], (_v) => personal.setValue("surname", _v));
@@ -189,14 +192,36 @@ export function Schengen() {
       setValue(db["sex"], (_v) => personal.setValue("sex", _v), true);
       setValue(db["nationality_at_birth"], (_v) => personal.setValue("nationality-at-birth", _v), true);
       setValue(db["other_nationalities"], (_v) => personal.setValue("other-nationalities", _v), true);
-      setValue(db["parental_authority"], (_v) => personal.setValue("parental-authority", _v), true);
+      setValue(db["parental_authority"], (_v) => personal.setValue("parental-authority", _v));
 
       setValue(db["national_identity_number"], (_v) => travel.setValue("national-identity-number", _v));
       setValue(db["type_of_travel_document"], (_v) => travel.setValue("travel-document-type", _v), true);
       setValue(db["passport_issue_date"], (_v) => travel.setValue("date-of-issue", _v));
       setValue(db["passport_expire_date"], (_v) => travel.setValue("valid-until", _v));
       setValue(db["passport_issued_country"], (_v) => travel.setValue("issued-country", _v), true);
-      setValue(db["passport_issued_country"], (_v) => travel.setValue("home-address", _v));
+      setValue(db["home_address"], (_v) => travel.setValue("home-address", _v));
+      setValue(db["home_email"], (_v) => travel.setValue("email-address", _v));
+      setValue(db["phone"], (_v) => travel.setValue("telephone-no", _v));
+
+      setValue(db["uk_family_surname"] ? "Yes" : "No", (_v) => travel.setValue("have-eu-citizen", _v));
+      setValue(db["uk_family_surname"], (_v) => travel.setValue("citizen-surname", _v));
+      setValue(db["uk_family_first_name"], (_v) => travel.setValue("citizen-first-name", _v));
+      setValue(db["uk_family_date_of_birth"], (_v) => travel.setValue("citizen-date-of-birth", _v));
+      setValue(db["uk_family_passport_or_id"], (_v) => travel.setValue("citizen-travel-document-number", _v));
+      setValue(db["uk_family_nationality"], (_v) => travel.setValue("citizen-nationality", _v), true);
+      setValue(db["uk_family_relationship"], (_v) => travel.setValue("citizen-relationship", _v), true);
+
+      setValue(db["residence_in_a_country_no"] ? "Yes" : "No", (_v) => contact.setValue("residence-in-a-country", _v));
+      setValue(db["residence_in_a_country_equivalent"], (_v) => contact.setValue("resident-permit-or-equivalent", _v));
+      setValue(db["residence_in_a_country_no"], (_v) => contact.setValue("resident-no", _v));
+      setValue(db["residence_in_a_country_valid"], (_v) => contact.setValue("resident-valid-until", _v));
+
+      setValue(db["employer_and_employers_address"], (v) => contact.setValue("employers-address-telephone-number", v));
+      setValue(db["current_occupation"], (_v) => contact.setValue("current-occupation", _v));
+      setValue(db["purpose_of_the_journey"], (_v) => contact.setValue("purpose-of-journey", _v), true);
+      setValue(db["additional_info_purpose"], (_v) => contact.setValue("purpose-of-journey-additional", _v));
+      setValue(db["member_state_of_main_destination"], (_v) => contact.setValue("main-destination", _v));
+      setValue(db["member_state_of_first_entry"], (_v) => contact.setValue("first-entry", _v));
     });
   }, [number.value]);
 
@@ -209,7 +234,10 @@ export function Schengen() {
           info.formState.isSubmitting ||
           contact.formState.isSubmitting
         }
-        onClick={() => navigate(-1)}
+        onClick={() => {
+          navigate(-1);
+          clearLocalStore();
+        }}
         className="my-1 inline-flex items-center rounded-md border-gray-200 bg-white px-5 py-2.5 text-center text-sm font-medium text-blue-700 shadow hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:opacity-0"
       >
         <NextIcon className="mr-2 scale-x-[-1]" />

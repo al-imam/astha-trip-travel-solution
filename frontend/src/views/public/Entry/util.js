@@ -84,9 +84,17 @@ export async function populate(id, cb = () => {}) {
   return serverRes.data;
 }
 
+function capitalizeFirstLetter(inputString) {
+  if (typeof inputString !== "string" || inputString.length === 0) {
+    return inputString;
+  }
+
+  return inputString.charAt(0).toUpperCase() + inputString.slice(1).toLowerCase();
+}
+
 export function setValue(value, callback = () => {}, select = false) {
   if (!value) return;
   if (!select) return callback(value);
   if (Array.isArray(value)) return callback(value.map((value) => ({ value, label: value })));
-  callback({ label: value, value });
+  callback({ label: capitalizeFirstLetter(value), value });
 }

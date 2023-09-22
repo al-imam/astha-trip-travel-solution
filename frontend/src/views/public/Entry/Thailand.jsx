@@ -11,8 +11,10 @@ import { useNavigate } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 import countries from "../countries.json";
 import districts from "../districts.json";
-import { fire, flattenObject, getNumberSelect } from "./util";
+import { fire, flattenObject, getNumberSelect, populate, setValue } from "./util";
 import { Spinner } from "./Spinner";
+import { AsyncSelect } from "components/form/Select";
+import { useAuth } from "hook/useAuth";
 
 const placeOfBirthOptions = districts.map((value) => ({
   label: value,
@@ -79,32 +81,46 @@ const validCountryOptions = ["ALL COUNTRIES OF THE WORLD EXCEPT ISRAIL"].map((va
 
 const steps = ["", "", ""];
 
+const localPersonal = "thailand-personal-submit";
+const localContact = "thailand-contact-submit";
+const localPurpose = "thailand-purpose-submit";
+
+function clearLocalStore() {
+  localStorage.removeItem(localPersonal);
+  localStorage.removeItem(localContact);
+  localStorage.removeItem(localPurpose);
+}
+
 export function Thailand() {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [_, setForm] = useState({});
 
+  const auth = useAuth();
+
   const personal = useForm();
   const contact = useForm();
   const purpose = useForm();
+
+  const number = personal.watch("passport-number") || {};
 
   useEffect(() => {
     purpose.setValue("countries-for-which-travel-document-is-valid", validCountryOptions[0]);
   }, []);
 
-  const cleanPersonal = useFormPersist("thailand-personal-submit", {
+  useFormPersist(localPersonal, {
     watch: personal.watch,
     setValue: personal.setValue,
     storage: window.localStorage,
   });
 
-  const cleanContact = useFormPersist("thailand-contact-submit", {
+  useFormPersist(localContact, {
     watch: contact.watch,
     setValue: contact.setValue,
     storage: window.localStorage,
   });
 
-  const cleanPurpose = useFormPersist("thailand-purpose-submit", {
+  useFormPersist(localPurpose, {
     watch: purpose.watch,
     setValue: purpose.setValue,
     storage: window.localStorage,
@@ -123,25 +139,59 @@ export function Thailand() {
   async function purposeSubmit(__D) {
     await new Promise((r) => setTimeout(r, 1000));
     const data = flattenObject(Object.assign(_, __D));
-    setForm(data);
 
     const serverRes = await axios.post("/api/visa-form/thailand", data).catch(console.log);
     if (!serverRes) return fire();
 
     fire("Successfully Done!", "success");
 
-    /* 
-    cleanContact.clear();
-    cleanPersonal.clear();
-    cleanPurpose.clear();
-    */
+    clearLocalStore();
+    if (auth.admin) return navigate("/admin");
+    navigate("/agent");
   }
+
+  useEffect(() => {
+    if (number.__isNew__ || !number.value) return;
+
+    populate(number.value, (_value) => {
+      const db = Object.assign(_value.common, _value.thailand);
+      if (!db) return;
+
+      console.log(db);
+
+      setValue(db["type_of_visa"], (_v) => personal.setValue("type-of-visa-requested", _v), true);
+      setValue(db["name_title"], (_v) => personal.setValue("name-title", _v), true);
+      setValue(db["first_name"], (_v) => personal.setValue("first-name", _v));
+      setValue(db["middle_name"], (_v) => personal.setValue("middle-name", _v));
+      setValue(db["family_name"], (_v) => personal.setValue("last-name", _v));
+      setValue(db["former_name"], (_v) => personal.setValue("former-name", _v));
+      setValue(db["nationality"], (_v) => personal.setValue("nationality", _v), true);
+      setValue(db["nationality_at_birth"], (_v) => personal.setValue("nationality-at-birth", _v), true);
+      setValue(db["birth_place"], (_v) => personal.setValue("place-of-birth", _v), true);
+      setValue(db["marital_status"], (_v) => personal.setValue("marital-status", _v), true);
+      setValue(db["date_of_birth"], (_v) => personal.setValue("date-of-birth", _v));
+      setValue(db["type_of_passport"], (_v) => personal.setValue("type-of-passport", _v), true);
+      setValue(db["passport_issued_at"], (_v) => personal.setValue("passport-issued-at", _v), true);
+      setValue(db["passport_issue_date"], (_v) => personal.setValue("passport-date-of-issue", _v));
+      setValue(db["passport_expiry_date"], (_v) => personal.setValue("passport-expire-date", _v));
+      setValue(db["occupation"], (_v) => personal.setValue("occupation", _v));
+
+      setValue(db["current_address"], (_v) => contact.setValue("current-address", _v));
+      setValue(db["phone"], (_v) => contact.setValue("telephone", _v));
+      setValue(db["permanent_address"], (_v) => contact.setValue("permanent-address", _v));
+      setValue(db["email"], (_v) => contact.setValue("email", _v));
+      setValue(db["permanent_phone"], (_v) => contact.setValue("permanent-telephone", _v));
+    });
+  }, [number.value]);
 
   return (
     <main className="container mx-auto space-y-4 p-4">
       <button
+        onClick={() => {
+          clearLocalStore();
+          navigate(-1);
+        }}
         disabled={contact.formState.isSubmitting || personal.formState.isSubmitting || purpose.formState.isSubmitting}
-        onClick={() => navigate(-1)}
         className="my-1 inline-flex items-center rounded-md border-gray-200 bg-white px-5 py-2.5 text-center text-sm font-medium text-blue-700 shadow hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-blue-300  disabled:opacity-0"
       >
         <NextIcon className="mr-2 scale-x-[-1]" />
@@ -161,10 +211,9 @@ export function Thailand() {
             autoComplete="off"
           >
             <fieldset disabled={personal.formState.isSubmitting} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              <Select
+              <AsyncSelect
                 label="Passport Number *"
                 placeholder="Select passport number"
-                options={[]}
                 control={personal.control}
                 isDisabled={personal.formState.isSubmitting}
                 name="passport-number"
@@ -300,7 +349,6 @@ export function Thailand() {
                 register={personal.register("type-of-passport", { required: "Type of passport is required" })}
                 error={personal.formState.errors["type-of-passport"]}
               />
-
 
               <Select
                 label="Passport issued at *"
@@ -455,10 +503,8 @@ export function Thailand() {
           <form name="purpose" autoComplete="off" className="space-y-4" onSubmit={purpose.handleSubmit(purposeSubmit)}>
             <fieldset disabled={purpose.formState.isSubmitting} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <Input
-                label="Date Of Previous Visit To Thailand *"
-                register={purpose.register("date-of-previous-visit", {
-                  required: "Date of previous visit to thailand is required",
-                })}
+                label="Date Of Previous Visit To Thailand"
+                register={purpose.register("date-of-previous-visit")}
                 error={purpose.formState.errors["date-of-previous-visit"]}
                 type="date"
               />
