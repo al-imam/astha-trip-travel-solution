@@ -93,7 +93,6 @@ const VisaFormColector = () => {
 
         res.json({ success: true });
       } catch (error) {
-        console.log("🚀 visa-form-controller - ", error);
         next(error);
       }
     },
@@ -186,13 +185,13 @@ const VisaFormColector = () => {
           apply_by: JSON.stringify(apply),
         });
 
-        res.send("database Insert done!");
+        if (typeof DbRes.errno === "number" || DbRes.errno) {
+          return res.status(406).json({ message: "Something went wrong" });
+        }
+
+        res.json({ success: true });
       } catch (error) {
-        console.log(
-          "🚀 ~ file: VisaFormCollector.js:5 ~ VisaFormColector ~ error:",
-          error
-        );
-        res.status(500).send(error);
+        next(error);
       }
     },
     thailand: async (req, res) => {
