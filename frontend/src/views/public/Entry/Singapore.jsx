@@ -106,6 +106,12 @@ const localParticulars = "singapore-particulars-of-applicant";
 const localOthers = "singapore-other-details";
 const localLocal = "singapore-particulars-of-local-contact";
 
+function clearLocalStore() {
+  localStorage.removeItem(localParticulars);
+  localStorage.removeItem(localOthers);
+  localStorage.removeItem(localLocal);
+}
+
 export function Singapore() {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
@@ -176,11 +182,7 @@ export function Singapore() {
     if (!serverRes) return fire();
     fire("Successfully Done!", "success");
 
-    setForm({});
-
-    localStorage.removeItem(localParticulars);
-    localStorage.removeItem(localOthers);
-    localStorage.removeItem(localLocal);
+    clearLocalStore();
     if (auth.admin) return navigate("/admin");
     navigate("/agent");
   }
@@ -234,7 +236,10 @@ export function Singapore() {
   return (
     <main className="container mx-auto space-y-4 p-4">
       <button
-        onClick={() => navigate(-1)}
+        onClick={() => {
+          navigate(-1);
+          clearLocalStore();
+        }}
         disabled={
           particularsOfApplicant.formState.isSubmitting ||
           otherDetails.formState.isSubmitting ||

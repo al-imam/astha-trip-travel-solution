@@ -85,6 +85,12 @@ const localPersonal = "thailand-personal-submit";
 const localContact = "thailand-contact-submit";
 const localPurpose = "thailand-purpose-submit";
 
+function clearLocalStore() {
+  localStorage.removeItem(localPersonal);
+  localStorage.removeItem(localContact);
+  localStorage.removeItem(localPurpose);
+}
+
 export function Thailand() {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
@@ -133,17 +139,13 @@ export function Thailand() {
   async function purposeSubmit(__D) {
     await new Promise((r) => setTimeout(r, 1000));
     const data = flattenObject(Object.assign(_, __D));
-    setForm(data);
 
     const serverRes = await axios.post("/api/visa-form/thailand", data).catch(console.log);
     if (!serverRes) return fire();
 
     fire("Successfully Done!", "success");
 
-    localStorage.removeItem(localPersonal);
-    localStorage.removeItem(localContact);
-    localStorage.removeItem(localPurpose);
-
+    clearLocalStore();
     if (auth.admin) return navigate("/admin");
     navigate("/agent");
   }
@@ -154,6 +156,8 @@ export function Thailand() {
     populate(number.value, (_value) => {
       const db = Object.assign(_value.common, _value.thailand);
       if (!db) return;
+
+      console.log(db);
 
       setValue(db["type_of_visa"], (_v) => personal.setValue("type-of-visa-requested", _v), true);
       setValue(db["name_title"], (_v) => personal.setValue("name-title", _v), true);
@@ -183,8 +187,11 @@ export function Thailand() {
   return (
     <main className="container mx-auto space-y-4 p-4">
       <button
+        onClick={() => {
+          clearLocalStore();
+          navigate(-1);
+        }}
         disabled={contact.formState.isSubmitting || personal.formState.isSubmitting || purpose.formState.isSubmitting}
-        onClick={() => navigate(-1)}
         className="my-1 inline-flex items-center rounded-md border-gray-200 bg-white px-5 py-2.5 text-center text-sm font-medium text-blue-700 shadow hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-blue-300  disabled:opacity-0"
       >
         <NextIcon className="mr-2 scale-x-[-1]" />

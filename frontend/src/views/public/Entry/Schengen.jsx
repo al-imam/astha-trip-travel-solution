@@ -4,6 +4,7 @@ import { Group, Join } from "components/form/Group";
 import { Input } from "components/form/Input";
 import { AsyncSelect, Select, SelectNotCreatable } from "components/form/Select";
 import { StepIndicator } from "components/form/StepIndicator";
+import { useAuth } from "hook/useAuth";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import useFormPersist from "react-hook-form-persist";
@@ -13,7 +14,6 @@ import countries from "../countries.json";
 import districts from "../districts.json";
 import { Spinner } from "./Spinner";
 import { fire, flattenObject, populate, setValue } from "./util";
-import { useAuth } from "hook/useAuth";
 
 const countriesOptions = countries.map((e) => ({
   label: e.name,
@@ -97,6 +97,13 @@ const localTravel = "schengen-travel-submit";
 const localContact = "schengen-contact-submit";
 const localInfo = "schengen-info-submit";
 
+function clearLocalStore() {
+  localStorage.removeItem(localContact);
+  localStorage.removeItem(localInfo);
+  localStorage.removeItem(localTravel);
+  localStorage.removeItem(localPersonal);
+}
+
 export function Schengen() {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
@@ -114,12 +121,10 @@ export function Schengen() {
   const isEuCitizen = travel.watch("have-eu-citizen") === "Yes";
   const isFingerprintsCollectedPreviously = info.watch("fingerprints-collected-previously") === "Yes";
 
-  /* 
   useFormPersist(localPersonal, {
     watch: personal.watch,
     setValue: personal.setValue,
     storage: window.localStorage,
-    exclude: ["passport-number"],
   });
 
   useFormPersist(localTravel, {
@@ -139,7 +144,7 @@ export function Schengen() {
     setValue: info.setValue,
     storage: window.localStorage,
   });
- */
+
   function personalSubmit(data) {
     setForm((prev) => Object.assign(prev, flattenObject(data)));
     setStep(2);
@@ -164,10 +169,7 @@ export function Schengen() {
     fire("Successfully Done!", "success");
 
     setForm({});
-    localStorage.removeItem(localContact);
-    localStorage.removeItem(localInfo);
-    localStorage.removeItem(localTravel);
-    localStorage.removeItem(localPersonal);
+    clearLocalStore();
     if (auth.admin) return navigate("/admin");
     navigate("/agent");
   }
@@ -232,7 +234,10 @@ export function Schengen() {
           info.formState.isSubmitting ||
           contact.formState.isSubmitting
         }
-        onClick={() => navigate(-1)}
+        onClick={() => {
+          navigate(-1);
+          clearLocalStore();
+        }}
         className="my-1 inline-flex items-center rounded-md border-gray-200 bg-white px-5 py-2.5 text-center text-sm font-medium text-blue-700 shadow hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:opacity-0"
       >
         <NextIcon className="mr-2 scale-x-[-1]" />
