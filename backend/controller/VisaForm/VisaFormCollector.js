@@ -25,6 +25,7 @@ const VisaFormColector = () => {
         const resDb = await Schengen.Add({
           surname: body["surname"],
           first_name: body["first-name"],
+          surname_at_birth: body["first-name"],
           date_of_birth: body["date-of-birth"],
           place_of_birth: body["place-of-birth"],
           country_of_birth: body["country-of-birth"],
@@ -95,11 +96,10 @@ const VisaFormColector = () => {
 
         res.json({ success: true });
       } catch (error) {
-        console.log("🚀 visa-form-controller - ", error);
         next(error);
       }
     },
-    singapore: async (req, res) => {
+    singapore: async (req, res, next) => {
       let apply = {};
       if (req.User.Admin) {
         apply = {
@@ -187,23 +187,24 @@ const VisaFormColector = () => {
           status: "pending",
           apply_by: JSON.stringify(apply),
         });
+        
 
+        if (typeof DbRes.errno === "number" || DbRes.errno) {
+          return res.status(406).json({ message: "Something went wrong" });
+        }
+        
         if (body.reference) {
           const Loi_res = await LOI_DATA.findByIdAndUpdate(body.reference, {
             visa_application: DbRes.insertId,
           });
         }
 
-        res.send("database Insert done!");
+        res.json({ success: true });
       } catch (error) {
-        console.log(
-          "🚀 ~ file: VisaFormCollector.js:5 ~ VisaFormColector ~ error:",
-          error
-        );
-        res.status(500).send(error);
+        next(error);
       }
     },
-    thailand: async (req, res) => {
+    thailand: async (req, res, next) => {
       let apply = {};
       if (req.User.Admin) {
         apply = {
@@ -220,7 +221,7 @@ const VisaFormColector = () => {
       try {
         const { body } = req;
 
-        const DbRe = await Thailand.Add({
+        const dbRes = await Thailand.Add({
           type_of_visa: body["type-of-visa-requested"],
           name_title: body["name-title"],
           first_name: body["first-name"],
@@ -266,13 +267,13 @@ const VisaFormColector = () => {
           apply_by: JSON.stringify(apply),
         });
 
-        res.send("database Insert done!");
+        if (typeof dbRes.errno === "number" || dbRes.errno) {
+          return res.status(406).json({ message: "Something went wrong" });
+        }
+
+        res.json({ success: true });
       } catch (error) {
-        console.log(
-          "🚀 ~ file: VisaFormCollector.js:5 ~ VisaFormColector ~ error:",
-          error
-        );
-        res.status(500).send(error);
+        next(error);
       }
     },
   };
