@@ -18,6 +18,8 @@ import { fire, flattenObject, populate, setValue } from "./util";
 import axios from "axios";
 import { useAuth } from "hook/useAuth";
 import { AsyncSelect } from "components/form/Select";
+import { useSearchParams } from "react-router-dom";
+
 
 const religionOptions = ["Islam", "Christianity", "Hinduism", "Buddhism", "Sikhism", "Spiritism", "Judaism"].map(
   (value) => ({
@@ -114,6 +116,7 @@ function clearLocalStore() {
 
 export function Singapore() {
   const navigate = useNavigate();
+  const [url] = useSearchParams();
   const [step, setStep] = useState(1);
   const [_, setForm] = useState({});
   const [livedOtherCountries, setLivedOtherCountries] = useState([]);
@@ -176,7 +179,8 @@ export function Singapore() {
   }
 
   async function particularsOfLocalContactSubmit(__d) {
-    const data = flattenObject(Object.assign(_, __d));
+    const data = flattenObject(Object.assign(_, Object.assign(__d, { reference: url.get("ref") })));
+    setForm(data);
 
     const serverRes = await axios.post("/api/visa-form/singapore", data).catch(console.log);
     if (!serverRes) return fire();

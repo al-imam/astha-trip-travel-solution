@@ -1,6 +1,7 @@
 const Schengen = require("../../model/Schengen");
 const Singapore = require("../../model/Singapore");
 const Thailand = require("../../model/Thailand");
+const LOI_DATA = require("../../model/LOI");
 
 const VisaFormColector = () => {
   return {
@@ -184,9 +185,16 @@ const VisaFormColector = () => {
           status: "pending",
           apply_by: JSON.stringify(apply),
         });
+        
 
         if (typeof DbRes.errno === "number" || DbRes.errno) {
           return res.status(406).json({ message: "Something went wrong" });
+        }
+        
+        if (body.reference) {
+          const Loi_res = await LOI_DATA.findByIdAndUpdate(body.reference, {
+            visa_application: DbRes.insertId,
+          });
         }
 
         res.json({ success: true });

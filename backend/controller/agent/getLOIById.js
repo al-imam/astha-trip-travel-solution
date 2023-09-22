@@ -4,7 +4,7 @@ async function getLOIById(req, res, next) {
   try {
     const con = JSON.stringify({ type: "agent", username: req.AGENT.email });
 
-    const [dbRes] = await LOI.RayQuery(`
+    const [dbRes] = await LOI.RawQuery(`
     SELECT * FROM loi_data WHERE agent='${con.replace("\n", "")}'
     `);
 
