@@ -193,7 +193,7 @@ export function Singapore() {
     if (number.__isNew__ || !number.value) return;
 
     populate(number.value, (_value) => {
-      const db = _value.singapore;
+      const db = Object.assign(_value.common, _value.singapore);
       if (!db) return;
 
       const setStepOne = particularsOfApplicant.setValue;

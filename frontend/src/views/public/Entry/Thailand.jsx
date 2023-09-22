@@ -152,7 +152,7 @@ export function Thailand() {
     if (number.__isNew__ || !number.value) return;
 
     populate(number.value, (_value) => {
-      const db = _value.thailand;
+      const db = Object.assign(_value.common, _value.thailand);
       if (!db) return;
 
       setValue(db["type_of_visa"], (_v) => personal.setValue("type-of-visa-requested", _v), true);

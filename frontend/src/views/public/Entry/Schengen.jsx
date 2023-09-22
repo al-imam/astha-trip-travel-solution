@@ -176,7 +176,7 @@ export function Schengen() {
     if (number.__isNew__ || !number.value) return;
 
     populate(number.value, (_value) => {
-      const db = _value.schengen;
+      const db = Object.assign(_value.common, _value.schengen);
       if (!db) return;
 
       setValue(db["surname"], (_v) => personal.setValue("surname", _v));
