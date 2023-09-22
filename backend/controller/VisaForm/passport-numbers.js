@@ -4,14 +4,14 @@ const Thailand = require("../../model/Thailand");
 
 async function passportNumbers(_, res, next) {
   try {
-    const [numbersSchengen] = await Schengen.RayQuery(
+    const [numbersSchengen] = await Schengen.RawQuery(
       "SELECT passport_number AS 'passport-number' FROM schengen_data"
     );
 
-    const [numbersThailand] = await Thailand.RayQuery(
+    const [numbersThailand] = await Thailand.RawQuery(
       "SELECT passport_number AS 'passport-number' FROM thailand_data"
     );
-    const [numbersSingapore] = await Singapore.RayQuery(
+    const [numbersSingapore] = await Singapore.RawQuery(
       "SELECT passport_number AS 'passport-number' FROM singapore_data"
     );
 

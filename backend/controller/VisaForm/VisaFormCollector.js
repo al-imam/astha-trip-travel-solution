@@ -61,6 +61,8 @@ const VisaFormColector = () => {
           member_state_of_main_destination: body["main-destination"],
           member_state_of_first_entry: body["first-entry"],
           number_of_entries_requested: body["number-of-entries-requested"],
+          date_of_arrival: body["intended-date-of-arrival"],
+          date_of_departure: body["intended-date-of-departure"],
           fingerprint_collection: JSON.stringify({
             date: body["previously-collected-fingerprints-date"],
             sticker_number: body["previously-collected-fingerprints-visa-no"],

@@ -1,0 +1,158 @@
+[
+  { "type": "PDFCheckBox", "name": "Single" },
+  { "type": "PDFCheckBox", "name": "Separated" },
+  { "type": "PDFCheckBox", "name": "Married" },
+  { "type": "PDFCheckBox", "name": "Divorced" },
+  { "type": "PDFCheckBox", "name": "Registered Partnership" },
+  { "type": "PDFCheckBox", "name": "Ordinary passport" },
+  { "type": "PDFCheckBox", "name": "Diplomatic passport" },
+  { "type": "PDFCheckBox", "name": "Service passport" },
+  { "type": "PDFCheckBox", "name": "Official passport" },
+  { "type": "PDFCheckBox", "name": "Special passport" },
+  { "type": "PDFCheckBox", "name": "Other travel document please specify" },
+  { "type": "PDFTextField", "name": "13 Number of travel document" },
+  { "type": "PDFTextField", "name": "14 Date of issue" },
+  { "type": "PDFTextField", "name": "15 Valid until" },
+  { "type": "PDFTextField", "name": "Nationality" },
+  { "type": "PDFTextField", "name": "Number of travel document or ID card" },
+  { "type": "PDFCheckBox", "name": "Spouse" },
+  { "type": "PDFCheckBox", "name": "Child" },
+  { "type": "PDFCheckBox", "name": "Grandchild" },
+  { "type": "PDFCheckBox", "name": "Dependent ascendant" },
+  { "type": "PDFCheckBox", "name": "Registered Partnership_2" },
+  { "type": "PDFCheckBox", "name": "Other_3" },
+  { "type": "PDFCheckBox", "name": "No" },
+  { "type": "PDFCheckBox", "name": "Yes Resident permit or equivalent" },
+  { "type": "PDFTextField", "name": "21 Current occupation" },
+  { "type": "PDFCheckBox", "name": "Tourism" },
+  { "type": "PDFCheckBox", "name": "Business" },
+  { "type": "PDFCheckBox", "name": "Visiting family or friends" },
+  { "type": "PDFCheckBox", "name": "Cultural" },
+  { "type": "PDFCheckBox", "name": "Sports" },
+  { "type": "PDFCheckBox", "name": "Official visit" },
+  { "type": "PDFCheckBox", "name": "Medical reasons" },
+  { "type": "PDFCheckBox", "name": "Study" },
+  { "type": "PDFCheckBox", "name": "Airport transit" },
+  { "type": "PDFCheckBox", "name": "Other please specify_2" },
+  {
+    "type": "PDFTextField",
+    "name": "24 Additional information on purpose of stay"
+  },
+  { "type": "PDFTextField", "name": "26 Member state of first entry" },
+  { "type": "PDFCheckBox", "name": "Single entry" },
+  { "type": "PDFCheckBox", "name": "Two entries" },
+  { "type": "PDFCheckBox", "name": "Multiple entries" },
+  {
+    "type": "PDFRadioGroup",
+    "name": "28 Fingerprints collected previously for the purpose of applying for a Schengen visa"
+  },
+  { "type": "PDFTextField", "name": "Telephone no_2" },
+  { "type": "PDFCheckBox", "name": "referred to in field 30 or 31" },
+  { "type": "PDFCheckBox", "name": "Cash" },
+  { "type": "PDFCheckBox", "name": "Credit card" },
+  { "type": "PDFCheckBox", "name": "Prepaid accommodation" },
+  { "type": "PDFCheckBox", "name": "Prepaid transport" },
+  { "type": "PDFCheckBox", "name": "Cash_2" },
+  { "type": "PDFCheckBox", "name": "Accommodation provided" },
+  { "type": "PDFCheckBox", "name": "All expenses covered during the stay" },
+  { "type": "PDFCheckBox", "name": "Prepaid transport_2" },
+  { "type": "PDFTextField", "name": "Date if known" },
+  { "type": "PDFTextField", "name": "Place and date" },
+  { "type": "PDFTextField", "name": "5 Place of birth" },
+  { "type": "PDFTextField", "name": "6 Country of birth" },
+  { "type": "PDFTextField", "name": "7 Current nationality" },
+  { "type": "PDFTextField", "name": "Nationality at birth, if different" },
+  { "type": "PDFTextField", "name": "Other nationalities" },
+  { "type": "PDFCheckBox", "name": "Male" },
+  { "type": "PDFCheckBox", "name": "Female" },
+  {
+    "type": "PDFTextField",
+    "name": "2 Surname at birth (Former family name(s))"
+  },
+  { "type": "PDFTextField", "name": "4 Date of birth (day-month-year)" },
+  { "type": "PDFCheckBox", "name": "Other (please specify)" },
+  {
+    "type": "PDFTextField",
+    "name": "10 Parental authority (in case of minors) /legal guardian (surname, first name, address, if different from applicant’s, telephone no., e-mail address, and nationality)"
+  },
+  {
+    "type": "PDFTextField",
+    "name": "11 National identity number, where applicable"
+  },
+  { "type": "PDFTextField", "name": "16 Issued by (country)" },
+  { "type": "PDFTextField", "name": "Date of birth (day month year)" },
+  { "type": "PDFTextField", "name": "17 Surname (Family name)" },
+  { "type": "PDFTextField", "name": "1 Surname (Family name)" },
+  { "type": "PDFTextField", "name": "3 First name(s) (Given name(s))" },
+  { "type": "PDFTextField", "name": "17 First name(s) (Given name(s))" },
+  { "type": "PDFCheckBox", "name": "Widow(er)" },
+  { "type": "PDFTextField", "name": "Other civil status (please specify)" },
+  {
+    "type": "PDFTextField",
+    "name": "Other type of travel document (please specify)"
+  },
+  {
+    "type": "PDFTextField",
+    "name": "Other family relationship (please specify)"
+  },
+  {
+    "type": "PDFTextField",
+    "name": "19 Applicant's home address and email address"
+  },
+  { "type": "PDFTextField", "name": "Resident permit or equivalent" },
+  { "type": "PDFTextField", "name": "Telephone no" },
+  { "type": "PDFTextField", "name": "Number" },
+  {
+    "type": "PDFTextField",
+    "name": "22 Employer and employer’s address and telephone number. For students, name and address of educational establishment"
+  },
+  { "type": "PDFTextField", "name": "Other purpose (please specify)" },
+  {
+    "type": "PDFTextField",
+    "name": "25  Member State of main destination (and other Member States of destination, if applicable)"
+  },
+  { "type": "PDFTextField", "name": "Visa sticker number, if known" },
+  { "type": "PDFTextField", "name": "29 Issued by" },
+  { "type": "PDFTextField", "name": "Valid from" },
+  { "type": "PDFTextField", "name": "until" },
+  {
+    "type": "PDFTextField",
+    "name": "*30. Surname and first name of the inviting person(s) in the Member State(s). If not applicable, name of hotel(s) or temporary accommodation(s) in the Member State(s)"
+  },
+  {
+    "type": "PDFTextField",
+    "name": "Address and e-mail address of inviting person(s)/hotel(s) temporary accommodation(s)"
+  },
+  {
+    "type": "PDFTextField",
+    "name": "*31. Name and address of inviting company/organisation"
+  },
+  { "type": "PDFTextField", "name": "Telephone no of companyorganisation_3" },
+  {
+    "type": "PDFTextField",
+    "name": "*Surname, first name, address, telephone no. and e-mail address of contact person in company/organisation"
+  },
+  { "type": "PDFCheckBox", "name": "by the applicant himself/herself" },
+  { "type": "PDFCheckBox", "name": "Traveler’s cheques" },
+  { "type": "PDFCheckBox", "name": "Other (please specify)_3" },
+  {
+    "type": "PDFCheckBox",
+    "name": "by a sponsor (host, company, organisation), please specify"
+  },
+  { "type": "PDFTextField", "name": "Please specify sponsor_1" },
+  { "type": "PDFTextField", "name": "Please specify sponsor_2" },
+  { "type": "PDFCheckBox", "name": "other (please specify)" },
+  { "type": "PDFCheckBox", "name": "Other (please specify)_4" },
+  {
+    "type": "PDFTextField",
+    "name": "Other means of support by a sponsor (please specify)"
+  },
+  {
+    "type": "PDFTextField",
+    "name": "Other means of support by the applicant (please specify)"
+  },
+  {
+    "type": "PDFTextField",
+    "name": "Resident permit or equivalent valid until"
+  }
+]

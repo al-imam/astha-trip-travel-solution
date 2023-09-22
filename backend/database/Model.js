@@ -140,7 +140,6 @@ class Model {
       const DB = await DataBase();
       const query = `SELECT * FROM ${this.name} WHERE ${q}`;
 
-      console.log(query);
       const sql = await DB.execute(query);
       return sql[0];
     } catch (error) {
