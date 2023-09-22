@@ -4,7 +4,7 @@ import { Input } from "components/form/Input";
 import { Radio } from "components/form/Radio";
 import { Select, SelectNotCreatable } from "components/form/Select";
 import { StepIndicator } from "components/form/StepIndicator";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import useFormPersist from "react-hook-form-persist";
 import { useNavigate } from "react-router-dom";
@@ -14,8 +14,10 @@ import races from "../races.json";
 import { AddIcon, DeleteIcon } from "./MainEntry";
 import { NextIcon } from "./Schengen";
 import { Spinner } from "./Spinner";
-import { fire, flattenObject } from "./util";
+import { fire, flattenObject, populate, setValue } from "./util";
 import axios from "axios";
+import { useAuth } from "hook/useAuth";
+import { AsyncSelect } from "components/form/Select";
 
 const religionOptions = ["Islam", "Christianity", "Hinduism", "Buddhism", "Sikhism", "Spiritism", "Judaism"].map(
   (value) => ({
@@ -100,16 +102,24 @@ const stayLocationOptions = ["Next of Kin's Place", "Relative's Place", "Friend'
 
 const steps = ["", "", ""];
 
+const localParticulars = "singapore-particulars-of-applicant";
+const localOthers = "singapore-other-details";
+const localLocal = "singapore-particulars-of-local-contact";
+
 export function Singapore() {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [_, setForm] = useState({});
   const [livedOtherCountries, setLivedOtherCountries] = useState([]);
 
+  const auth = useAuth();
+
   const particularsOfApplicant = useForm();
   const otherDetails = useForm();
   const countryForm = useForm();
   const particularsOfLocalContact = useForm();
+
+  const number = particularsOfApplicant.watch("passport-no") || {};
 
   const citizenshipOfSpouse = particularsOfApplicant.watch("citizenship-of-spouse");
   const answers = particularsOfLocalContact.watch(["a", "b", "c", "d"]);
@@ -121,19 +131,19 @@ export function Singapore() {
     (c) => citizenshipOfSpouse && c.value === citizenshipOfSpouse.value
   );
 
-  const clearParticulars = useFormPersist("singapore-particulars-of-applicant", {
+  useFormPersist(localParticulars, {
     watch: particularsOfApplicant.watch,
     setValue: particularsOfApplicant.setValue,
     storage: window.localStorage,
   });
 
-  const clearOthers = useFormPersist("singapore-other-details", {
+  useFormPersist(localOthers, {
     watch: otherDetails.watch,
     setValue: otherDetails.setValue,
     storage: window.localStorage,
   });
 
-  const clearLocal = useFormPersist("singapore-particulars-of-local-contact", {
+  useFormPersist(localLocal, {
     watch: particularsOfLocalContact.watch,
     setValue: particularsOfLocalContact.setValue,
     storage: window.localStorage,
@@ -160,25 +170,66 @@ export function Singapore() {
   }
 
   async function particularsOfLocalContactSubmit(__d) {
-    await new Promise((r) => setTimeout(r, 5000));
     const data = flattenObject(Object.assign(_, __d));
-    setForm(data);
-    // console.log(data);
 
     const serverRes = await axios.post("/api/visa-form/singapore", data).catch(console.log);
     if (!serverRes) return fire();
     fire("Successfully Done!", "success");
 
-    /* 
-    clearLocal.clear();
-    clearOthers.clear();
-    clearParticulars.clear();
-    */
+    setForm({});
+
+    localStorage.removeItem(localParticulars);
+    localStorage.removeItem(localOthers);
+    localStorage.removeItem(localLocal);
+    if (auth.admin) return navigate("/admin");
+    navigate("/agent");
   }
 
   function stopSubmitting(event) {
     if (event.key === "Enter") event.preventDefault();
   }
+
+  useEffect(() => {
+    if (number.__isNew__ || !number.value) return;
+
+    populate(number.value, (_value) => {
+      const db = _value.singapore;
+      if (!db) return;
+
+      const setStepOne = particularsOfApplicant.setValue;
+      const setStepTwo = otherDetails.setValue;
+
+      setValue(db["name"], (_v) => setStepOne("name", _v));
+      setValue(db["alias"], (_v) => setStepOne("alias", _v));
+      setValue(db["date_of_birth"], (_v) => setStepOne("date-of-birth", _v));
+      setValue(db["sex"], (_v) => setStepOne("sex", _v), true);
+      setValue(db["marital_status"], (_v) => setStepOne("marital-status", _v), true);
+      setValue(db["nationality"], (_v) => setStepOne("nationality", _v), true);
+      setValue(db["citizenship"], (_v) => setStepOne("citizenship-of-spouse", _v), true);
+      setValue(db["nric"], (_v) => setStepOne("nric-no", _v));
+      setValue(db["country_place_of_birth"], (_v) => setStepOne("country-of-birth", _v), true);
+      setValue(db["state_place_of_birth"], (_v) => setStepOne("state-of-birth", _v), true);
+      setValue(db["race"], (_v) => setStepOne("race", _v), true);
+      setValue(db["type_of_passport"], (_v) => setStepOne("type-of-passport", _v), true);
+      setValue(db["passport_issue_date"], (_v) => setStepOne("passport-issue-date", _v));
+      setValue(db["passport_expire_date"], (_v) => setStepOne("passport-expiry-date", _v));
+      setValue(db["passport_issue_country"], (_v) => setStepOne("country-of-issue", _v));
+      setValue(db["prc_id_number"], (_v) => setStepOne("prc-id-number", _v));
+      setValue(db["residence_country"], (_v) => setStepOne("residence", _v), true);
+      setValue(db["residence_state"], (_v) => setStepOne("state-of-residence", _v), true);
+      setValue(db["residence_origin"], (_v) => setStepOne("prefecture-of-residence", _v));
+      setValue(db["residence_address"], (_v) => setStepOne("address", _v));
+
+      setValue(db["email"], (_v) => setStepTwo("email-address", _v));
+      setValue(db["contact_number"], (_v) => setStepTwo("contact-number", _v));
+      setValue(db["occupation"], (_v) => setStepTwo("occupation", _v));
+      setValue(db["high_academic"], (_v) => setStepTwo("highest-academic", _v), true);
+      setValue(db["qualifications_attained"], (_v) => setStepTwo("qualifications-attained", _v), true);
+      setValue(db["annual_income"], (_v) => setStepTwo("annual-income", _v));
+      setValue(db["religion"], (_v) => setStepTwo("religion", _v), true);
+      setValue(db["type_of_visa"], (_v) => setStepTwo("type-of-visa", _v), true);
+    });
+  }, [number.value]);
 
   return (
     <main className="container mx-auto space-y-4 p-4">
@@ -212,6 +263,16 @@ export function Singapore() {
               disabled={particularsOfApplicant.formState.isSubmitting}
               className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
             >
+              <AsyncSelect
+                label="Passport Number *"
+                placeholder="Select passport number"
+                control={particularsOfApplicant.control}
+                isDisabled={particularsOfApplicant.formState.isSubmitting}
+                name="passport-no"
+                register={particularsOfApplicant.register("passport-no", { required: "Passport number is required" })}
+                error={particularsOfApplicant.formState.errors["passport-no"]}
+              />
+
               <Input
                 label="Name (Full Name As Shown In Travel Document) *"
                 placeholder="Name"
@@ -350,15 +411,6 @@ export function Singapore() {
                   required: "Type of passport is required",
                 })}
                 error={particularsOfApplicant.formState.errors["type-of-passport"]}
-              />
-
-              <Input
-                label="Passport No *"
-                register={particularsOfApplicant.register("passport-no", {
-                  required: "Passport no is required",
-                  maxLength: { value: 15, message: "Exceeds 15 character limit" },
-                })}
-                error={particularsOfApplicant.formState.errors["passport-no"]}
               />
 
               <Input
