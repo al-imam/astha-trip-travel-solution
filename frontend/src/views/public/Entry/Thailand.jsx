@@ -13,6 +13,8 @@ import countries from "../countries.json";
 import districts from "../districts.json";
 import { fire, flattenObject, getNumberSelect } from "./util";
 import { Spinner } from "./Spinner";
+import { AsyncSelect } from "components/form/Select";
+import { useAuth } from "hook/useAuth";
 
 const placeOfBirthOptions = districts.map((value) => ({
   label: value,
@@ -79,10 +81,16 @@ const validCountryOptions = ["ALL COUNTRIES OF THE WORLD EXCEPT ISRAIL"].map((va
 
 const steps = ["", "", ""];
 
+const localPersonal = "thailand-personal-submit";
+const localContact = "thailand-contact-submit";
+const localPurpose = "thailand-purpose-submit";
+
 export function Thailand() {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [_, setForm] = useState({});
+
+  const auth = useAuth();
 
   const personal = useForm();
   const contact = useForm();
@@ -92,19 +100,19 @@ export function Thailand() {
     purpose.setValue("countries-for-which-travel-document-is-valid", validCountryOptions[0]);
   }, []);
 
-  const cleanPersonal = useFormPersist("thailand-personal-submit", {
+  useFormPersist(localPersonal, {
     watch: personal.watch,
     setValue: personal.setValue,
     storage: window.localStorage,
   });
 
-  const cleanContact = useFormPersist("thailand-contact-submit", {
+  useFormPersist(localContact, {
     watch: contact.watch,
     setValue: contact.setValue,
     storage: window.localStorage,
   });
 
-  const cleanPurpose = useFormPersist("thailand-purpose-submit", {
+  useFormPersist(localPurpose, {
     watch: purpose.watch,
     setValue: purpose.setValue,
     storage: window.localStorage,
@@ -130,11 +138,12 @@ export function Thailand() {
 
     fire("Successfully Done!", "success");
 
-    /* 
-    cleanContact.clear();
-    cleanPersonal.clear();
-    cleanPurpose.clear();
-    */
+    localStorage.removeItem(localPersonal);
+    localStorage.removeItem(localContact);
+    localStorage.removeItem(localPurpose);
+
+    if (auth.admin) return navigate("/admin");
+    navigate("/agent");
   }
 
   return (
@@ -161,10 +170,9 @@ export function Thailand() {
             autoComplete="off"
           >
             <fieldset disabled={personal.formState.isSubmitting} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              <Select
+              <AsyncSelect
                 label="Passport Number *"
                 placeholder="Select passport number"
-                options={[]}
                 control={personal.control}
                 isDisabled={personal.formState.isSubmitting}
                 name="passport-number"
@@ -300,7 +308,6 @@ export function Thailand() {
                 register={personal.register("type-of-passport", { required: "Type of passport is required" })}
                 error={personal.formState.errors["type-of-passport"]}
               />
-
 
               <Select
                 label="Passport issued at *"
