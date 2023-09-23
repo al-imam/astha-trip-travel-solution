@@ -1,4 +1,5 @@
 const SCHENGEN_DATABASE = require("../../model/Schengen");
+const LOI_DATABASE = require("../../model/LOI");
 const { PDFDocument } = require("pdf-lib");
 const { readFile, writeFile } = require("fs/promises");
 const FormHelper = require("./Helper/Function");
@@ -16,6 +17,16 @@ const GenerateSchengen = async (id) => {
     // check is data is exist on the database
     if (!response) {
       throw "Provided ID has no relevant data";
+    }
+
+    if (response.status !== "approved") {
+      const [responseLOI] = await LOI_DATABASE.find({ visa_application: id });
+      if (!responseLOI) {
+        throw "This request are not approved by the Admin";
+      }
+      if (responseLOI.status !== "approved") {
+        throw "This LOI are not approved by the Admin";
+      }
     }
 
     const formUrl = await readFile(
@@ -538,16 +549,63 @@ const GenerateSchengen = async (id) => {
         value: response["contact_person_of_inviting_company"],
         font: 7,
       },
+      {
+        type: "PDFCheckBox",
+        name: "by the applicant himself/herself",
+        value:
+          JSON.parse(response["cost_of_travel_and_living"]).indexOf(
+            "by the applicant himself/herself Means of support"
+          ) !== -1,
+      },
+      {
+        type: "PDFCheckBox",
+        name: "Traveler’s cheques",
+        value:
+          JSON.parse(response["cost_of_travel_and_living"]).indexOf(
+            "Traveler's cheques"
+          ) !== -1,
+      },
+      {
+        type: "PDFCheckBox",
+        name: "Cash",
+        value:
+          JSON.parse(response["cost_of_travel_and_living"]).indexOf("Cash") !==
+          -1,
+      },
+      {
+        type: "PDFCheckBox",
+        name: "Credit card",
+        value:
+          JSON.parse(response["cost_of_travel_and_living"]).indexOf(
+            "Credit card"
+          ) !== -1,
+      },
+      {
+        type: "PDFCheckBox",
+        name: "Prepaid accommodation",
+        value:
+          JSON.parse(response["cost_of_travel_and_living"]).indexOf(
+            "Prepaid accommodation"
+          ) !== -1,
+      },
+      {
+        type: "PDFCheckBox",
+        name: "Prepaid transport",
+        value:
+          JSON.parse(response["cost_of_travel_and_living"]).indexOf(
+            "Prepaid transport"
+          ) !== -1,
+      },
     ]);
 
     form.flatten();
     const pdfByt = await pdfDoc.save();
-
-    await writeFile("./pdfs.pdf", pdfByt);
-
-    return "pdf save ";
+    return { file: pdfByt, name: response["first_name"] };
+    // console.log("pdf save");
+    // await writeFile("./pdfs.pdf", pdfByt);
+    // return "pdf save ";
   } catch (error) {
-    return error;
+    throw new Error(error);
   }
 };
 

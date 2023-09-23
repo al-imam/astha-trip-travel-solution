@@ -78,12 +78,17 @@ function TotalInfo() {
               </div>
               <div className="relative w-full ">
                 {openGuest.visa_application ? (
-                  <button className="float-right mt-2 flex items-center rounded-xl bg-brand-600 py-3 px-5 font-bold text-white transition-all  duration-300 hover:scale-105 hover:shadow-xl active:scale-95">
+                  <a
+                    href={`/api/visa-form/download-form-pdf-schengen/${openGuest.visa_application}`}
+                    target="_blank"
+                    className="float-right mt-2 flex items-center rounded-xl bg-brand-600 py-3 px-5 font-bold text-white transition-all  duration-300 hover:scale-105 hover:shadow-xl active:scale-95"
+                    rel="noreferrer"
+                  >
                     <span className="pr-2 text-2xl">
                       <LineMdDownloadOutlineLoop />
                     </span>
                     Download Visa Application Form
-                  </button>
+                  </a>
                 ) : (
                   <Link
                     to={`/entry/${openGuest.country.toLowerCase()}?ref=${openGuest.id}`}

@@ -10,6 +10,7 @@ const GetByPassport = require("../controller/VisaForm/GetByPassport");
 const GetForm = require("../controller/VisaForm/GetForm");
 const Approved = require("../controller/VisaForm/Approved");
 const passportNumbers = require("../controller/VisaForm/passport-numbers");
+const GeneratePDF = require("../controller/VisaForm/GenaratePDF");
 
 VisaFormRouter.post("/schengen", isAuthenticate, VisaFormColector().schengen);
 VisaFormRouter.post("/singapore", isAuthenticate, VisaFormColector().singapore);
@@ -30,6 +31,11 @@ VisaFormRouter.get(
   "/get-by-passport/:passport",
   isAuthenticate,
   GetForm().get_by_passport
+);
+VisaFormRouter.get(
+  "/download-form-pdf-schengen/:id",
+  isAuthenticate,
+  GeneratePDF().Gen_Schengen
 );
 
 VisaFormRouter.get("/passport-numbers", isAuthenticate, passportNumbers);
