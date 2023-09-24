@@ -40,7 +40,7 @@ async function getAgentByEmailAndDate(req, res, next) {
       timeQuery(dateBefore, dateAfter)
     )}`;
 
-    const [dbRes] = await LOI.RayQuery(query);
+    const [dbRes] = await LOI.RawQuery(query);
 
     res.json(dbRes);
   } catch (error) {

@@ -353,7 +353,7 @@ class Model {
   }
 
   // raw sql input
-  async RayQuery(sql) {
+  async RawQuery(sql) {
     try {
       // chack is table exist if not then add the table
       if (!(await chackTable(this.name))) {
@@ -366,7 +366,7 @@ class Model {
       const DB = await DataBase();
       return DB.execute(sql);
     } catch (error) {
-      console.log("🚀 ~ file: Model.js:214 ~ Model ~ RayQuery ~ error:", error);
+      console.log("🚀 ~ file: Model.js:214 ~ Model ~ RawQuery ~ error:", error);
 
       return error;
     }
