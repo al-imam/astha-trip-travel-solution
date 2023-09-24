@@ -116,6 +116,7 @@ export function MainEntry() {
   const guestType = guest.watch("guest-type");
   const hotelName = guest.watch("hotel-name");
   const guestNumber = guest.watch("guest-number");
+  const country = guest.watch("country") ?? {};
   const numberOfGuest = getNumberByType(guestNumber?.value, guestType?.value);
 
   const disableGlobalInputs = allGuest.length > 0;
@@ -157,6 +158,7 @@ export function MainEntry() {
     form.append("imgvisa", data["visa-copy"][0]);
     form.append("hotel", data["hotel-copy"][0]);
     form.append("ticket", data["ticket-copy"][0]);
+    country.value && form.append("passport-size-photo", data["passport-size-photo"][0]);
 
     try {
       const res = await toast.promise(axios.post("/temp/guestlist/photoupload", form), {
@@ -185,6 +187,7 @@ export function MainEntry() {
           visaPhoto: res.data.visa.name || null,
           hotelbooking: res.data.hotelbooking.name || null,
           ticket: res.data.tiket.name || null,
+          passportSizePhoto: res.data?.passportSizePhoto?.name || null,
           country: data["country"].value,
           tourPurpose: data["tour-purpose"].value,
           id: uuid(),
@@ -262,7 +265,6 @@ export function MainEntry() {
         </button>
         {!auth.isLoading && auth.agent && (
           <div className="ml-auto grid grid-cols-[1fr_auto_auto] text-base text-gray-800 [column-gap:0.5rem]">
-            {console.log(auth.agent)}
             <span>Remaining Balance</span> - <span>{auth.agent.balance}</span>
             <span>Submission Rate</span> - <span>{auth.agent.rate}</span>
           </div>
@@ -296,7 +298,7 @@ export function MainEntry() {
             />
 
             <Input
-              label="Passport number *"
+              label="Passport Number *"
               placeholder="Passport number"
               register={guest.register("passport-number", {
                 required: "Passport number is required",
@@ -311,7 +313,7 @@ export function MainEntry() {
 
             <div className="flex gap-4 [&>*]:flex-1">
               <SelectNotCreatable
-                label="Guest type *"
+                label="Guest Type *"
                 options={guestTypeOptions}
                 placeholder="Select guest type"
                 control={guest.control}
@@ -337,7 +339,7 @@ export function MainEntry() {
             </div>
 
             <Input
-              label="Travel date *"
+              label="Travel Date *"
               disabled={disableGlobalInputs}
               register={guest.register("travel-date", { required: "Travel date is required" })}
               error={guest.formState.errors["travel-date"]}
@@ -345,7 +347,7 @@ export function MainEntry() {
             />
 
             <Select
-              label="Hotel name *"
+              label="Hotel Name *"
               options={hotelNameOptions}
               control={guest.control}
               isDisabled={disableGlobalInputs}
@@ -356,7 +358,7 @@ export function MainEntry() {
             />
 
             <Select
-              label="Purpose of tour *"
+              label="Purpose Of Tour *"
               options={purposeOfTourOptions}
               control={guest.control}
               isDisabled={disableGlobalInputs}
@@ -367,7 +369,7 @@ export function MainEntry() {
             />
 
             <Input
-              label="Passport copy (image, pdf) *"
+              label="Passport Copy (Image, Pdf) *"
               register={guest.register("passport-copy", {
                 required: "Passport copy is required",
               })}
@@ -378,7 +380,7 @@ export function MainEntry() {
             />
 
             <Input
-              label="Visa copy (image, pdf) *"
+              label="Visa Copy (Image, Pdf) *"
               register={guest.register("visa-copy", {
                 required: "Visa copy is required",
               })}
@@ -389,7 +391,7 @@ export function MainEntry() {
             />
 
             <Input
-              label="Hotel booking copy (image, pdf) *"
+              label="Hotel Booking Copy (Image, Pdf) *"
               register={guest.register("hotel-copy", {
                 required: "Hotel copy is required",
               })}
@@ -400,7 +402,7 @@ export function MainEntry() {
             />
 
             <Input
-              label="Ticket copy (image, pdf) *"
+              label="Ticket Copy (Image, Pdf) *"
               register={guest.register("ticket-copy", {
                 required: "Ticket copy is required",
               })}
@@ -409,6 +411,19 @@ export function MainEntry() {
               accept=".pdf, .jpg, .jpeg"
               multiple={false}
             />
+
+            {country.value === "Vietnam" && (
+              <Input
+                label="Passport Size Photo *"
+                register={guest.register("passport-size-photo", {
+                  required: { value: country.value === "Vietnam", message: "Passport size photo is required" },
+                })}
+                error={guest.formState.errors["passport-size-photo"]}
+                type="file"
+                accept=".jpg, .jpeg"
+                multiple={false}
+              />
+            )}
           </div>
 
           {allGuest.length < numberOfGuest ? (
@@ -441,7 +456,11 @@ export function MainEntry() {
               <button
                 title="delete"
                 onClick={() => {
-                  setAllGuest((prev) => prev.filter((g) => g["passportNumber"] !== value["passportNumber"]));
+                  setAllGuest((prev) => {
+                    const next = prev.filter((g) => g["passportNumber"] !== value["passportNumber"]);
+                    setFamilyMemberOptions(getNumberSelect(next.length < 2 ? 2 : next.length + 1, 9));
+                    return next;
+                  });
                   if (allGuest.length === 1) setItenaries([]);
                 }}
                 className="flex items-center justify-center rounded text-red-500/95 hover:scale-105 hover:text-red-600"

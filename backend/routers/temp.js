@@ -12,6 +12,7 @@ TempRouter.post(
     { name: "imgvisa", maxCount: 1 },
     { name: "hotel", maxCount: 1 },
     { name: "ticket", maxCount: 1 },
+    { name: "passport-size-photo", maxCount: 1 },
   ]),
   PhotoUploader
 );
