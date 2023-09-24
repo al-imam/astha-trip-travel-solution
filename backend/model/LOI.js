@@ -38,6 +38,11 @@ const LOISchema = new Schema({
     type: "text(255)",
     req: true,
   },
+  purpose: {
+    type: "VARCHAR(255)",
+    req: true,
+  },
+
   tiket_copy: {
     type: "text(255)",
     req: true,

@@ -35,7 +35,7 @@ VisaFormRouter.get(
 VisaFormRouter.get(
   "/download-form-pdf-schengen/:id",
   isAuthenticate,
-  GeneratePDF().Gen_Schengen
+  GeneratePDF().schengen
 );
 
 VisaFormRouter.get("/passport-numbers", isAuthenticate, passportNumbers);

@@ -115,6 +115,7 @@ const LOIEntry = async (req, res, next) => {
             country: e.country,
             tiket_copy: e.ticket,
             iternary: BODY.iternary,
+            purpose: BODY["tour-purpose"],
             status: "pending",
             agent: JSON.stringify(whoe),
           });
@@ -134,7 +135,6 @@ const LOIEntry = async (req, res, next) => {
 
     if (reqfrom.type === "Agent") {
       // chack agent balence
-      
 
       const bala =
         +agentforbalance.balance -

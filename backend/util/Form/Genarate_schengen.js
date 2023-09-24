@@ -18,7 +18,7 @@ const GenerateSchengen = async (id) => {
     if (!response) {
       throw "Provided ID has no relevant data";
     }
-
+    // check the data is approved with the loi request
     if (response.status !== "approved") {
       const [responseLOI] = await LOI_DATABASE.find({ visa_application: id });
       if (!responseLOI) {
@@ -32,6 +32,7 @@ const GenerateSchengen = async (id) => {
     const formUrl = await readFile(
       path.join(__dirname, "./src/schengen-visa.pdf")
     );
+
     const pdfDoc = await PDFDocument.load(formUrl);
 
     const page = pdfDoc.getPages()[1];
