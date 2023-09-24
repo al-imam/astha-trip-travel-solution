@@ -47,6 +47,10 @@ const LOISchema = new Schema({
     type: "text(255)",
     req: true,
   },
+  passportSizePhoto: {
+    type: "text(255)",
+    req: true,
+  },
   iternary: {
     type: "LONGTEXT",
     req: true,

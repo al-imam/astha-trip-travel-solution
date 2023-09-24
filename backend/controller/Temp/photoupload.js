@@ -12,6 +12,11 @@ const UploadTempPhoto = async (req, res) => {
     tiket: {
       name: req.files?.ticket ? req.files?.ticket[0]?.filename : null,
     },
+    passportSizePhoto: {
+      name: req.files["passport-size-photo"]
+        ? req.files["passport-size-photo"][0]?.filename
+        : null,
+    },
   };
   res.send({
     ...response,
