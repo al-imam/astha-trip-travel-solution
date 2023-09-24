@@ -30,7 +30,6 @@ app.get("*", (req, res) => {
 });
 
 app.use((err, req, res, next) => {
-  console.log(err);
   // handel erroe heare
   if (res.headersSent) {
     next("some thing wrong");
@@ -38,7 +37,7 @@ app.use((err, req, res, next) => {
     if (err.message) {
       if (err.instanceof === "multer") {
         return res.status(406).send(err.message);
-      } else if (err.instanceof === "unauthorised login") {
+      } else if (err.instanceof === "unauthorized login") {
         return res.status(401).send(err.message);
       } else if (err.instanceof === "not auth") {
         res.setHeader(

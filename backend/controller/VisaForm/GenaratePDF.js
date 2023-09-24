@@ -1,7 +1,7 @@
 const Generate_schengen = require("../../util/Form/Genarate_schengen");
 const GeneratePDF = () => {
   return {
-    schengen: async (req, res) => {
+    schengen: async (req, res, next) => {
       try {
         const { id } = req.params;
         const { file, name } = await Generate_schengen(id);
@@ -14,8 +14,8 @@ const GeneratePDF = () => {
 
         // res.send(name);
       } catch (error) {
-        console.log("🚀 ~ file: GenaratePDF.js:7 ~ schengen: ~ error:", error);
-        res.send("ok");
+        // res.status(500).send(error);
+        next(error);
       }
     },
   };

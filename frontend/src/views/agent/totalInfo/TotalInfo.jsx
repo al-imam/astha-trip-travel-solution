@@ -79,7 +79,7 @@ function TotalInfo() {
               <div className="relative w-full ">
                 {openGuest.visa_application ? (
                   <a
-                    href={`/api/visa-form/download-form-pdf-schengen/${openGuest.visa_application}`}
+                    href={`/api/visa-form/${openGuest.country}}/${openGuest.visa_application}`}
                     target="_blank"
                     className="float-right mt-2 flex items-center rounded-xl bg-brand-600 py-3 px-5 font-bold text-white transition-all  duration-300 hover:scale-105 hover:shadow-xl active:scale-95"
                     rel="noreferrer"
@@ -91,7 +91,7 @@ function TotalInfo() {
                   </a>
                 ) : (
                   <Link
-                    to={`/entry/${openGuest.country.toLowerCase()}?ref=${openGuest.id}`}
+                    to={`/entry/${openGuest.country.toLowerCase() === "vietnam" ? "vietnam" : ""}?ref=${openGuest.id}`}
                     className="float-right mt-2 flex items-center rounded-xl bg-brand-600 py-3 px-5 font-bold text-white transition-all  duration-300 hover:scale-105 hover:shadow-xl active:scale-95"
                   >
                     <span className="pr-2 text-2xl">
