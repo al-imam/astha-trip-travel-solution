@@ -4,61 +4,6 @@ import { MdFirstPage, MdOutlineLastPage } from "react-icons/md";
 import { useGlobalFilter, usePagination, useSortBy, useTable } from "react-table";
 import style from "./Style.module.css";
 
-// const Person = [
-//   {
-//     invoice: "1201",
-//     ammount: "300",
-//     categiry: "income",
-//     Date: "22-02-2023",
-//     admin: "Nahid",
-//   },
-//   {
-//     invoice: "1001",
-//     ammount: "300",
-//     categiry: "income",
-//     Date: "22-02-2023",
-//     admin: "Nahid",
-//   },
-//   {
-//     invoice: "1001",
-//     ammount: "300",
-//     categiry: "income",
-//     Date: "22-02-2023",
-//     admin: "sabbir",
-//   },
-//   {
-//     invoice: "1001",
-//     ammount: "300",
-//     categiry: "income",
-//     Date: "22-01-2023",
-//     admin: "sabbir",
-//   },
-// ];
-// () => [
-//   {
-//     Header: "ID",
-//     accessor: "id", // accessor is the "key" in the data
-//   },
-//   {
-//     Header: "Amount",
-//     accessor: "ammount",
-//     Cell:(prop)=>{
-//       return prop.row.original.id
-//     }
-//   },
-//   {
-//     Header: "Category",
-//     accessor: "categiry",
-//   },
-//   {
-//     Header: "Date",
-//     accessor: "Date",
-//   },
-//   {
-//     Header: "Admin",
-//     accessor: "admin",
-//   },
-// ],
 const Table = ({ datas, colunm, nav = true }) => {
   const data = React.useMemo(() => datas, [datas]);
   const columns = colunm;

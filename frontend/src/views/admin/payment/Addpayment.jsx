@@ -2,7 +2,7 @@ import axios from "axios";
 import { Button } from "components/form/Button";
 import { Input } from "components/form/Input";
 import Widget from "components/widget/Widget";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Select from "react-select";
 import { toast } from "react-toastify";
 
@@ -19,19 +19,13 @@ const Addpayment = ({ close }) => {
   const [rate, setRate] = useState("");
   const [amount, setAmount] = useState("");
   const [message, setMessage] = useState("");
+  const [status, setStatus] = useState({});
 
   useEffect(() => {
     const Getdata = async () => {
       try {
         const serverRes = await axios.get("/api/admin/get-all-agent");
-        SetAllAgent(
-          serverRes.data?.map((e) => {
-            return {
-              label: e.email,
-              value: e.email,
-            };
-          })
-        );
+        SetAllAgent(serverRes.data ?? []);
         setLoading(false);
       } catch (error) {
         console.log("🚀 ~ file: Addpayment.jsx:17 ~ Getdata ~ error:", error);
@@ -65,7 +59,33 @@ const Addpayment = ({ close }) => {
           console.log("🚀 ~ file: Addpayment.jsx:47 ~ getAgentData ~ error:", error);
         }
       };
-      getAgentData();
+      // getAgentData();
+
+      (async () => {
+        try {
+          const [{ data: loi }, { data }] = await toast.promise(
+            Promise.all([
+              axios.post("/api/loi/loibyagent", {
+                email: SelectedAgent.value,
+              }),
+              axios.post("/api/payment/status", {
+                agent_id: allAgent.find((v) => v.email === SelectedAgent.value)?.id,
+                email: SelectedAgent.value,
+              }),
+            ]),
+            {
+              pending: "please Wait ..",
+              error: "OPS Something is wrong!",
+              success: "Data fetched Successfully",
+            }
+          );
+
+          SetFetchAllLOI(loi);
+          setStatus(data);
+        } catch (error) {
+          console.log(error);
+        }
+      })();
     }
   }, [SelectedAgent]);
 
@@ -96,6 +116,8 @@ const Addpayment = ({ close }) => {
       console.log(error);
     }
   }
+
+  const options = useMemo(() => allAgent.map(({ email }) => ({ label: email, value: email })), [allAgent]);
 
   return (
     <div className="fixed top-0 left-0 z-50 h-screen w-full overflow-y-scroll bg-brand-100/20 backdrop-blur-sm">
@@ -128,7 +150,7 @@ const Addpayment = ({ close }) => {
                 placeholder="Select agent"
                 onChange={(change) => setSelectedAgent(change)}
                 value={SelectedAgent}
-                options={allAgent}
+                options={options}
                 styles={{
                   control: (styles, state) => ({
                     ...styles,
@@ -171,27 +193,22 @@ const Addpayment = ({ close }) => {
                 <Widget
                   icon={<MaterialSymbolsDonutSmallOutline className="text-2xl" />}
                   title={"Total Submission"}
-                  subtitle={FetchAllLOI.length}
+                  subtitle={status.numberOfRequest ?? 0}
                 />
                 <Widget
                   icon={<MaterialSymbolsPaidOutline className="text-2xl" />}
                   title={"Already Paid"}
-                  subtitle={300}
+                  subtitle={status.totalPaid ?? 0}
                 />
                 <Widget
                   icon={<MaterialSymbolsPaidOutline className="text-2xl" />}
                   title={"Due Payment"}
-                  subtitle={300}
+                  subtitle={status.duePayment ?? 0}
                 />
                 <Widget
                   icon={<MaterialSymbolsPaidOutline className="text-2xl" />}
                   title={"Total cancel"}
-                  subtitle={300}
-                />
-                <Widget
-                  icon={<MaterialSymbolsPaidOutline className="text-2xl" />}
-                  title={"Due Payment"}
-                  subtitle={300}
+                  subtitle={status.numberOfCanceledRequest ?? 0}
                 />
               </div>
 
