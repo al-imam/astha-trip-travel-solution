@@ -178,21 +178,20 @@ const VisaFormColector = () => {
           local_contact_email: body["email-of-local-contact"],
           antecedent_of_applicant: JSON.stringify({
             a: body["a"],
-            a: body["b"],
-            a: body["c"],
-            a: body["d"],
+            b: body["b"],
+            c: body["c"],
+            d: body["d"],
             details: body["details-why-yes"] || "",
           }),
 
           status: "pending",
           apply_by: JSON.stringify(apply),
         });
-        
 
         if (typeof DbRes.errno === "number" || DbRes.errno) {
           return res.status(406).json({ message: "Something went wrong" });
         }
-        
+
         if (body.reference) {
           const Loi_res = await LOI_DATA.findByIdAndUpdate(body.reference, {
             visa_application: DbRes.insertId,

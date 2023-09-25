@@ -37,6 +37,11 @@ VisaFormRouter.get(
   isAuthenticate,
   GeneratePDF().schengen
 );
+VisaFormRouter.get(
+  "/download-form-pdf-singapore/:id",
+  isAuthenticate,
+  GeneratePDF().singapore
+);
 
 VisaFormRouter.get("/passport-numbers", isAuthenticate, passportNumbers);
 
