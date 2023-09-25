@@ -72,6 +72,15 @@ const Addpayment = ({ close }) => {
 
   async function onSubmit(evt) {
     evt.preventDefault();
+
+    const numRate = getNumber(rate);
+    const numAmount = getNumber(amount);
+
+    if (!(numRate > 0 && numAmount > 0)) return toast.error("Type rate and amount");
+
+    const serverRes = await axios
+      .post("/api/payment/create", { rate: numRate, amount: numAmount, agent: SelectedAgent.value })
+      .catch(console.log);
   }
 
   return (
