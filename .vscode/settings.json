@@ -1,3 +1,11 @@
 {
-  "cSpell.words": ["Schengen"]
+  "editor.formatOnSaveMode": "file",
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "files.autoSave": "onFocusChange",
+  "css.validate": false,
+
+  "editor.codeActionsOnSave": {
+    "source.sortImports": true
+  }
 }
