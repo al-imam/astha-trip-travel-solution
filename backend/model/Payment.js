@@ -6,12 +6,16 @@ const Payment = new Schema({
     type: "INT",
     req: true,
   },
+  admin_id: {
+    type: "INT",
+    req: true,
+  },
   amount: {
     type: "INT",
     req: true,
   },
-  transition_id: {
-    type: "TEXT(255)",
+  rate: {
+    type: "INT",
     req: true,
   },
   message: {
