@@ -7,7 +7,7 @@ const Payment = new Schema({
   amount: { type: "INT", req: true },
   rate: { type: "INT", req: true },
   message: { type: "TEXT(255)", req: true },
-  status: { type: "VARCHAR(25)", req: true },
+  transition_id: { type: "varchar(255)", req: true },
 });
 
 module.exports = new Model(Payment, "Payment");
