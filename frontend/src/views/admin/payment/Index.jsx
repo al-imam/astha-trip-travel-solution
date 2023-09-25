@@ -8,22 +8,24 @@ const Index = () => {
   const [reqList, setReqList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [relod, setRelod] = useState(0);
- const [add,setAdd] = useState(false)
+  const [add, setAdd] = useState(false);
 
   return (
     <div className="relative w-full pt-5">
-    {
-      add?<Addpayment close={setAdd}/>:""
-    }
-      <div className="w-full relative p-3 ">
-        <div className="w-full relative">
-            <button
-            
-            onClick={()=>{
-              setAdd(true)
-            }} className="bg-brand-400 text-white py-3 px-5 rounded-md shadow-md flex justify-center items-center hover:scale-105 active:scale-95 transition-all duration-300 hover:shadow-2xl active:shadow-lg ">
-              <span  className="pr-2 text-2xl"><StreamlineMoneyAtmCard2DepositMoneyPaymentFinanceAtmWithdraw/></span>
-              Add payment</button>
+      {add ? <Addpayment close={setAdd} /> : ""}
+      <div className="relative w-full p-3 ">
+        <div className="relative w-full">
+          <button
+            onClick={() => {
+              setAdd(true);
+            }}
+            className="flex items-center justify-center rounded-md bg-brand-400 py-3 px-5 text-white shadow-md transition-all duration-300 hover:scale-105 hover:shadow-2xl active:scale-95 active:shadow-lg "
+          >
+            <span className="pr-2 text-2xl">
+              <StreamlineMoneyAtmCard2DepositMoneyPaymentFinanceAtmWithdraw />
+            </span>
+            Add payment
+          </button>
         </div>
       </div>
       <Table
@@ -36,7 +38,6 @@ const Index = () => {
             Header: "Agent",
             accessor: "agent",
             Cell: (props) => {
-              // console.log(props);
               return (
                 <div>
                   <p className="font-bold ">
@@ -95,7 +96,7 @@ const Index = () => {
                     <>
                       <button
                         onClick={() => {
-                          // handelapp(`${props.row.original.id}`);
+                          // accept(`${props.row.original.id}`);
                         }}
                         className="border-transparent rounded border bg-brand-900 py-2 px-4 font-bold text-white hover:bg-brand-800"
                       >
@@ -103,7 +104,7 @@ const Index = () => {
                       </button>
                       <button
                         onClick={() => {
-                          // handelRejection(`${props.row.original.id}`);
+                          // reject(`${props.row.original.id}`);
                         }}
                         className="border-transparent rounded border bg-red-900 py-2 px-4 font-bold text-white hover:bg-red-800"
                       >
@@ -126,9 +127,15 @@ const Index = () => {
 
 export default Index;
 
-
 export function StreamlineMoneyAtmCard2DepositMoneyPaymentFinanceAtmWithdraw(props) {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 14 14" {...props}><g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"><path d="M1 4.5A.5.5 0 0 1 .5 4V1A.5.5 0 0 1 1 .5h12a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-.5.5"></path><rect width="7" height="8" x="3.5" y="3" rx=".5"></rect><circle cx="7" cy="7" r="1.5"></circle><path d="M3.5 13.5h7"></path></g></svg>
-  )
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 14 14" {...props}>
+      <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M1 4.5A.5.5 0 0 1 .5 4V1A.5.5 0 0 1 1 .5h12a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-.5.5"></path>
+        <rect width="7" height="8" x="3.5" y="3" rx=".5"></rect>
+        <circle cx="7" cy="7" r="1.5"></circle>
+        <path d="M3.5 13.5h7"></path>
+      </g>
+    </svg>
+  );
 }

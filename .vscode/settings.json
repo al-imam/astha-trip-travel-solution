@@ -7,5 +7,7 @@
 
   "editor.codeActionsOnSave": {
     "source.sortImports": true
-  }
+  },
+  "cSpell.words": ["Addpayment"],
+  "cSpell.ignoreWords": ["Relod", "relod"]
 }
