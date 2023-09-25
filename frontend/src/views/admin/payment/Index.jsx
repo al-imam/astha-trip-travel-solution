@@ -1,17 +1,21 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
 import Addpayment from "./Addpayment";
 import Table from "./table";
 
 const Index = () => {
-  const [reqList, setReqList] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [relod, setRelod] = useState(0);
   const [add, setAdd] = useState(false);
+  const [payments, setPayments] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("/api/payment/")
+      .then((res) => setPayments(res.data))
+      .catch(console.log);
+  }, []);
 
   return (
-    <div className="relative w-full pt-5">
+    <div className="relative w-full pt-5 ">
       {add ? <Addpayment close={() => setAdd(false)} /> : ""}
       <div className="relative w-full p-3 ">
         <div className="relative w-full">
@@ -37,24 +41,6 @@ const Index = () => {
           {
             Header: "Agent",
             accessor: "agent",
-            Cell: (props) => {
-              return (
-                <div>
-                  <p className="font-bold ">
-                    <span>Name: </span>
-                    {props.row.original?.agent?.name}
-                  </p>
-                  <p>
-                    <span>Email: </span>
-                    {props.row.original?.agent?.email}
-                  </p>
-                  <p>
-                    <span>Phone: </span>
-                    {props.row.original?.agent?.phone}
-                  </p>
-                </div>
-              );
-            },
           },
           {
             Header: "Amount",
@@ -69,57 +55,14 @@ const Index = () => {
             accessor: "message",
           },
           {
-            Header: "Status",
-            accessor: "status",
-          },
-          {
             Header: "Action",
             accessor: "action",
             Cell: (props) => {
-              return (
-                <div>
-                  {props.row.original.status === "canceled" ? (
-                    <button className="border-transparent cursor-not-allowed rounded border bg-red-900 py-2 px-4 font-bold text-white">
-                      Rejected{" "}
-                    </button>
-                  ) : (
-                    ""
-                  )}
-                  {props.row.original.status === "submitted" ? (
-                    <button className="border-transparent cursor-not-allowed rounded border bg-brand-900 py-2 px-4 font-bold text-white">
-                      Approved{" "}
-                    </button>
-                  ) : (
-                    ""
-                  )}
-                  {props.row.original.status === "pending" ? (
-                    <>
-                      <button
-                        onClick={() => {
-                          // accept(`${props.row.original.id}`);
-                        }}
-                        className="border-transparent rounded border bg-brand-900 py-2 px-4 font-bold text-white hover:bg-brand-800"
-                      >
-                        Approve
-                      </button>
-                      <button
-                        onClick={() => {
-                          // reject(`${props.row.original.id}`);
-                        }}
-                        className="border-transparent rounded border bg-red-900 py-2 px-4 font-bold text-white hover:bg-red-800"
-                      >
-                        Reject
-                      </button>
-                    </>
-                  ) : (
-                    ""
-                  )}
-                </div>
-              );
+              return <button className="rounded bg-brand-400 px-2 py-1 text-white">Details</button>;
             },
           },
         ]}
-        datas={reqList}
+        datas={payments}
       />
     </div>
   );

@@ -92,7 +92,7 @@ const Table = ({ datas, colunm, nav = true }) => {
   return (
     <div className={style.con}>
       {nav ? (
-        <div className="mb-4 w-full px-3">
+        <div className="mb-4 w-full px-3 ">
           <div className="relative">
             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
               <svg
@@ -134,7 +134,7 @@ const Table = ({ datas, colunm, nav = true }) => {
         ""
       )}
 
-      <div className="relative w-full overflow-auto">
+      <div className="relative w-full overflow-auto text-xl">
         <table {...getTableProps()}>
           <thead className="text-brand-700 dark:text-brand-100">
             {
@@ -211,11 +211,11 @@ const Table = ({ datas, colunm, nav = true }) => {
             </span>{" "}
             prev
           </button>
-          <span className="capitalize dark:text-brand-50 text-gray-900">
+          <span className="capitalize text-gray-900 dark:text-brand-50">
             page : {pageIndex + 1} of {pageOptions.length} <span> </span>
             <select
               value={pageSize}
-              className="relative text-brand-600  ml-4 border-[1px] border-brand-200"
+              className="relative ml-4  border-[1px] border-brand-200 text-brand-600"
               onChange={(e) => {
                 setPageSize(Number(e.target.value));
               }}

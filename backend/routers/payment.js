@@ -1,5 +1,6 @@
 const { isString, isNumber } = require("nested-object-validate");
 const create = require("../controller/payment/create");
+const payments = require("../controller/payment/payments");
 const isAdmin = require("../middleware/Auth/isAdmin");
 const validateBody = require("../middleware/validator/validateBody");
 
@@ -15,5 +16,7 @@ router.post(
   isAdmin,
   create
 );
+
+router.get("/", isAdmin, payments);
 
 module.exports = router;

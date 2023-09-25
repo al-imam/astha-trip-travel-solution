@@ -15,12 +15,10 @@ function getNumber(str, fallback = 0) {
 const Addpayment = ({ close }) => {
   const [allAgent, SetAllAgent] = useState([]);
   const [loading, setLoading] = useState(true);
-
   const [SelectedAgent, setSelectedAgent] = useState(null);
   const [rate, setRate] = useState("");
   const [amount, setAmount] = useState("");
   const [message, setMessage] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     const Getdata = async () => {
