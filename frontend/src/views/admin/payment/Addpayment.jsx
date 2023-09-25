@@ -7,11 +7,19 @@ import React, { useEffect, useState } from "react";
 import CreatableSelect from "react-select/creatable";
 import { toast } from "react-toastify";
 
+function getNumber(str, fallback = 0) {
+  const num = parseFloat(str);
+  if (isNaN(num)) return fallback;
+  return num;
+}
+
 const Addpayment = ({ close }) => {
   const [allAgent, SetAllAgent] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const [SelectedAgent, setSelectedAgent] = useState(null);
+  const [rate, setRate] = useState("");
+  const [amount, setAmount] = useState("");
 
   useEffect(() => {
     const Getdata = async () => {
@@ -61,6 +69,10 @@ const Addpayment = ({ close }) => {
       getAgentData();
     }
   }, [SelectedAgent]);
+
+  async function onSubmit(evt) {
+    evt.preventDefault();
+  }
 
   return (
     <div className="fixed top-0 left-0 z-50 h-screen w-full overflow-y-scroll bg-brand-100/20 backdrop-blur-sm">
@@ -160,13 +172,29 @@ const Addpayment = ({ close }) => {
                 />
               </div>
 
-              <form>
+              <form onSubmit={onSubmit} className="flex flex-col gap-4">
                 <div className="flex flex-col gap-4 sm:flex-row [&>*]:flex-1">
-                  <Input label="Enter The Amount Of application" type={"number"} />
-                  <Input label="Enter Thedf Rate" type={"text"} />
+                  <Input
+                    value={amount}
+                    onKeyDown={(e) => ["e", "E", "+", "-"].includes(e.key) && e.preventDefault()}
+                    onChange={(e) => setAmount(e.target.value.replace(/[^0-9]/g, ""))}
+                    label="Enter The Amount Of application"
+                    type={"number"}
+                  />
+                  <Input
+                    value={rate}
+                    onKeyDown={(e) => ["e", "E", "+", "-"].includes(e.key) && e.preventDefault()}
+                    onChange={(e) => setRate(e.target.value.replace(/[^0-9]/g, ""))}
+                    label="Enter The Rate"
+                    type={"number"}
+                  />
                 </div>
 
-                <div className="mt-4 flex justify-between">
+                <p className="text-xl">
+                  <span className="font-medium">Total</span> - {getNumber(rate) * getNumber(amount)}
+                </p>
+
+                <div className="flex justify-between">
                   <Button className="mt-auto">Add payment</Button>
                   <button
                     type="button"
