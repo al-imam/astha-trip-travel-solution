@@ -12,7 +12,7 @@ const Index = () => {
 
   return (
     <div className="relative w-full pt-5">
-      {add ? <Addpayment close={setAdd} /> : ""}
+      {add ? <Addpayment close={() => setAdd(false)} /> : ""}
       <div className="relative w-full p-3 ">
         <div className="relative w-full">
           <button

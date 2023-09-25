@@ -1,10 +1,9 @@
 import axios from "axios";
 import { Button } from "components/form/Button";
 import { Input } from "components/form/Input";
-import { Select } from "components/form/Select";
 import Widget from "components/widget/Widget";
 import React, { useEffect, useState } from "react";
-import CreatableSelect from "react-select/creatable";
+import Select from "react-select";
 import { toast } from "react-toastify";
 
 function getNumber(str, fallback = 0) {
@@ -20,6 +19,8 @@ const Addpayment = ({ close }) => {
   const [SelectedAgent, setSelectedAgent] = useState(null);
   const [rate, setRate] = useState("");
   const [amount, setAmount] = useState("");
+  const [message, setMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     const Getdata = async () => {
@@ -78,9 +79,24 @@ const Addpayment = ({ close }) => {
 
     if (!(numRate > 0 && numAmount > 0)) return toast.error("Type rate and amount");
 
-    const serverRes = await axios
-      .post("/api/payment/create", { rate: numRate, amount: numAmount, agent: SelectedAgent.value })
-      .catch(console.log);
+    try {
+      toast.promise(
+        axios.post("/api/payment/create", {
+          rate: numRate,
+          amount: numAmount,
+          agent: SelectedAgent.value,
+          message: message ? message : null,
+        }),
+        {
+          error: "Something went wrong",
+          success: "Added successfully",
+          pending: "Loading wait",
+        }
+      );
+      close();
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (
@@ -109,7 +125,7 @@ const Addpayment = ({ close }) => {
                   ""
                 )}
               </label>
-              <CreatableSelect
+              <Select
                 isDisabled={loading}
                 placeholder="Select agent"
                 onChange={(change) => setSelectedAgent(change)}
@@ -187,16 +203,17 @@ const Addpayment = ({ close }) => {
                     value={amount}
                     onKeyDown={(e) => ["e", "E", "+", "-"].includes(e.key) && e.preventDefault()}
                     onChange={(e) => setAmount(e.target.value.replace(/[^0-9]/g, ""))}
-                    label="Enter The Amount Of application"
+                    label="Enter The Amount Of Application *"
                     type={"number"}
                   />
                   <Input
                     value={rate}
                     onKeyDown={(e) => ["e", "E", "+", "-"].includes(e.key) && e.preventDefault()}
                     onChange={(e) => setRate(e.target.value.replace(/[^0-9]/g, ""))}
-                    label="Enter The Rate"
+                    label="Enter The Rate *"
                     type={"number"}
                   />
+                  <Input label="Message" value={message} onChange={(e) => setMessage(e.target.value)} />
                 </div>
 
                 <p className="text-xl">
