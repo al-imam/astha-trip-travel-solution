@@ -9,6 +9,7 @@ module.exports = {
   bracketSpacing: true,
   arrowParens: "always",
   jsxSingleQuote: false,
+  singleQuote: false,
   bracketSameLine: false,
   endOfLine: "lf",
 };
