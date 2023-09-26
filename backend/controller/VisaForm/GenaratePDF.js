@@ -39,7 +39,10 @@ const GeneratePDF = () => {
     },
     thailand: async (req, res, next) => {
       try {
-        const { file, name } = await Generate_thailand(req.params.id);
+        const { file, name, failed } = await Generate_thailand(req.params.id);
+
+        if (failed)
+          return res.status(500).json({ message: "Internal Server Error" });
 
         res.set({
           "Content-Disposition": `attachment; filename=${name}-visa-form.pdf`,

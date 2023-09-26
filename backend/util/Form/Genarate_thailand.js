@@ -4,14 +4,17 @@ const { PDFDocument, StandardFonts } = require("pdf-lib");
 const { readFile, writeFile } = require("fs/promises");
 const FormHelper = require("./Helper/Function");
 const path = require("path");
+const { v4: uuid } = require("uuid");
+
+// if you're going to change it change it in frontend too
+const SEPARATOR = "<$72$31$33$>";
 
 const Generate_thailand = async (id) => {
   try {
     if (!id) throw "id not found";
-
     const [response] = await THAILAND_DATABASE.findById(id);
-
     if (!response) throw "Provided ID has no relevant data";
+
     /* 
     if (response.status !== "approved") {
       const [responseLOI] = await LOI_DATABASE.find({ visa_application: id });
@@ -21,35 +24,9 @@ const Generate_thailand = async (id) => {
     }
     */
 
-    //  readfile
-    const formUrl = await readFile(path.join(__dirname, "./src/thailand.pdf"));
+    const formUrl = await readFile(path.join(__dirname, "src/thailand.pdf"));
     const pdfDoc = await PDFDocument.load(formUrl);
     const form = pdfDoc.getForm();
-
-    const names = (str) => {
-      let c = 0;
-      let s = [];
-      let g = 0;
-      str
-        .split(" ")
-        .map((e) => {
-          const lenth = e.length;
-          return { lenth, data: e };
-        })
-        .forEach((e) => {
-          if (c + e.lenth > 25) {
-            g++;
-            s[g] === undefined && (s[g] = "");
-            s[g] = s[g] + " " + e.data;
-            c = e.lenth + 1;
-          } else {
-            c += e.lenth + 1;
-            s[g] === undefined && (s[g] = "");
-            s[g] = s[g] + " " + e.data;
-          }
-        });
-      return [...s.map((e) => e.trim())];
-    };
 
     function preFix(strNum) {
       const num = parseInt(strNum);
@@ -62,6 +39,9 @@ const Generate_thailand = async (id) => {
         (a) => a?.toString().toLowerCase() === to?.toString().toLowerCase()
       );
     }
+
+    const [occupationPosition, occupationName] =
+      response["occupation"]?.split(SEPARATOR) || [];
 
     FormHelper(form).SetBulk([
       {
@@ -102,9 +82,21 @@ const Generate_thailand = async (id) => {
       },
 
       {
+        type: "PDFTextField",
+        name: "Occupation specify present position and name of employer 1",
+        value: occupationPosition,
+        font: 11,
+      },
+      {
+        type: "PDFTextField",
+        name: "Occupation specify present position and name of employer 2",
+        value: occupationName,
+        font: 11,
+      },
+      {
         type: "PDFRadioGroup",
         name: "salutation",
-        value: "undefined" /* TODO - response["name_title"] */,
+        // value: response["name_title"],
       },
       {
         type: "PDFTextField",
@@ -154,7 +146,7 @@ const Generate_thailand = async (id) => {
       {
         type: "PDFTextField",
         name: "Date of Birth",
-        value: response["date_of_birth"].split("-").reverse().join("/"),
+        value: response["date_of_birth"]?.split("-").reverse().join("/"),
         font: 12,
       },
       {
@@ -179,27 +171,29 @@ const Generate_thailand = async (id) => {
       {
         type: "PDFTextField",
         name: "Date of Issue",
-        value: response["passport_issue_date"].split("-").reverse().join("/"),
+        value: response["passport_issue_date"]?.split("-").reverse().join("/"),
         font: 11,
       },
       {
         type: "PDFTextField",
         name: "Expiry Date",
-        value: response["passport_expiry_date"].split("-").reverse().join("/"),
+        value: response["passport_expiry_date"]?.split("-").reverse().join("/"),
         font: 11,
       },
       {
         type: "PDFTextField",
         name: "Current Address 1",
-        value: response["current_address"].split(" ").slice(0, 2).join(" "),
+        value: response["current_address"]?.split(" ").slice(0, 2).join(" "),
         font: 11,
       },
       {
         type: "PDFTextField",
         name: "Current Address 2",
         value:
-          response["current_address"].split(" ").slice(2, Infinity).join(" ") ||
-          " ",
+          response["current_address"]
+            ?.split(" ")
+            .slice(2, Infinity)
+            .join(" ") || " ",
         font: 11,
       },
 
@@ -219,7 +213,7 @@ const Generate_thailand = async (id) => {
         type: "PDFTextField",
         name: "Permanent Address if different from above 1",
         value: AsAbove(
-          response["permanent_address"].split(" ").slice(0, 1).join(" ")
+          response["permanent_address"]?.split(" ").slice(0, 1).join(" ")
         ),
         font: 11,
       },
@@ -227,8 +221,11 @@ const Generate_thailand = async (id) => {
         type: "PDFTextField",
         name: "Permanent Address if different from above 2",
         value: AsAbove(
-          response["permanent_address"].split(" ").slice(1, Infinity).join(" "),
-          response["permanent_address"].split(" ").length
+          response["permanent_address"]
+            ?.split(" ")
+            .slice(1, Infinity)
+            .join(" "),
+          response["permanent_address"]?.split(" ").length
         ),
         font: 11,
       },
@@ -244,7 +241,7 @@ const Generate_thailand = async (id) => {
         type: "PDFTextField",
         name: "if accompanying 1",
         value: NA(
-          response["minor_children_info"].split(" ").slice(0, 2).join(" ")
+          response["minor_children_info"]?.split(" ").slice(0, 2).join(" ")
         ),
         font: 11,
       },
@@ -253,17 +250,20 @@ const Generate_thailand = async (id) => {
         name: "if accompanying 2",
         value: NA(
           response["minor_children_info"]
-            .split(" ")
+            ?.split(" ")
             .slice(2, Infinity)
             .join(" "),
-          response["minor_children_info"].split(" ").length
+          response["minor_children_info"]?.split(" ").length
         ),
         font: 11,
       },
       {
         type: "PDFTextField",
         name: "Date of Arrival in Thailand",
-        value: response["arrival_date_thailand"].split("-").reverse().join("/"),
+        value: response["arrival_date_thailand"]
+          ?.split("-")
+          .reverse()
+          .join("/"),
         font: 11,
       },
       {
@@ -312,7 +312,10 @@ const Generate_thailand = async (id) => {
       {
         type: "PDFTextField",
         name: "Proposed Address in Thailand",
-        value: response["address_in_thailand"].split(" ").slice(0, 1).join(" "),
+        value: response["address_in_thailand"]
+          ?.split(" ")
+          .slice(0, 1)
+          .join(" "),
         font: 11,
       },
 
@@ -321,7 +324,7 @@ const Generate_thailand = async (id) => {
         name: "Proposed Address in Thailand 2",
         value:
           response["address_in_thailand"]
-            .split(" ")
+            ?.split(" ")
             .slice(1, Infinity)
             .join(" ") || " ",
         font: 11,
@@ -329,15 +332,17 @@ const Generate_thailand = async (id) => {
       {
         type: "PDFTextField",
         name: "Name and Address of Local Guarantor 1",
-        value: NA(response["local_guarantor"].split(" ").slice(0, 3).join(" ")),
+        value: NA(
+          response["local_guarantor"]?.split(" ").slice(0, 3).join(" ")
+        ),
         font: 11,
       },
       {
         type: "PDFTextField",
         name: "Name and Address of Local Guarantor 2",
         value: NA(
-          response["local_guarantor"].split(" ").slice(3, Infinity).join(" "),
-          response["local_guarantor"].split(" ").length
+          response["local_guarantor"]?.split(" ").slice(3, Infinity).join(" "),
+          response["local_guarantor"]?.split(" ").length
         ),
         font: 11,
       },
@@ -357,15 +362,15 @@ const Generate_thailand = async (id) => {
       {
         type: "PDFTextField",
         name: "Name and Address of Guarantor in Thailand 1",
-        value: NA(" ", response["thailand_guarantor"].split(" ").length),
+        value: NA(" ", response["thailand_guarantor"]?.split(" ").length),
         font: 11,
       },
       {
         type: "PDFTextField",
         name: "Name and Address of Guarantor in Thailand",
         value: NA(
-          response["thailand_guarantor"].split(" ").slice(0, 4).join(" "),
-          response["thailand_guarantor"].split(" ").length
+          response["thailand_guarantor"]?.split(" ").slice(0, 4).join(" "),
+          response["thailand_guarantor"]?.split(" ").length
         ),
         font: 11,
       },
@@ -374,7 +379,7 @@ const Generate_thailand = async (id) => {
         name: "Name and Address of Guarantor in Thailand 3",
         value: NA(
           response["thailand_guarantor"]
-            .split(" ")
+            ?.split(" ")
             .slice(4, Infinity)
             .join(" "),
           response["thailand_guarantor"].split(" ").length
@@ -422,11 +427,13 @@ const Generate_thailand = async (id) => {
     form.flatten();
     const pdfByt = await pdfDoc.save();
     await writeFile("generate-thailand.pdf", pdfByt);
-    return "pdf save ";
-    // return { file: pdfByt, name: response["name"] };
+
+    return {
+      file: pdfByt,
+      name: `thailand-${response["first_name"]}-${uuid()}`,
+    };
   } catch (error) {
-    console.log("generate-thailand - ", error);
-    return error;
+    return { failed: true };
   }
 };
 
