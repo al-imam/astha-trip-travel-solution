@@ -55,7 +55,7 @@ const numberOfEntryOptions = [...getNumberSelect(1, 3), { label: "Multi", value:
 
 const nameTitleOptions = ["Mr", "Mrs", "Miss"].map((value) => ({
   label: value,
-  value: value === "Miss" ? "Mrs" : value,
+  value: value === "Miss" ? "undefined" : value,
 }));
 
 const maritalStatusOptions = ["Single", "Married", "Divorced", "Widowed"].map((value) => ({
