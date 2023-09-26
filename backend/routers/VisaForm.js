@@ -11,10 +11,26 @@ const GetForm = require("../controller/VisaForm/GetForm");
 const Approved = require("../controller/VisaForm/Approved");
 const passportNumbers = require("../controller/VisaForm/passport-numbers");
 const GeneratePDF = require("../controller/VisaForm/GenaratePDF");
+const Approval = require("../middleware/visa-form/Approval");
 
-VisaFormRouter.post("/schengen", isAuthenticate, VisaFormColector().schengen);
-VisaFormRouter.post("/singapore", isAuthenticate, VisaFormColector().singapore);
-VisaFormRouter.post("/thailand", isAuthenticate, VisaFormColector().thailand);
+VisaFormRouter.post(
+  "/schengen",
+  isAuthenticate,
+  Approval,
+  VisaFormColector().schengen
+);
+VisaFormRouter.post(
+  "/singapore",
+  isAuthenticate,
+  Approval,
+  VisaFormColector().singapore
+);
+VisaFormRouter.post(
+  "/thailand",
+  isAuthenticate,
+  Approval,
+  VisaFormColector().thailand
+);
 
 // get data by passport
 VisaFormRouter.post("/get-by-passport", isAdmin, GetByPassport);
