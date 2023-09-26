@@ -4,61 +4,6 @@ import { MdFirstPage, MdOutlineLastPage } from "react-icons/md";
 import { useGlobalFilter, usePagination, useSortBy, useTable } from "react-table";
 import style from "./Style.module.css";
 
-// const Person = [
-//   {
-//     invoice: "1201",
-//     ammount: "300",
-//     categiry: "income",
-//     Date: "22-02-2023",
-//     admin: "Nahid",
-//   },
-//   {
-//     invoice: "1001",
-//     ammount: "300",
-//     categiry: "income",
-//     Date: "22-02-2023",
-//     admin: "Nahid",
-//   },
-//   {
-//     invoice: "1001",
-//     ammount: "300",
-//     categiry: "income",
-//     Date: "22-02-2023",
-//     admin: "sabbir",
-//   },
-//   {
-//     invoice: "1001",
-//     ammount: "300",
-//     categiry: "income",
-//     Date: "22-01-2023",
-//     admin: "sabbir",
-//   },
-// ];
-// () => [
-//   {
-//     Header: "ID",
-//     accessor: "id", // accessor is the "key" in the data
-//   },
-//   {
-//     Header: "Amount",
-//     accessor: "ammount",
-//     Cell:(prop)=>{
-//       return prop.row.original.id
-//     }
-//   },
-//   {
-//     Header: "Category",
-//     accessor: "categiry",
-//   },
-//   {
-//     Header: "Date",
-//     accessor: "Date",
-//   },
-//   {
-//     Header: "Admin",
-//     accessor: "admin",
-//   },
-// ],
 const Table = ({ datas, colunm, nav = true }) => {
   const data = React.useMemo(() => datas, [datas]);
   const columns = colunm;
@@ -92,7 +37,7 @@ const Table = ({ datas, colunm, nav = true }) => {
   return (
     <div className={style.con}>
       {nav ? (
-        <div className="mb-4 w-full px-3">
+        <div className="mb-4 w-full px-3 ">
           <div className="relative">
             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
               <svg
@@ -134,7 +79,7 @@ const Table = ({ datas, colunm, nav = true }) => {
         ""
       )}
 
-      <div className="relative w-full overflow-auto">
+      <div className="relative w-full overflow-auto text-xl">
         <table {...getTableProps()}>
           <thead className="text-brand-700 dark:text-brand-100">
             {
@@ -211,11 +156,11 @@ const Table = ({ datas, colunm, nav = true }) => {
             </span>{" "}
             prev
           </button>
-          <span className="capitalize dark:text-brand-50 text-gray-900">
+          <span className="capitalize text-gray-900 dark:text-brand-50">
             page : {pageIndex + 1} of {pageOptions.length} <span> </span>
             <select
               value={pageSize}
-              className="relative text-brand-600  ml-4 border-[1px] border-brand-200"
+              className="relative ml-4  border-[1px] border-brand-200 text-brand-600"
               onChange={(e) => {
                 setPageSize(Number(e.target.value));
               }}
