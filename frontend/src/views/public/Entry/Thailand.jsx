@@ -80,6 +80,9 @@ const validCountryOptions = ["ALL COUNTRIES OF THE WORLD EXCEPT ISRAIL"].map((va
 
 const steps = ["", "", ""];
 
+// if you're going to change it change it in backend too
+const SEPARATOR = "<$72$31$33$>";
+
 const localPersonal = "thailand-personal-submit";
 const localContact = "thailand-contact-submit";
 const localPurpose = "thailand-purpose-submit";
@@ -126,6 +129,7 @@ export function Thailand() {
   });
 
   function personalSubmit(data) {
+    data.occupation = `${data["present-position-occupation"]}${SEPARATOR}${data["name-of-employer-occupation"]}`;
     setForm((prev) => Object.assign(prev, flattenObject(data)));
     setStep(2);
   }
@@ -173,7 +177,10 @@ export function Thailand() {
       setValue(db["passport_issued_at"], (_v) => personal.setValue("passport-issued-at", _v), true);
       setValue(db["passport_issue_date"], (_v) => personal.setValue("passport-date-of-issue", _v));
       setValue(db["passport_expiry_date"], (_v) => personal.setValue("passport-expire-date", _v));
-      setValue(db["occupation"], (_v) => personal.setValue("occupation", _v));
+
+      const [position, name] = db["occupation"]?.split(SEPARATOR) || [];
+      setValue(position, (_v) => personal.setValue("present-position-occupation", _v));
+      setValue(name, (_v) => personal.setValue("name-of-employer-occupation", _v));
 
       setValue(db["current_address"], (_v) => contact.setValue("current-address", _v));
       setValue(db["phone"], (_v) => contact.setValue("telephone", _v));
@@ -380,14 +387,27 @@ export function Thailand() {
                 type="date"
               />
 
-              <Input
-                label="Occupation (Present Position, Name Of Employer) *"
-                placeholder="Occupation"
-                register={personal.register("occupation", {
-                  required: "Occupation is required",
-                })}
-                error={personal.formState.errors["occupation"]}
-              />
+              <div>
+                <label className="text-base font-medium text-gray-800 line-clamp-1">
+                  Occupation (Present Position, Name Of Employer) *
+                </label>
+                <div className="flex gap-2 [&>*]:flex-1">
+                  <Input
+                    placeholder="Occupation"
+                    register={personal.register("present-position-occupation", {
+                      required: "Present position is required",
+                    })}
+                    error={personal.formState.errors["present-position-occupation"]}
+                  />
+                  <Input
+                    placeholder="Name of employer"
+                    register={personal.register("name-of-employer-occupation", {
+                      required: "Name is required",
+                    })}
+                    error={personal.formState.errors["name-of-employer-occupation"]}
+                  />
+                </div>
+              </div>
             </fieldset>
 
             <div className="flex justify-end">
@@ -557,13 +577,13 @@ export function Thailand() {
               />
 
               <Input
-                label="Name And Address Of Guarantor In Thailand *"
+                label="Name And Address Of Guarantor In Thailand"
                 register={purpose.register("name-and-address-of-guarantor-in-thailand")}
                 error={purpose.formState.errors["name-and-address-of-guarantor-in-thailand"]}
               />
 
               <Input
-                label="Telephone/Fax Of Thailand Guarantor *"
+                label="Telephone/Fax Of Thailand Guarantor"
                 register={purpose.register("telephone-fax-of-thailand-guarantor")}
                 error={purpose.formState.errors["telephone-fax-of-thailand-guarantor"]}
               />
