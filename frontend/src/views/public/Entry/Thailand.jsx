@@ -2,8 +2,9 @@ import axios from "axios";
 import { Button } from "components/form/Button";
 import { Group, Join } from "components/form/Group";
 import { Input } from "components/form/Input";
-import { Select, SelectNotCreatable } from "components/form/Select";
+import { AsyncSelect, Select, SelectNotCreatable } from "components/form/Select";
 import { StepIndicator } from "components/form/StepIndicator";
+import { useAuth } from "hook/useAuth";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import useFormPersist from "react-hook-form-persist";
@@ -11,10 +12,8 @@ import { useNavigate } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 import countries from "../countries.json";
 import districts from "../districts.json";
-import { fire, flattenObject, getNumberSelect, populate, setValue } from "./util";
 import { Spinner } from "./Spinner";
-import { AsyncSelect } from "components/form/Select";
-import { useAuth } from "hook/useAuth";
+import { fire, flattenObject, getNumberSelect, populate, setValue } from "./util";
 
 const placeOfBirthOptions = districts.map((value) => ({
   label: value,
@@ -54,9 +53,9 @@ const typeOfPassportOptions = [
 
 const numberOfEntryOptions = [...getNumberSelect(1, 3), { label: "Multi", value: "MULTI" }];
 
-const nameTitleOptions = ["Mr.", "Mrs.", "Master", "Miss"].map((value) => ({
-  label: value.replace(/\.$/, ""),
-  value,
+const nameTitleOptions = ["Mr", "Mrs", "Miss"].map((value) => ({
+  label: value,
+  value: value === "Miss" ? "Mrs" : value,
 }));
 
 const maritalStatusOptions = ["Single", "Married", "Divorced", "Widowed"].map((value) => ({
