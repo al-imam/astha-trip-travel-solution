@@ -158,7 +158,7 @@ export function MainEntry() {
     form.append("imgvisa", data["visa-copy"][0]);
     form.append("hotel", data["hotel-copy"][0]);
     form.append("ticket", data["ticket-copy"][0]);
-    country.value && form.append("passport-size-photo", data["passport-size-photo"][0]);
+    country.value === "Vietnam" && form.append("passport-size-photo", data["passport-size-photo"][0]);
 
     try {
       const res = await toast.promise(axios.post("/temp/guestlist/photoupload", form), {

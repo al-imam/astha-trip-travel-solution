@@ -127,5 +127,12 @@
   { "type": "PDFCheckBox", "name": "Check Box7" },
   { "type": "PDFCheckBox", "name": "Check Box8" },
   { "type": "PDFCheckBox", "name": "Check Box9" },
-  { "type": "PDFCheckBox", "name": "Check Box10" }
+  { "type": "PDFCheckBox", "name": "Check Box10" },
+  {
+    "a": "No",
+    "b": "No",
+    "c": "No",
+    "d": "Yes",
+    "details": "for break bank sell"
+  }
 ]
