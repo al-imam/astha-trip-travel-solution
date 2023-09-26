@@ -14,6 +14,7 @@ import countries from "../countries.json";
 import districts from "../districts.json";
 import { Spinner } from "./Spinner";
 import { fire, flattenObject, populate, setValue } from "./util";
+import { useSearchParams } from "react-router-dom";
 
 const countriesOptions = countries.map((e) => ({
   label: e.name,
@@ -110,6 +111,8 @@ export function Schengen() {
   const [form, setForm] = useState({});
   const auth = useAuth();
 
+  const [url] = useSearchParams();
+
   const personal = useForm();
   const travel = useForm();
   const contact = useForm();
@@ -161,8 +164,7 @@ export function Schengen() {
   }
 
   async function infoSubmit(__d) {
-    await new Promise((r) => setTimeout(r, 5000));
-    const data = flattenObject(Object.assign(form, __d));
+    const data = flattenObject(Object.assign(form, Object.assign(__d, { reference: url.get("ref") })));
 
     const serverRes = await axios.post("/api/visa-form/schengen", data).catch(console.log);
     if (!serverRes) return fire();

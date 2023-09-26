@@ -19,6 +19,9 @@ const VisaFormColector = () => {
         };
       }
 
+      // console.log(req.STATUS);
+      // return res.status(500).send("oin test ssdd");
+
       try {
         const { body } = req;
 
@@ -87,11 +90,17 @@ const VisaFormColector = () => {
             body["cost-of-traveling-and-living"]
           ),
           apply_by: JSON.stringify(apply),
-          status: "pending",
+          status: req.STATUS,
         });
 
         if (typeof resDb.errno === "number" || resDb.errno) {
           return res.status(406).json({ message: "Something went wrong" });
+        }
+
+        if (body.reference) {
+          const Loi_res = await LOI_DATA.findByIdAndUpdate(body.reference, {
+            visa_application: resDb.insertId,
+          });
         }
 
         res.json({ success: true });
@@ -184,7 +193,7 @@ const VisaFormColector = () => {
             details: body["details-why-yes"] || "",
           }),
 
-          status: "pending",
+          status: req.STATUS,
           apply_by: JSON.stringify(apply),
         });
 
@@ -261,13 +270,18 @@ const VisaFormColector = () => {
           thailand_contact_phone: body["telephone-fax-of-thailand-guarantor"],
 
           number_of_entry: body["number-of-entries"],
-          status: "pending",
+          status: req.STATUS,
           // Address i
           apply_by: JSON.stringify(apply),
         });
 
         if (typeof dbRes.errno === "number" || dbRes.errno) {
           return res.status(406).json({ message: "Something went wrong" });
+        }
+        if (body.reference) {
+          const Loi_res = await LOI_DATA.findByIdAndUpdate(body.reference, {
+            visa_application: dbRes.insertId,
+          });
         }
 
         res.json({ success: true });

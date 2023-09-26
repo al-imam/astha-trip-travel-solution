@@ -19,7 +19,9 @@ const Generate_Singapore = async (id) => {
       throw "Provided ID has no relevant data";
     }
     // check the data is approved with the loi request
+
     if (response.status !== "approved") {
+      console.log("goo");
       const [responseLOI] = await LOI_DATABASE.find({ visa_application: id });
       if (!responseLOI) {
         throw "This request are not approved by the Admin";
@@ -28,7 +30,6 @@ const Generate_Singapore = async (id) => {
         throw "This LOI are not approved by the Admin";
       }
     }
-
     //  readfile
     const formUrl = await readFile(path.join(__dirname, "./src/Singapore.pdf"));
     const pdfDoc = await PDFDocument.load(formUrl);
@@ -799,8 +800,8 @@ const Generate_Singapore = async (id) => {
     // return "pdf save ";
     return { file: pdfByt, name: response["name"] };
   } catch (error) {
-    console.log("🚀 ~ file: Genarate_Sngapore.js:9 ~ error:", error);
-    return new Error(error);
+    // console.log("🚀 ~ file: Genarate_Sngapore.js:9 ~ error:", error);
+    throw new Error(error);
   }
 };
 

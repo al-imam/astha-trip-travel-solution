@@ -21,7 +21,9 @@ const GeneratePDF = () => {
       try {
         const { id } = req.params;
         const { file, name } = await Generate_singapore(id);
-
+        if (!file) {
+          throw "the pdf is not generated";
+        }
         res.set({
           "Content-Disposition": `attachment; filename=${name}-visa-form.pdf`,
           "Content-Type": "application/pdf",

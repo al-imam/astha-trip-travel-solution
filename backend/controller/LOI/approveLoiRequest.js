@@ -1,6 +1,7 @@
 const LOI = require("../../model/LOI");
 const PDF = require("../../GenaretePDF/pythonGeneratePDF");
 const SendEmail = require("../../util/SendEmail");
+const Singapore_visa = require("../../model/Singapore");
 const path = require("path");
 const fs = require("fs");
 
@@ -73,6 +74,16 @@ async function SendMailWithAttachment(loiReqData, guests) {
       set: { status: "approved" },
       where: { id: loiReqData.id },
     });
+
+    if (loiReqData.visa_application != 0) {
+      if (loiReqData.country === "Singapore")
+        await Singapore_visa.update({
+          set: { status: "approved" },
+          where: {
+            id: loiReqData.visa_application,
+          },
+        });
+    }
 
     return false;
   } catch (error) {
