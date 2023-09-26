@@ -44,8 +44,6 @@ function combineData(...objects) {
     email: ["email", "email", "home_email"],
     home_email: ["email", "email", "home_email"],
     phone: ["phone", "phone", "phone"],
-    occupation: ["occupation", "occupation", "current_occupation"],
-    current_occupation: ["occupation", "occupation", "current_occupation"],
     employer_and_employers_address: [
       null,
       null,

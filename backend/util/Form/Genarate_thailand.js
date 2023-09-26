@@ -96,7 +96,7 @@ const Generate_thailand = async (id) => {
       {
         type: "PDFRadioGroup",
         name: "salutation",
-        // value: response["name_title"],
+        value: response["name_title"],
       },
       {
         type: "PDFTextField",
@@ -426,7 +426,6 @@ const Generate_thailand = async (id) => {
 
     form.flatten();
     const pdfByt = await pdfDoc.save();
-    await writeFile("generate-thailand.pdf", pdfByt);
 
     return {
       file: pdfByt,
