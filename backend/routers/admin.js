@@ -71,7 +71,7 @@ AdminRouter.post(
   resetPassword
 );
 
-AdminRouter.put("/heading", validateBody([isString("text")]), write);
+AdminRouter.put("/heading", validateBody([isString("text")]), isAdmin, write);
 
 AdminRouter.get("/heading", read);
 
