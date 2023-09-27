@@ -11,6 +11,9 @@ const isAgent = require("../middleware/Auth/isAgent");
 const addBalance = require("../controller/agent/addBalance");
 const changePassword = require("../controller/agent/changePassword");
 const getLOIById = require("../controller/agent/getLOIById");
+const getMulter = require("../util/multer");
+const uploadProfilePhoto = require("../controller/Agent/uploadProfilePhoto");
+const path = require("path");
 
 const AgentRoute = express.Router();
 
@@ -55,5 +58,13 @@ AgentRoute.get("/info", getInfo);
 AgentRoute.get("/agent-loi-by-id", isAgent, getLOIById);
 
 AgentRoute.get("/balance-invoice/:agent_id", isAgent, balanceInvoice);
+
+AgentRoute.post(
+  "/upload-profile-photo",
+  getMulter({
+    destination: path.normalize(path.join(__dirname, "..", "upload", "avatar")),
+  }).single("photo"),
+  uploadProfilePhoto
+);
 
 module.exports = AgentRoute;
