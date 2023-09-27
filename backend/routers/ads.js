@@ -9,7 +9,7 @@ const path = require("path");
 
 const router = require("express").Router();
 
-router.get("/", isAdmin, allAds);
+router.get("/", allAds);
 
 router.post(
   "/add-ads-photo",

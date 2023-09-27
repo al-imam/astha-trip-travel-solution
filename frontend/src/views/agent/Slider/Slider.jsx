@@ -1,13 +1,22 @@
+import axios from "axios";
+import { useEffect, useState } from "react";
 import "swiper/css";
 import { Autoplay } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 const Slider = () => {
+  const [ads, setAds] = useState([]);
+
+  useEffect(() => {
+    (async () => setAds((await axios.get("/api/admin/ads").catch(() => ({ data: [] }))).data))();
+  }, []);
+
   return (
     <>
       <Swiper
         spaceBetween={30}
         centeredSlides={true}
+        loop
         autoplay={{
           delay: 2500,
           disableOnInteraction: false,
@@ -15,21 +24,13 @@ const Slider = () => {
         modules={[Autoplay]}
         className="mySwiper"
       >
-        <SwiperSlide>
-          <div className="relative h-full w-full">
-            <img src="/post1.jpg" className="relative h-full w-full object-contain" alt="" />
-          </div>
-        </SwiperSlide>
-        <SwiperSlide>
-          <div className="relative h-full w-full">
-            <img src="/astha2.jpg" className="relative h-full w-full object-contain" alt="" />
-          </div>
-        </SwiperSlide>
-        <SwiperSlide>
-          <div className="relative h-full w-full">
-            <img src="/singapor1.jpg" className="relative h-full w-full object-contain" alt="" />
-          </div>
-        </SwiperSlide>
+        {ads.map((ad) => (
+          <SwiperSlide className="my-auto flex">
+            <div className=" h-full w-full">
+              <img src={`/api/admin/ads/get/${ad.url}`} className="h-full w-full object-fill" alt="" />
+            </div>
+          </SwiperSlide>
+        ))}
       </Swiper>
     </>
   );
