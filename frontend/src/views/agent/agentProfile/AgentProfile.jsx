@@ -154,11 +154,11 @@ const AgentProfile = () => {
       </div>
 
       {isUploaderOpen && (
-        <div className="fixed inset-0 z-10 flex flex-col items-center justify-center">
-          <div className="absolute inset-0 bg-gray-800 opacity-50"></div>
-          <div className="z-20 w-[80vw] rounded bg-white p-6 shadow-md lg:w-[35vw]">
+        <div className="fixed inset-0 z-10 flex flex-col items-center justify-center sm-max:px-4">
+          <div className="absolute inset-0 bg-gray-800 opacity-50 backdrop-blur-sm "></div>
+          <div className="z-20 w-full rounded bg-white p-6 shadow-md  sm:max-w-xl lg:max-w-3xl">
             <h2 className="mb-4 text-center text-lg font-semibold">Upload photo</h2>
-            <form onSubmit={photo.handleSubmit(onUploadSubmit)} className="flex flex-col gap-4">
+            <form onSubmit={photo.handleSubmit(onUploadSubmit)} className="flex w-full flex-col gap-4">
               <div className="relative mx-auto h-40 w-40 overflow-hidden rounded-md  bg-gradient-to-b from-gray-700 to-gray-600">
                 {imageURL && (
                   <Fragment>
