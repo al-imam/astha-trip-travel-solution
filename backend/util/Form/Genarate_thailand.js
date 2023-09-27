@@ -9,20 +9,28 @@ const { v4: uuid } = require("uuid");
 // if you're going to change it change it in frontend too
 const SEPARATOR = "<$72$31$33$>";
 
-const Generate_thailand = async (id) => {
+const Generate_thailand = async (id, pass) => {
+  console.log(
+    "🚀 ~ file: Genarate_thailand.js:13 ~ constGenerate_thailand= ~ pass:",
+    pass
+  );
   try {
     if (!id) throw "id not found";
     const [response] = await THAILAND_DATABASE.findById(id);
     if (!response) throw "Provided ID has no relevant data";
 
-    /* 
-    if (response.status !== "approved") {
-      const [responseLOI] = await LOI_DATABASE.find({ visa_application: id });
-      if (!responseLOI || (responseLOI && responseLOI.status !== "approved")) {
-        throw "This request are not approved by the Admin";
+    if (!pass) {
+      if (response.status !== "approved") {
+        const [responseLOI] = await LOI_DATABASE.find({ visa_application: id });
+        if (
+          !responseLOI ||
+          (responseLOI && responseLOI.status !== "approved")
+        ) {
+          throw "This request are not approved by the Admin";
+        }
+        throw "This Request is Not approved";
       }
     }
-    */
 
     const formUrl = await readFile(path.join(__dirname, "src/thailand.pdf"));
     const pdfDoc = await PDFDocument.load(formUrl);
@@ -78,7 +86,7 @@ const Generate_thailand = async (id) => {
         type: "PDFTextField",
         name: "Number of Entries Requested",
         value: preFix(response["number_of_entry"]),
-        font: 12,
+        font: 9,
       },
 
       {
@@ -96,76 +104,79 @@ const Generate_thailand = async (id) => {
       {
         type: "PDFRadioGroup",
         name: "salutation",
-        // value: response["name_title"],
+        value: response["name_title"],
       },
       {
         type: "PDFTextField",
         name: "First Name",
         value: response["first_name"],
+        font: 11,
       },
       {
         type: "PDFTextField",
         name: "Middle Name (if any)",
         value: response["middle_name"],
+        font: 11,
       },
       {
         type: "PDFTextField",
         name: "Family Name",
         value: response["family_name"],
+        font: 11,
       },
       {
         type: "PDFTextField",
         name: "Former Name",
         value: response["former_name"],
-        font: 12,
+        font: 11,
       },
       {
         type: "PDFTextField",
         name: "Nationality",
         value: response["nationality"],
-        font: 12,
+        font: 11,
       },
       {
         type: "PDFTextField",
         name: "Nationality at Birth",
         value: response["nationality_at_birth"],
-        font: 12,
+        font: 11,
       },
       {
         type: "PDFTextField",
         name: "Birth Place",
         value: response["birth_place"],
-        font: 12,
+        font: 9,
       },
       {
         type: "PDFTextField",
         name: "Marital Status",
         value: response["marital_status"],
-        font: 12,
+        font: 9,
       },
       {
         type: "PDFTextField",
         name: "Date of Birth",
         value: response["date_of_birth"]?.split("-").reverse().join("/"),
-        font: 12,
+        font: 11,
       },
       {
         type: "PDFTextField",
         name: "PASSPORT TYPE",
         value: response["type_of_passport"],
-        font: 12,
+        font: 8,
       },
       {
         type: "PDFTextField",
         name: "Passport No",
         value: response["passport-number"],
-        font: 12,
+        font: 9,
       },
       {
         type: "PDFTextField",
         name: "Issued at",
         value: response["passport_issued_at"],
-        font: 12,
+        font: 9,
       },
 
       {
@@ -207,7 +218,7 @@ const Generate_thailand = async (id) => {
         type: "PDFTextField",
         name: "Email",
         value: response["email"],
-        font: 11,
+        font: 8,
       },
       {
         type: "PDFTextField",
@@ -270,7 +281,7 @@ const Generate_thailand = async (id) => {
         type: "PDFTextField",
         name: "Traveling by",
         value: response["travel_by"],
-        font: 12,
+        font: 9,
       },
 
       {
@@ -433,7 +444,7 @@ const Generate_thailand = async (id) => {
       name: `thailand-${response["first_name"]}-${uuid()}`,
     };
   } catch (error) {
-    return { failed: true };
+    throw new Error(error);
   }
 };
 

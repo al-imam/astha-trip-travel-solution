@@ -4,9 +4,13 @@ const Generate_thailand = require("../../util/Form/Genarate_thailand");
 const GeneratePDF = () => {
   return {
     schengen: async (req, res, next) => {
+      let pass = false;
+      if (req.User.Admin) {
+        pass = true;
+      }
       try {
         const { id } = req.params;
-        const { file, name } = await Generate_schengen(id);
+        const { file, name } = await Generate_schengen(id, pass);
 
         res.set({
           "Content-Disposition": `attachment; filename=${name}-visa-form.pdf`,
@@ -21,9 +25,13 @@ const GeneratePDF = () => {
       }
     },
     singapore: async (req, res, next) => {
+      let pass = false;
+      if (req.User.Admin) {
+        pass = true;
+      }
       try {
         const { id } = req.params;
-        const { file, name } = await Generate_singapore(id);
+        const { file, name } = await Generate_singapore(id, pass);
         if (!file) {
           throw "the pdf is not generated";
         }
@@ -40,11 +48,12 @@ const GeneratePDF = () => {
       }
     },
     thailand: async (req, res, next) => {
+      let pass = false;
+      if (req.User.Admin) {
+        pass = true;
+      }
       try {
-        const { file, name, failed } = await Generate_thailand(req.params.id);
-
-        if (failed)
-          return res.status(500).json({ message: "Internal Server Error" });
+        const { file, name } = await Generate_thailand(req.params.id, pass);
 
         res.set({
           "Content-Disposition": `attachment; filename=${name}-visa-form.pdf`,

@@ -66,7 +66,7 @@ const DataPage = () => {
         {
           Header: "Action",
           accessor: "action",
-          Cell: (prop) => <Action props={{ ...prop, county: "Singapore" }} />,
+          Cell: (prop) => <Action props={{ ...prop, county: "schengen" }} />,
         },
       ],
       thailand: [
@@ -97,7 +97,7 @@ const DataPage = () => {
         {
           Header: "Action",
           accessor: "action",
-          Cell: (prop) => <Action props={{ ...prop, county: "Singapore" }} />,
+          Cell: (prop) => <Action props={{ ...prop, county: "thailand" }} />,
         },
       ],
       singapore: [
@@ -128,7 +128,7 @@ const DataPage = () => {
         {
           Header: "Action",
           accessor: "action",
-          Cell: (prop) => <Action props={{ ...prop, county: "Singapore" }} />,
+          Cell: (prop) => <Action props={{ ...prop, county: "singapore" }} />,
         },
       ],
     };
@@ -177,7 +177,10 @@ const Action = ({ props }) => {
   return (
     <div className="flex justify-end gap-2">
       {props.row.original.status !== "approved" ? (
-        "wait"
+        <div className="flex h-8 w-8 flex-col items-center justify-center rounded-full bg-red-100/60 text-xs ring-1 ring-brand-500">
+          <LineMdDownloadOffOutlineLoop />
+          wait
+        </div>
       ) : (
         <a
           target="_blank"
@@ -214,6 +217,44 @@ export function LineMdDownloadingLoop(props) {
           <animate fill="freeze" attributeName="stroke-dashoffset" begin="0.7s" dur="0.2s" values="6;0"></animate>
         </path>
       </g>
+    </svg>
+  );
+}
+
+export function LineMdDownloadOffOutlineLoop(props) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" {...props}>
+      <mask id="lineMdDownloadOffOutlineLoop0">
+        <g fill="none" stroke="#fff" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
+          <path strokeDasharray="14" strokeDashoffset="14" d="M6 19h12">
+            <animate fill="freeze" attributeName="stroke-dashoffset" begin="0.5s" dur="0.4s" values="14;0"></animate>
+          </path>
+          <path strokeDasharray="18" strokeDashoffset="18" d="M12 4 h2 v6 h2.5 L12 14.5M12 4 h-2 v6 h-2.5 L12 14.5">
+            <animate fill="freeze" attributeName="stroke-dashoffset" dur="0.4s" values="18;0"></animate>
+            <animate
+              attributeName="d"
+              calcMode="linear"
+              dur="1.5s"
+              keyTimes="0;0.7;1"
+              repeatCount="indefinite"
+              values="M12 4 h2 v6 h2.5 L12 14.5M12 4 h-2 v6 h-2.5 L12 14.5;M12 4 h2 v3 h2.5 L12 11.5M12 4 h-2 v3 h-2.5 L12 11.5;M12 4 h2 v6 h2.5 L12 14.5M12 4 h-2 v6 h-2.5 L12 14.5"
+            ></animate>
+          </path>
+          <g strokeDasharray="26" strokeDashoffset="26" transform="rotate(45 13 12)">
+            <path stroke="#000" d="M0 11h24"></path>
+            <path d="M0 13h22">
+              <animate
+                attributeName="d"
+                dur="6s"
+                repeatCount="indefinite"
+                values="M0 13h22;M2 13h22;M0 13h22"
+              ></animate>
+            </path>
+            <animate fill="freeze" attributeName="stroke-dashoffset" begin="1s" dur="0.2s" values="26;0"></animate>
+          </g>
+        </g>
+      </mask>
+      <rect width="24" height="24" fill="currentColor" mask="url(#lineMdDownloadOffOutlineLoop0)"></rect>
     </svg>
   );
 }

@@ -59,7 +59,11 @@ VisaFormRouter.get(
   GeneratePDF().singapore
 );
 
-VisaFormRouter.get("/download-form-pdf-thailand/:id", GeneratePDF().thailand);
+VisaFormRouter.get(
+  "/download-form-pdf-thailand/:id",
+  isAuthenticate,
+  GeneratePDF().thailand
+);
 
 VisaFormRouter.get("/passport-numbers", isAuthenticate, passportNumbers);
 
