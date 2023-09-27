@@ -89,7 +89,7 @@ const Index = () => {
           Header: "Action",
           accessor: "action",
           Cell: (prop) => (
-            <Action prop={{ ...prop }} SelectedCountry={SelectedCountry} reloadSingapore={reloadSingapore} />
+            <Action prop={{ ...prop }} SelectedCountry={SelectedCountry} reloadSingapore={reloadschengen} />
           ),
         },
       ],
@@ -129,7 +129,7 @@ const Index = () => {
           Header: "Action",
           accessor: "action",
           Cell: (prop) => (
-            <Action prop={{ ...prop }} SelectedCountry={SelectedCountry} reloadSingapore={reloadSingapore} />
+            <Action prop={{ ...prop }} SelectedCountry={SelectedCountry} reloadSingapore={reloadthailand} />
           ),
         },
       ],
@@ -401,7 +401,7 @@ const Index = () => {
 export default Index;
 
 const Action = ({ prop, SelectedCountry, reloadSingapore }) => {
-  // approve contrler
+  // approve controller =>
   const Approved = async (country, id) => {
     // return alert(SelectedCountry);
     try {
@@ -416,9 +416,29 @@ const Action = ({ prop, SelectedCountry, reloadSingapore }) => {
           success: "Request Accepted",
         }
       );
-      if (country === "singapore") {
-        reloadSingapore();
-      }
+
+      reloadSingapore();
+    } catch (error) {
+      console.log("🚀 ~ file: Index.jsx:340 ~ Approved ~ error:", error);
+    }
+  };
+  // approve controller =>
+  const Reject = async (country, id) => {
+    // return alert(SelectedCountry);
+    try {
+      const serverRes = await toast.promise(
+        axios.post("/api/visa-form/Reject", {
+          country,
+          id,
+        }),
+        {
+          pending: "Please Wait ...",
+          error: "Something is Wrong!",
+          success: "Request Rejected",
+        }
+      );
+
+      reloadSingapore();
     } catch (error) {
       console.log("🚀 ~ file: Index.jsx:340 ~ Approved ~ error:", error);
     }
@@ -426,6 +446,9 @@ const Action = ({ prop, SelectedCountry, reloadSingapore }) => {
   return (
     <div className="flex justify-end gap-2">
       <button
+        onClick={() => {
+          Reject(SelectedCountry, prop.row.original.id);
+        }}
         title="Reject Request"
         className={`text-md rounded-full bg-red-200 p-2 text-red-800 ring-1 ring-red-700 transition-all duration-500 hover:scale-105 hover:shadow-md ${
           prop.row.original.status === "approved" || prop.row.original.status === "rejected" ? "hidden" : ""
@@ -457,6 +480,7 @@ const Action = ({ prop, SelectedCountry, reloadSingapore }) => {
     </div>
   );
 };
+// icons
 
 export function LineMdDownloadingLoop(props) {
   return (

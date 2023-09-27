@@ -12,6 +12,7 @@ const Approved = require("../controller/VisaForm/Approved");
 const passportNumbers = require("../controller/VisaForm/passport-numbers");
 const GeneratePDF = require("../controller/VisaForm/GenaratePDF");
 const Approval = require("../middleware/visa-form/Approval");
+const Reject = require("../controller/VisaForm/Reject");
 
 VisaFormRouter.post(
   "/schengen",
@@ -42,6 +43,7 @@ VisaFormRouter.get("/get-by-agent", isAgent, GetForm().agent);
 
 // action controller
 VisaFormRouter.post("/approved", isAdmin, Approved);
+VisaFormRouter.post("/Reject", isAdmin, Reject);
 
 VisaFormRouter.get(
   "/get-by-passport/:passport",
