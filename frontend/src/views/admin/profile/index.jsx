@@ -63,6 +63,15 @@ function ProfileOverview() {
     toast.error("Something went wrong!");
   }
 
+  async function removeAd(url) {
+    const server = await axios.post("/api/admin/ads/remove-ads", { url }).catch(() => ({}));
+    if (server.data && server.data.success) {
+      return setAds((prev) => prev.filter((old) => old.url !== url));
+    }
+
+    toast.error("Something went wrong");
+  }
+
   return (
     <div className="flex w-full flex-col gap-5">
       <div className="w-ful mt-3 flex h-fit flex-col gap-5 lg:grid lg:grid-cols-3">
@@ -94,7 +103,10 @@ function ProfileOverview() {
               <div className="relative overflow-hidden rounded-md bg-red-400/5">
                 <img className="sm:h-40 sm-max:w-full" src={`/api/admin/ads/get/${url}`} />
                 <div className="absolute inset-0  flex items-start justify-end hover:bg-white/30">
-                  <button className="m-2 rounded-sm bg-white p-1 text-lg text-red-500 shadow hover:text-red-600">
+                  <button
+                    onClick={() => removeAd(url)}
+                    className="m-2 rounded-sm bg-white p-1 text-lg text-red-500 shadow hover:text-red-600"
+                  >
                     <DeleteIcon />
                   </button>
                 </div>
