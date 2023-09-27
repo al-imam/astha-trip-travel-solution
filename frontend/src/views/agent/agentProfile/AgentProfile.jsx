@@ -64,7 +64,6 @@ const AgentProfile = () => {
 
   async function onUploadSubmit(data) {
     const form = new FormData();
-    await new Promise((r) => setTimeout(r, 5000));
     form.append("photo", data.photo[0]);
     form.append("id", agent.id);
     const server = await axios.post("/api/agent/upload-profile-photo", form).catch(console.log);
