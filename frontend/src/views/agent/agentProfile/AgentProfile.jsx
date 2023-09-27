@@ -5,6 +5,7 @@ import { Fragment, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { DeleteIcon } from "views/public/Entry/MainEntry";
+import { Spinner } from "views/public/Entry/Spinner";
 
 const AgentProfile = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -63,9 +64,17 @@ const AgentProfile = () => {
 
   async function onUploadSubmit(data) {
     const form = new FormData();
+    await new Promise((r) => setTimeout(r, 5000));
     form.append("photo", data.photo[0]);
-    const res = await axios.post("/api/agent/upload-profile-photo", form);
-    console.log(res);
+    const server = await axios.post("/api/agent/upload-profile-photo", form).catch(console.log);
+
+    if (server && server.data && server.data.success) {
+      setImageURL("");
+      photo.setValue("photo", "");
+      return setIsUploaderOpen(false);
+    }
+
+    toast.error("Something went wrong!");
   }
 
   async function onPassSubmit(data) {
@@ -150,7 +159,7 @@ const AgentProfile = () => {
                     <img className="h-full w-full object-cover object-center" src={imageURL} />
                     <div className="absolute inset-0 flex items-center justify-center bg-gray-900/10 opacity-0 backdrop-blur-sm transition-all  hover:opacity-100">
                       <button
-                        onClick={() => photo.setValue("photo", "") || setImageURL("")}
+                        onClick={() => photo.formState.isSubmitting || photo.setValue("photo", "") || setImageURL("")}
                         type="button"
                         className="text-xl text-red-500 shadow-sm hover:text-red-400"
                       >
@@ -163,11 +172,19 @@ const AgentProfile = () => {
               <Input
                 type="file"
                 label="Profile photo"
+                disabled={photo.formState.isSubmitting}
                 register={photo.register("photo", { required: "Photo is required" })}
                 error={photo.formState.errors["photo"]}
               />
               <div className="flex justify-between">
-                <Button>Submit</Button>
+                <Button disabled={photo.formState.isSubmitting} className="relative">
+                  <span className={photo.formState.isSubmitting ? "opacity-0" : ""}>Submit</span>
+                  {photo.formState.isSubmitting && (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <Spinner />
+                    </div>
+                  )}
+                </Button>
                 <Button type="button" onClick={() => setIsUploaderOpen(false)}>
                   Close
                 </Button>
