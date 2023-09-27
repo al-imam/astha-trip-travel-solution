@@ -3,7 +3,7 @@ const path = require("path");
 
 module.exports = async function (req, res, next) {
   try {
-    const local = path.join(__dirname, "../../upload/avatar", req.params.name);
+    const local = path.join(__dirname, "../../upload/ads", req.params.name);
     if (existsSync(local)) return res.sendFile(local);
     res.status(404).json({ message: "File not found", code: "NOT FOUND" });
   } catch (error) {
