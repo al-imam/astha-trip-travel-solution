@@ -14,6 +14,7 @@ function ProfileOverview() {
   const [text, setText] = useState("");
   const [isUploadModelOpen, setIsUploadModelOpen] = useState(false);
   const [imageURL, setImageURL] = useState("");
+  const [ads, setAds] = useState([]);
   const { admin } = useAuth();
   const photo = useForm();
 
@@ -27,8 +28,13 @@ function ProfileOverview() {
 
   useEffect(() => {
     (async () => {
-      const { data } = await axios.get("/api/admin/heading");
-      setText((prev) => prev || data.text);
+      const [headingRes, adsRes] = await Promise.allSettled([
+        axios.get("/api/admin/heading"),
+        axios.get("/api/admin/ads"),
+      ]).catch(() => []);
+
+      if (headingRes.value) setText((prev) => prev || headingRes.value.data.text);
+      if (adsRes.value) setAds(adsRes.value.data);
     })();
   }, []);
 
@@ -82,7 +88,22 @@ function ProfileOverview() {
         </button>
       </div>
       <div className="relative flex flex-col gap-4 rounded-[20px] bg-white bg-clip-border p-4 text-gray-900 shadow-3xl shadow-shadow-500 dark:!bg-navy-800 dark:shadow-none ">
-        <p className="mx-auto py-10 text-3xl">No image</p>
+        {ads.length > 0 ? (
+          <div className="flex flex-wrap gap-4">
+            {ads.map(({ url }) => (
+              <div className="relative overflow-hidden rounded-md bg-red-400/5">
+                <img className="sm:h-40 sm-max:w-full" src={`/api/admin/ads/get/${url}`} />
+                <div className="absolute inset-0  flex items-start justify-end hover:bg-white/30">
+                  <button className="m-2 rounded-sm bg-white p-1 text-lg text-red-500 shadow hover:text-red-600">
+                    <DeleteIcon />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="mx-auto py-10 text-3xl">No image</p>
+        )}
         <button
           onClick={() => setIsUploadModelOpen(true)}
           className="mt-auto rounded-md bg-brand-500 px-6 py-2 text-base font-medium text-white transition duration-200 hover:bg-brand-600 active:bg-brand-700 dark:bg-brand-400 dark:text-white dark:hover:bg-brand-300 dark:active:bg-brand-200"
