@@ -66,6 +66,7 @@ const AgentProfile = () => {
     const form = new FormData();
     await new Promise((r) => setTimeout(r, 5000));
     form.append("photo", data.photo[0]);
+    form.append("id", agent.id);
     const server = await axios.post("/api/agent/upload-profile-photo", form).catch(console.log);
 
     if (server && server.data && server.data.success) {
@@ -103,11 +104,16 @@ const AgentProfile = () => {
       <div className="container mx-auto flex flex-col gap-5 md:flex-row">
         <div>
           <div className=" flex w-full items-center justify-center md:w-[300px]">
-            <div className="relative rounded-full">
-              <img className="h-40 w-40" src="/logoastha.png" alt="img" />
+            <div className="relative overflow-hidden rounded-full">
+              <img
+                className="h-40 w-40 object-cover object-center"
+                src={`/api/agent/avatar/${agent.photo}`}
+                onError={(evt) => (evt.target.src = "/logoastha.png")}
+                alt="img"
+              />
               <button
                 onClick={() => setIsUploaderOpen(true)}
-                className="text-black absolute inset-0 rounded-full bg-white/80 text-base font-medium opacity-0  transition-opacity hover:opacity-100"
+                className="absolute -inset-1 rounded-full bg-gray-900/50 text-base font-medium text-white opacity-0  backdrop-blur-sm transition-opacity hover:opacity-100"
               >
                 Upload photo
               </button>
@@ -185,7 +191,12 @@ const AgentProfile = () => {
                     </div>
                   )}
                 </Button>
-                <Button type="button" onClick={() => setIsUploaderOpen(false)}>
+                <Button
+                  type="button"
+                  className="bg-red-500 hover:bg-red-600 focus:ring-red-500/50"
+                  onClick={() => setIsUploaderOpen(false)}
+                  disabled={photo.formState.isSubmitting}
+                >
                   Close
                 </Button>
               </div>

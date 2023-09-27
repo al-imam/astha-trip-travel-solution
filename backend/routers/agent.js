@@ -14,6 +14,7 @@ const getLOIById = require("../controller/agent/getLOIById");
 const getMulter = require("../util/multer");
 const uploadProfilePhoto = require("../controller/Agent/uploadProfilePhoto");
 const path = require("path");
+const sendProfilePhoto = require("../controller/Agent/sendProfilePhoto");
 
 const AgentRoute = express.Router();
 
@@ -61,10 +62,13 @@ AgentRoute.get("/balance-invoice/:agent_id", isAgent, balanceInvoice);
 
 AgentRoute.post(
   "/upload-profile-photo",
+  isAgent,
   getMulter({
     destination: path.normalize(path.join(__dirname, "..", "upload", "avatar")),
   }).single("photo"),
   uploadProfilePhoto
 );
+
+AgentRoute.get("/avatar/:name", sendProfilePhoto);
 
 module.exports = AgentRoute;
