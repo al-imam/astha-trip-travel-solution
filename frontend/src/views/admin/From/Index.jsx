@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import useAgent from "hook/UseAgent";
 import useAllform from "hook/useAllform";
 import React, { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import NormalSelect from "react-select";
 import { toast } from "react-toastify";
 import Table from "../payment/table";
@@ -255,6 +256,37 @@ const Index = () => {
           subtitle={thailandLoad ? <SvgSpinnersPulseRings3 /> : allthailand.length}
         />
       </div>
+      <div className="my-2 p-3">
+        <div>
+          <h1 className="flex items-center justify-start text-xl">
+            {" "}
+            <span className="pr-2">
+              <SolarPenNewRoundLineDuotone />
+            </span>
+            Entry
+          </h1>
+          <div className="relative flex w-full items-center justify-start gap-2">
+            <Link
+              to={"/entry/singapore"}
+              className="cursor-pointer rounded-md bg-brand-300 py-1 px-3 text-white ring-brand-500 hover:bg-brand-400 hover:ring-1"
+            >
+              Singapore
+            </Link>
+            <Link
+              to={"/entry/thailand"}
+              className="cursor-pointer rounded-md bg-brand-300 py-1 px-3 text-white ring-brand-500 hover:bg-brand-400 hover:ring-1"
+            >
+              Thailand
+            </Link>
+            <Link
+              to={"/entry/schengen"}
+              className="cursor-pointer rounded-md bg-brand-300 py-1 px-3 text-white ring-brand-500 hover:bg-brand-400 hover:ring-1"
+            >
+              Schengen
+            </Link>
+          </div>
+        </div>
+      </div>
       <div className="relative w-full p-3">
         <span className="text-xl">Choose Country:</span>
         <NormalSelect
@@ -311,6 +343,7 @@ const Index = () => {
                 subtitle={SelectedCountryData.filter((e) => e.status === "rejected").length}
               />
             </div>
+
             {/* table  */}
             <div className="relative mt-6 w-full">
               <div className="relative grid w-full grid-cols-3 gap-3 p-3">
@@ -784,6 +817,21 @@ export function ClarityDetailsLine(props) {
         className="clr-i-outline clr-i-outline-path-4"
       ></path>
       <path fill="none" d="M0 0h36v36H0z"></path>
+    </svg>
+  );
+}
+
+export function SolarPenNewRoundLineDuotone(props) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" {...props}>
+      <g fill="none" stroke="currentColor" strokeWidth="1.5">
+        <path
+          d="M16.652 3.455s.081 1.379 1.298 2.595c1.216 1.217 2.595 1.298 2.595 1.298M10.1 15.588L8.413 13.9"
+          opacity=".5"
+        ></path>
+        <path d="m16.652 3.455l.649-.649A2.753 2.753 0 0 1 21.194 6.7l-.65.649l-5.964 5.965c-.404.404-.606.606-.829.78a4.59 4.59 0 0 1-.848.524c-.255.121-.526.211-1.068.392l-1.735.579l-1.123.374a.742.742 0 0 1-.939-.94l.374-1.122l.579-1.735c.18-.542.27-.813.392-1.068c.144-.301.32-.586.524-.848c.174-.223.376-.425.78-.83l5.965-5.964Z"></path>
+        <path strokeLinecap="round" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2" opacity=".5"></path>
+      </g>
     </svg>
   );
 }

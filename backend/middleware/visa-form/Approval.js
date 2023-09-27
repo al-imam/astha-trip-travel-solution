@@ -12,6 +12,7 @@ const Visa_Approval = async (req, res, next) => {
       const [Loi] = await LOI_DATABASE.find({
         id: LOI_ref,
       });
+
       if (Loi) {
         if (Loi.visa_application == 0) {
           if (Loi.status === "approved") {
@@ -26,6 +27,7 @@ const Visa_Approval = async (req, res, next) => {
         }
       }
     }
+
     if (req.User?.Admin) {
       status = "approved";
     } else if (req.User.Agent) {
@@ -44,16 +46,14 @@ const Visa_Approval = async (req, res, next) => {
       } else {
         status = "pending";
       }
-      req.STATUS = status;
-      next();
+
       // console.log("strat");
       // res.status(500).send("okk");
     }
+    req.STATUS = status;
+
+    next();
   } catch (error) {
-    console.log(
-      "🚀 ~ file: Approval.js:5 ~ constVisa_Approval= ~ error:",
-      error
-    );
     res.status(500).send(error);
   }
 };
