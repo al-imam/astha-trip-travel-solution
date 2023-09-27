@@ -1,6 +1,7 @@
 import axios from "axios";
 import Widget from "components/widget/Widget";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 
@@ -8,9 +9,22 @@ const swalWithBootstrapButtons = Swal.mixin();
 
 const DetailAgentmodule = ({ dataraw, close, reload }) => {
   const [data, setData] = useState(null);
+  const [stat, setStat] = useState(null);
   useEffect(() => {
     setData(dataraw);
   }, [dataraw]);
+
+  if (data) {
+    const res = axios.post("/api/payment/status", {
+      agent_id: data.id,
+      email: data.email,
+    });
+    res
+      .then((re) => {
+        setStat(re.data);
+      })
+      .catch((e) => console.log(e));
+  }
 
   const [inpbal, setInpbal] = useState("");
 
@@ -216,6 +230,50 @@ const DetailAgentmodule = ({ dataraw, close, reload }) => {
                   subtitle={`balance: ${data.balance}`}
                 />
               </div>
+              <div>
+                <div className="relative flex w-full items-center justify-between">
+                  <div className="flex items-center justify-start p-3 text-xl">
+                    {" "}
+                    <span className="pr-2 text-2xl text-brand-700">
+                      <StreamlineMoneyCashBill2CurrencyBillingPaymentFinanceCashBillMoneyAccounting />
+                    </span>{" "}
+                    Payment Status
+                  </div>
+                  <Link
+                    to="/admin/payment"
+                    className="mr-4 flex items-center hover:cursor-pointer hover:text-brand-500"
+                  >
+                    <span className="relative -top-[3px] pr-1 text-xl">
+                      <StreamlineMoneyAtmCard3DepositMoneyPaymentFinanceAtmWithdraw />
+                    </span>{" "}
+                    Add Payment
+                  </Link>
+                </div>
+                <div className="flex w-full justify-start px-3 ">
+                  <div className="w-full flex-1">
+                    <div className="">
+                      <div className="flex items-center">
+                        <span className="text-xl">
+                          <IconamoonTrendDownThin />
+                        </span>
+                        Due Payment
+                      </div>
+                      <div className="pl-4 text-3xl">{stat?.duePayment || "000"}</div>
+                    </div>
+                  </div>
+                  <div className="w-full flex-1">
+                    <div className="">
+                      <div className="flex items-center">
+                        <span className="text-xl">
+                          <IonTrendingUpSharp />
+                        </span>
+                        Already Paid
+                      </div>
+                      <div className="pl-4 text-3xl">{stat?.duePayment || "000"}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
           <div>
@@ -351,6 +409,64 @@ export function BytesizeSettings(props) {
       <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
         <path d="M13 2v4l-2 1l-3-3l-4 4l3 3l-1 2H2v6h4l1 2l-3 3l4 4l3-3l2 1v4h6v-4l2-1l3 3l4-4l-3-3l1-2h4v-6h-4l-1-2l3-3l-4-4l-3 3l-2-1V2Z"></path>
         <circle cx="16" cy="16" r="4"></circle>
+      </g>
+    </svg>
+  );
+}
+
+export function StreamlineMoneyCashBill2CurrencyBillingPaymentFinanceCashBillMoneyAccounting(props) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 14 14" {...props}>
+      <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+        <rect width="13" height="9" x=".5" y="2.5" rx="1"></rect>
+        <circle cx="7" cy="7" r="1.5"></circle>
+        <path d="M3 5h.5m7 4h.5"></path>
+      </g>
+    </svg>
+  );
+}
+
+export function IconamoonTrendDownThin(props) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" {...props}>
+      <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+        <path d="m3 7l6 6l4-4l8 8"></path>
+        <path d="M17 17h4v-4"></path>
+      </g>
+    </svg>
+  );
+}
+
+export function IonTrendingUpSharp(props) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 512 512" {...props}>
+      <path
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="square"
+        strokeMiterlimit="10"
+        strokeWidth="32"
+        d="M352 144h112v112"
+      ></path>
+      <path
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="square"
+        strokeMiterlimit="10"
+        strokeWidth="32"
+        d="m48 368l144-144l96 96l160-160"
+      ></path>
+    </svg>
+  );
+}
+
+export function StreamlineMoneyAtmCard3DepositMoneyPaymentFinanceAtmWithdraw(props) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 14 14" {...props}>
+      <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+        <rect width="13" height="7" x=".5" y="6.5" rx="1"></rect>
+        <path d="M3.5 2v2M7 .5V4m3.5-2v2"></path>
+        <circle cx="7" cy="10" r="1.5"></circle>
       </g>
     </svg>
   );
