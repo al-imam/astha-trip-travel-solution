@@ -1,16 +1,30 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { Button } from "components/form/Button";
+import { Input } from "components/form/Input";
+import { Fragment, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
+import { DeleteIcon } from "views/public/Entry/MainEntry";
 
 const AgentProfile = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isPassOpen, setIsPassOpen] = useState(false);
   const [agent, setAgent] = useState({});
   const [invoices, setInvoices] = useState([]);
+  const [isUploaderOpen, setIsUploaderOpen] = useState(false);
+  const [imageURL, setImageURL] = useState("");
 
   const { register, handleSubmit, reset } = useForm();
   const { register: passReg, handleSubmit: passHS, reset: passRe, getValues } = useForm();
+  const photo = useForm();
+
+  const selectedPhoto = photo.watch("photo");
+
+  useEffect(() => {
+    if (selectedPhoto && selectedPhoto[0]) {
+      setImageURL(URL.createObjectURL(selectedPhoto[0]));
+    }
+  }, [selectedPhoto]);
 
   useEffect(() => {
     const getAuth = async () => {
@@ -47,6 +61,13 @@ const AgentProfile = () => {
     toast.error("Enter valid information!");
   }
 
+  async function onUploadSubmit(data) {
+    const form = new FormData();
+    form.append("photo", data.photo[0]);
+    const res = await axios.post("/api/agent/upload-profile-photo", form);
+    console.log(res);
+  }
+
   async function onPassSubmit(data) {
     try {
       await toast.promise(axios.post("/api/agent/change-password", data), {
@@ -72,8 +93,16 @@ const AgentProfile = () => {
     <>
       <div className="container mx-auto flex flex-col gap-5 md:flex-row">
         <div>
-          <div className="flex w-full items-center justify-center md:w-[300px]">
-            <img className="h-40 w-40 rounded-full" src="/logoastha.png" alt="img" />
+          <div className=" flex w-full items-center justify-center md:w-[300px]">
+            <div className="relative rounded-full">
+              <img className="h-40 w-40" src="/logoastha.png" alt="img" />
+              <button
+                onClick={() => setIsUploaderOpen(true)}
+                className="text-black absolute inset-0 rounded-full bg-white/80 text-base font-medium opacity-0  transition-opacity hover:opacity-100"
+              >
+                Upload photo
+              </button>
+            </div>
           </div>
           <div className="flex w-full flex-col justify-center lg:w-[500px]">
             <div className="flex flex-col items-center gap-y-[.5] md:items-start">
@@ -108,6 +137,45 @@ const AgentProfile = () => {
           Change Password
         </button>
       </div>
+
+      {isUploaderOpen && (
+        <div className="fixed inset-0 z-10 flex flex-col items-center justify-center">
+          <div className="absolute inset-0 bg-gray-800 opacity-50"></div>
+          <div className="z-20 w-[80vw] rounded bg-white p-6 shadow-md lg:w-[35vw]">
+            <h2 className="mb-4 text-center text-lg font-semibold">Upload photo</h2>
+            <form onSubmit={photo.handleSubmit(onUploadSubmit)} className="flex flex-col gap-4">
+              <div className="relative mx-auto h-40 w-40 overflow-hidden rounded-md  bg-gradient-to-b from-gray-700 to-gray-600">
+                {imageURL && (
+                  <Fragment>
+                    <img className="h-full w-full object-cover object-center" src={imageURL} />
+                    <div className="absolute inset-0 flex items-center justify-center bg-gray-900/10 opacity-0 backdrop-blur-sm transition-all  hover:opacity-100">
+                      <button
+                        onClick={() => photo.setValue("photo", "") || setImageURL("")}
+                        type="button"
+                        className="text-xl text-red-500 shadow-sm hover:text-red-400"
+                      >
+                        <DeleteIcon />
+                      </button>
+                    </div>
+                  </Fragment>
+                )}
+              </div>
+              <Input
+                type="file"
+                label="Profile photo"
+                register={photo.register("photo", { required: "Photo is required" })}
+                error={photo.formState.errors["photo"]}
+              />
+              <div className="flex justify-between">
+                <Button>Submit</Button>
+                <Button type="button" onClick={() => setIsUploaderOpen(false)}>
+                  Close
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       {isOpen && (
         <div className="fixed inset-0 z-10 flex flex-col items-center justify-center">
