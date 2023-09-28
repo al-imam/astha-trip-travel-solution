@@ -583,122 +583,127 @@ const GenerateSchengen = async (id) => {
       {
         type: "PDFCheckBox",
         name: "Cash",
-        value:
-          compare(method, "self") && compare(response["means_support"], "Cash"),
+        value: compare(method, "self") && compareSome("Cash", ...meansSupport),
       },
       {
         type: "PDFCheckBox",
         name: "Traveler’s cheques",
         value:
           compare(method, "self") &&
-          compare(response["means_support"], "Traveler's cheques"),
+          compareSome("Traveler's cheques", ...meansSupport),
       },
       {
         type: "PDFCheckBox",
         name: "Credit card",
         value:
           compare(method, "self") &&
-          compare(response["means_support"], "Credit card"),
+          compareSome("Credit card", ...meansSupport),
       },
       {
         type: "PDFCheckBox",
         name: "Prepaid accommodation",
         value:
           compare(method, "self") &&
-          compare(response["means_support"], "Prepaid accommodation"),
+          compareSome("Prepaid accommodation", ...meansSupport),
       },
       {
         type: "PDFCheckBox",
         name: "Prepaid transport",
         value:
           compare(method, "self") &&
-          compare(response["means_support"], "Prepaid transport"),
+          compareSome("Prepaid transport", ...meansSupport),
       },
       {
         type: "PDFTextField",
         name: "Other means of support by the applicant (please specify)",
         value:
           compare(method, "self") &&
-          compareArray(
-            response["means_support"],
-            "Cash",
-            "Prepaid transport",
-            "Prepaid accommodation",
-            "Credit card"
-          ) &&
-          response["means_support"],
+          meansSupport
+            ?.filter(
+              (m) =>
+                ![
+                  "Cash",
+                  "Prepaid transport",
+                  "Prepaid accommodation",
+                  "Credit card",
+                ].find((v) => compare(v, m))
+            )
+            .join(", "),
       },
       {
         type: "PDFCheckBox",
         name: "Other (please specify)_3",
         value:
           compare(method, "self") &&
-          compareArray(
-            response["means_support"],
-            "Cash",
-            "Prepaid transport",
-            "Prepaid accommodation",
-            "Credit card"
-          ),
+          meansSupport?.filter(
+            (m) =>
+              ![
+                "Cash",
+                "Prepaid transport",
+                "Prepaid accommodation",
+                "Credit card",
+              ].find((v) => compare(v, m))
+          ).length > 0,
       },
 
       {
         type: "PDFCheckBox",
         name: "Cash_2",
         value:
-          compare(method, "sponsor") &&
-          compare(response["means_support"], "Cash"),
+          compare(method, "sponsor") && compareSome("Cash", ...meansSupport),
       },
       {
         type: "PDFCheckBox",
         name: "Accommodation provided",
         value:
           compare(method, "sponsor") &&
-          compare(response["means_support"], "Accommodation provided"),
+          compareSome("Accommodation provided", ...meansSupport),
       },
       {
         type: "PDFCheckBox",
         name: "All expenses covered during the stay",
         value:
           compare(method, "sponsor") &&
-          compare(
-            response["means_support"],
-            "All expenses covered during the stay"
-          ),
+          compareSome("All expenses covered during the stay", ...meansSupport),
       },
       {
         type: "PDFCheckBox",
         name: "Prepaid transport_2",
         value:
           compare(method, "sponsor") &&
-          compare(response["means_support"], "Prepaid transport"),
+          compareSome("Prepaid transport", ...meansSupport),
       },
       {
         type: "PDFTextField",
         name: "Other means of support by a sponsor (please specify)",
         value:
           compare(method, "sponsor") &&
-          compareArray(
-            response["means_support"],
-            "Cash",
-            "Accommodation provided",
-            "All expenses covered during the stay",
-            "Prepaid transport"
-          ) &&
-          response["means_support"],
+          meansSupport
+            ?.filter(
+              (m) =>
+                ![
+                  "Cash",
+                  "Accommodation provided",
+                  "All expenses covered during the stay",
+                  "Prepaid transport",
+                ].find((v) => compare(v, m))
+            )
+            .join(", "),
       },
       {
         type: "PDFCheckBox",
         name: "Other (please specify)_4",
         value:
           compare(method, "sponsor") &&
-          compareArray(
-            response["means_support"],
-            "Cash",
-            "Accommodation provided",
-            "All expenses covered during the stay",
-            "Prepaid transport"
-          ),
+          meansSupport?.filter(
+            (m) =>
+              ![
+                "Cash",
+                "Accommodation provided",
+                "All expenses covered during the stay",
+                "Prepaid transport",
+              ].find((v) => compare(v, m))
+          ).length > 0,
       },
     ]);
 
