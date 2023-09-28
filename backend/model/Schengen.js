@@ -189,8 +189,15 @@ const SchengenSchema = new Schema({
     type: "VARCHAR(255)",
     req: true,
   },
-  cost_of_travel_and_living: {
-    // 32
+  cost_payment_method: {
+    type: "VARCHAR(255)",
+    req: true,
+  },
+  means_support: {
+    type: "VARCHAR(255)",
+    req: true,
+  },
+  sponsor_referred: {
     type: "VARCHAR(255)",
     req: true,
   },

@@ -5,16 +5,15 @@ import { Input } from "components/form/Input";
 import { AsyncSelect, Select, SelectNotCreatable } from "components/form/Select";
 import { StepIndicator } from "components/form/StepIndicator";
 import { useAuth } from "hook/useAuth";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import useFormPersist from "react-hook-form-persist";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 import countries from "../countries.json";
 import districts from "../districts.json";
 import { Spinner } from "./Spinner";
 import { fire, flattenObject, populate, setValue } from "./util";
-import { useSearchParams } from "react-router-dom";
 
 const countriesOptions = countries.map((e) => ({
   label: e.name,
@@ -79,12 +78,21 @@ const numberOfEntryRequestOptions = ["Single entry", "Two entries", "Multiple en
   value,
 }));
 
-const costOfTravelingAndLivingOptions = [
-  "by the applicant himself/herself Means of support",
+const selfCostOfTravelingAndLivingOptions = [
   "Cash",
   "Traveler's cheques",
   "Credit card",
   "Prepaid accommodation",
+  "Prepaid transport",
+].map((value) => ({
+  label: value,
+  value,
+}));
+
+const sponsorCostOfTravelingAndLivingOptions = [
+  "Cash",
+  "Accommodation provided",
+  "All expenses covered during the stay",
   "Prepaid transport",
 ].map((value) => ({
   label: value,
@@ -109,7 +117,7 @@ export function Schengen() {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [form, setForm] = useState({});
-  const auth = useAuth();
+  useAuth();
 
   const [url] = useSearchParams();
 
@@ -119,10 +127,20 @@ export function Schengen() {
   const info = useForm();
 
   const number = personal.watch("passport-number") || {};
+  const paymentMethod = info.watch("cost-payment-method");
+  const referred = info.watch("referred-to-in-field-30-or-31");
+  const referredOther = info.watch("sponsor-other");
 
   const isResidence = contact.watch("residence-in-a-country") === "Yes";
   const isEuCitizen = travel.watch("have-eu-citizen") === "Yes";
   const isFingerprintsCollectedPreviously = info.watch("fingerprints-collected-previously") === "Yes";
+  const methodOpen = paymentMethod === "By A Sponsor  (Host, Company Organization)" ? 2 : 1;
+
+  useEffect(() => {
+    info.clearErrors(["referred-to-in-field-30-or-31", "sponsor-other"]);
+    if (referred !== "") info.setValue("sponsor-other", "");
+    if (referredOther !== "") info.setValue("referred-to-in-field-30-or-31", "");
+  }, [referredOther, referred]);
 
   useFormPersist(localPersonal, {
     watch: personal.watch,
@@ -170,10 +188,8 @@ export function Schengen() {
     if (!serverRes) return fire();
     fire("Successfully Done!", "success");
 
-    setForm({});
-    clearLocalStore();
-    if (auth.admin) return navigate("/admin");
-    navigate("/agent");
+    setTimeout(clearLocalStore, 500);
+    navigate(-1);
   }
 
   useEffect(() => {
@@ -238,7 +254,7 @@ export function Schengen() {
         }
         onClick={() => {
           navigate(-1);
-          clearLocalStore();
+          setTimeout(clearLocalStore, 500);
         }}
         className="my-1 inline-flex items-center rounded-md border-gray-200 bg-white px-5 py-2.5 text-center text-sm font-medium text-blue-700 shadow hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:opacity-0"
       >
@@ -828,21 +844,88 @@ export function Schengen() {
                 />
               </div>
 
-              <div className="col-span-full">
-                <Select
-                  label="Cost Of Traveling And Living During The Applicant's Stay Is Covered *"
-                  classNameLabel="line-clamp-none"
-                  options={costOfTravelingAndLivingOptions}
-                  control={info.control}
-                  isDisabled={info.formState.isSubmitting}
-                  isMulti
-                  name="cost-of-traveling-and-living"
-                  register={info.register("cost-of-traveling-and-living", {
-                    required: "Cost of traveling and living during the applicant's stay is covered is required",
-                  })}
-                  error={info.formState.errors["cost-of-traveling-and-living"]}
-                />
-              </div>
+              <Group
+                options={["By The Applicant Himself/Herself", "By A Sponsor  (Host, Company Organization)"]}
+                legend="Cost Of Traveling And Living During The Applicant's Stay Is Covered *"
+                classNameContainer="col-span-full"
+                checked={methodOpen}
+                register={info.register("cost-payment-method", {
+                  required: "Cost of traveling is required",
+                })}
+                error={info.formState.errors["cost-payment-method"]}
+                isOpen={true}
+                className="grid gap-4 md:grid-cols-2"
+                disabled={info.formState.isSubmitting}
+              >
+                {paymentMethod === "By The Applicant Himself/Herself" ? (
+                  <div className="col-span-full">
+                    <Select
+                      label="Means Of Support *"
+                      classNameLabel="line-clamp-none"
+                      options={selfCostOfTravelingAndLivingOptions}
+                      control={info.control}
+                      isDisabled={info.formState.isSubmitting}
+                      isMulti
+                      name="self-means-support"
+                      register={info.register("self-means-support", {
+                        required: {
+                          value: paymentMethod === "By The Applicant Himself/Herself",
+                          message: "Means of support is required",
+                        },
+                      })}
+                      error={info.formState.errors["self-means-support"]}
+                    />
+                  </div>
+                ) : (
+                  <Fragment>
+                    <Input
+                      label="Referred To In Field 30 Or 31"
+                      register={info.register("referred-to-in-field-30-or-31", {
+                        required: {
+                          value:
+                            info.getValues("sponsor-other") === "" &&
+                            paymentMethod === "By A Sponsor  (Host, Company Organization)",
+                          message: "Field is required if others not specified",
+                        },
+                      })}
+                      error={info.formState.errors["referred-to-in-field-30-or-31"]}
+                      classNameLabel="line-clamp-none"
+                    />
+                    <Input
+                      label="other (please specify)"
+                      register={info.register("sponsor-other", {
+                        required: {
+                          value:
+                            info.getValues("referred-to-in-field-30-or-31") === "" &&
+                            paymentMethod === "By A Sponsor  (Host, Company Organization)",
+                          message: "Field is required if referred to in field not specified",
+                        },
+                      })}
+                      error={info.formState.errors["sponsor-other"]}
+                      classNameLabel="line-clamp-none"
+                    />
+
+                    <div className="col-span-full">
+                      <Select
+                        label="Means Of Support *"
+                        classNameLabel="line-clamp-none"
+                        options={sponsorCostOfTravelingAndLivingOptions}
+                        control={info.control}
+                        isDisabled={info.formState.isSubmitting}
+                        isMulti
+                        name="sponsor-means-support"
+                        register={info.register("sponsor-means-support", {
+                          required: {
+                            value: paymentMethod === "By A Sponsor  (Host, Company Organization)",
+                            message: "Means of support is required",
+                          },
+                        })}
+                        error={info.formState.errors["sponsor-means-support"]}
+                      />
+                    </div>
+                  </Fragment>
+                )}
+              </Group>
             </fieldset>
 
             <div className="flex justify-between">

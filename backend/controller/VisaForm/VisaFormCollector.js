@@ -86,9 +86,15 @@ const VisaFormColector = () => {
             body["telephone-no-of-inviting-company"],
           contact_person_of_inviting_company:
             body["surname-and-first-name-of-contact-persons"],
-          cost_of_travel_and_living: JSON.stringify(
-            body["cost-of-traveling-and-living"]
-          ),
+          cost_payment_method: body["cost-payment-method"],
+          means_support:
+            body["cost-payment-method"] === "By The Applicant Himself/Herself"
+              ? JSON.stringify(body["self-means-support"])
+              : JSON.stringify(body["sponsor-means-support"]),
+          sponsor_referred:
+            body["referred-to-in-field-30-or-31"] !== ""
+              ? body["referred-to-in-field-30-or-31"]
+              : `<$other$>${body["sponsor-other"]}`,
           apply_by: JSON.stringify(apply),
           status: req.STATUS,
         });

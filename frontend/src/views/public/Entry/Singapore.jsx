@@ -1,13 +1,15 @@
+import axios from "axios";
 import { Button } from "components/form/Button";
 import { Group, Join } from "components/form/Group";
 import { Input } from "components/form/Input";
 import { Radio } from "components/form/Radio";
-import { Select, SelectNotCreatable } from "components/form/Select";
+import { AsyncSelect, Select, SelectNotCreatable } from "components/form/Select";
 import { StepIndicator } from "components/form/StepIndicator";
+import { useAuth } from "hook/useAuth";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import useFormPersist from "react-hook-form-persist";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import countries from "../countries.json";
 import districts from "../districts.json";
 import races from "../races.json";
@@ -15,11 +17,6 @@ import { AddIcon, DeleteIcon } from "./MainEntry";
 import { NextIcon } from "./Schengen";
 import { Spinner } from "./Spinner";
 import { fire, flattenObject, populate, setValue } from "./util";
-import axios from "axios";
-import { useAuth } from "hook/useAuth";
-import { AsyncSelect } from "components/form/Select";
-import { useSearchParams } from "react-router-dom";
-
 
 const religionOptions = ["Islam", "Christianity", "Hinduism", "Buddhism", "Sikhism", "Spiritism", "Judaism"].map(
   (value) => ({
@@ -121,7 +118,7 @@ export function Singapore() {
   const [_, setForm] = useState({});
   const [livedOtherCountries, setLivedOtherCountries] = useState([]);
 
-  const auth = useAuth();
+  useAuth();
 
   const particularsOfApplicant = useForm();
   const otherDetails = useForm();
@@ -186,9 +183,8 @@ export function Singapore() {
     if (!serverRes) return fire();
     fire("Successfully Done!", "success");
 
-    clearLocalStore();
-    if (auth.admin) return navigate("/admin");
-    navigate("/agent");
+    setTimeout(clearLocalStore, 500);
+    navigate(-1);
   }
 
   function stopSubmitting(event) {
@@ -242,7 +238,7 @@ export function Singapore() {
       <button
         onClick={() => {
           navigate(-1);
-          clearLocalStore();
+          setTimeout(clearLocalStore, 500);
         }}
         disabled={
           particularsOfApplicant.formState.isSubmitting ||
