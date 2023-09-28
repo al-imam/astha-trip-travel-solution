@@ -89,8 +89,8 @@ const VisaFormColector = () => {
           cost_payment_method: body["cost-payment-method"],
           means_support:
             body["cost-payment-method"] === "By The Applicant Himself/Herself"
-              ? body["self-means-support"]
-              : body["sponsor-means-support"],
+              ? JSON.stringify(body["self-means-support"])
+              : JSON.stringify(body["sponsor-means-support"]),
           sponsor_referred:
             body["referred-to-in-field-30-or-31"] !== ""
               ? body["referred-to-in-field-30-or-31"]
