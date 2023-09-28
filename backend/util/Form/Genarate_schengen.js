@@ -37,45 +37,31 @@ const GenerateSchengen = async (id) => {
 
     const page = pdfDoc.getPages()[1];
     const { width, height } = page.getSize();
-    const fontSize = 7; // Set the font size
-    const textX = 300; // X-coordinate of the text position
-    const textY = height - 141; // Y-coordinate of the text position
+    const fontSize = 7;
+    const textX = 300;
+    const textY = height - 141;
+
     page.drawText(response["date_of_arrival"], {
       x: textX - 10,
       y: textY,
       size: fontSize,
-      //   color: rgb(0, 0, 0), // Black color
     });
     page.drawText(response["date_of_departure"], {
       x: textX + 20,
       y: textY - 13.5,
       size: fontSize,
-      //   color: rgb(0, 0, 0), // Black color
     });
 
     const form = pdfDoc.getForm();
-    const allName = form.getFields();
-    // const ref = allName.map((e) => {
-    //   return {
-    //     type: e.constructor.name,
-    //     name: e.getName(),
-    //   };
-    // });
 
-    // await writeFile("./ref.json", JSON.stringify(ref));
-    // FormHelper(form).SetText("1 Surname (Family name)", response.surname);
+    const method = compare(
+      response["cost_payment_method"],
+      "by the applicant himself/herself"
+    )
+      ? "self"
+      : "sponsor";
 
-    // FormHelper(form).SetText(
-    //   "3 First name(s) (Given name(s))",
-    //   response["first_name"]
-    // );
-
-    // FormHelper(form).SetText(
-    //   "4 Date of birth (day-month-year)",
-    //   response["date_of_birth"].split("-").reverse().join("-")
-    // );
-
-    // FormHelper(form).SetText("5 Place of birth", response["place_of_birth"]);
+    const meansSupport = JSON.parse(response["means_support"]);
 
     FormHelper(form).SetBulk([
       {
@@ -553,51 +539,188 @@ const GenerateSchengen = async (id) => {
       {
         type: "PDFCheckBox",
         name: "by the applicant himself/herself",
+        value: compare(method, "self"),
+      },
+      {
+        type: "PDFCheckBox",
+        name: "by a sponsor (host, company, organisation), please specify",
+        value: compare(method, "sponsor"),
+      },
+
+      {
+        type: "PDFTextField",
+        name: "Please specify sponsor_1",
+        value: empty(
+          compare(method, "sponsor") &&
+            !response["sponsor_referred"]?.startsWith("<$other$>"),
+          response["sponsor_referred"]
+        ),
+      },
+      {
+        type: "PDFTextField",
+        name: "Please specify sponsor_2",
+        value: empty(
+          compare(method, "sponsor") &&
+            response["sponsor_referred"]?.startsWith("<$other$>"),
+          response["sponsor_referred"]?.replace("<$other$>", "")
+        ),
+      },
+      {
+        type: "PDFCheckBox",
+        name: "referred to in field 30 or 31",
         value:
-          JSON.parse(response["cost_of_travel_and_living"]).indexOf(
-            "by the applicant himself/herself Means of support"
-          ) !== -1,
+          compare(method, "sponsor") &&
+          !response["sponsor_referred"]?.startsWith("<$other$>"),
+      },
+      {
+        type: "PDFCheckBox",
+        name: "other (please specify)",
+        value:
+          compare(method, "sponsor") &&
+          response["sponsor_referred"]?.startsWith("<$other$>"),
+      },
+
+      {
+        type: "PDFCheckBox",
+        name: "Cash",
+        value:
+          compare(method, "self") && compare(response["means_support"], "Cash"),
       },
       {
         type: "PDFCheckBox",
         name: "Traveler’s cheques",
         value:
-          JSON.parse(response["cost_of_travel_and_living"]).indexOf(
-            "Traveler's cheques"
-          ) !== -1,
-      },
-      {
-        type: "PDFCheckBox",
-        name: "Cash",
-        value:
-          JSON.parse(response["cost_of_travel_and_living"]).indexOf("Cash") !==
-          -1,
+          compare(method, "self") &&
+          compare(response["means_support"], "Traveler's cheques"),
       },
       {
         type: "PDFCheckBox",
         name: "Credit card",
         value:
-          JSON.parse(response["cost_of_travel_and_living"]).indexOf(
-            "Credit card"
-          ) !== -1,
+          compare(method, "self") &&
+          compare(response["means_support"], "Credit card"),
       },
       {
         type: "PDFCheckBox",
         name: "Prepaid accommodation",
         value:
-          JSON.parse(response["cost_of_travel_and_living"]).indexOf(
-            "Prepaid accommodation"
-          ) !== -1,
+          compare(method, "self") &&
+          compare(response["means_support"], "Prepaid accommodation"),
       },
       {
         type: "PDFCheckBox",
         name: "Prepaid transport",
         value:
-          JSON.parse(response["cost_of_travel_and_living"]).indexOf(
+          compare(method, "self") &&
+          compare(response["means_support"], "Prepaid transport"),
+      },
+      {
+        type: "PDFTextField",
+        name: "Other means of support by the applicant (please specify)",
+        value:
+          compare(method, "self") &&
+          compareArray(
+            response["means_support"],
+            "Cash",
+            "Prepaid transport",
+            "Prepaid accommodation",
+            "Credit card"
+          ) &&
+          response["means_support"],
+      },
+      {
+        type: "PDFCheckBox",
+        name: "Other (please specify)_3",
+        value:
+          compare(method, "self") &&
+          compareArray(
+            response["means_support"],
+            "Cash",
+            "Prepaid transport",
+            "Prepaid accommodation",
+            "Credit card"
+          ),
+      },
+
+      {
+        type: "PDFCheckBox",
+        name: "Cash_2",
+        value:
+          compare(method, "sponsor") &&
+          compare(response["means_support"], "Cash"),
+      },
+      {
+        type: "PDFCheckBox",
+        name: "Accommodation provided",
+        value:
+          compare(method, "sponsor") &&
+          compare(response["means_support"], "Accommodation provided"),
+      },
+      {
+        type: "PDFCheckBox",
+        name: "All expenses covered during the stay",
+        value:
+          compare(method, "sponsor") &&
+          compare(
+            response["means_support"],
+            "All expenses covered during the stay"
+          ),
+      },
+      {
+        type: "PDFCheckBox",
+        name: "Prepaid transport_2",
+        value:
+          compare(method, "sponsor") &&
+          compare(response["means_support"], "Prepaid transport"),
+      },
+      {
+        type: "PDFTextField",
+        name: "Other means of support by a sponsor (please specify)",
+        value:
+          compare(method, "sponsor") &&
+          compareArray(
+            response["means_support"],
+            "Cash",
+            "Accommodation provided",
+            "All expenses covered during the stay",
             "Prepaid transport"
-          ) !== -1,
+          ) &&
+          response["means_support"],
+      },
+      {
+        type: "PDFCheckBox",
+        name: "Other (please specify)_4",
+        value:
+          compare(method, "sponsor") &&
+          compareArray(
+            response["means_support"],
+            "Cash",
+            "Accommodation provided",
+            "All expenses covered during the stay",
+            "Prepaid transport"
+          ),
       },
     ]);
+
+    function compareSome(to, ...args) {
+      return args.some(
+        (a) => a?.toString().toLowerCase() === to?.toString().toLowerCase()
+      );
+    }
+
+    function compareArray(to, ...args) {
+      return args.every(
+        (a) => a?.toString().toLowerCase() !== to?.toString().toLowerCase()
+      );
+    }
+
+    function empty(bool, value) {
+      return bool ? value : "";
+    }
+
+    function compare(_1 = "", _2 = "") {
+      return _1.toLowerCase() === _2.toLowerCase();
+    }
 
     form.flatten();
     const pdfByt = await pdfDoc.save();
