@@ -98,7 +98,7 @@ export function Thailand() {
   const [step, setStep] = useState(1);
   const [_, setForm] = useState({});
 
-  const auth = useAuth();
+  useAuth();
 
   const personal = useForm();
   const contact = useForm();
@@ -149,8 +149,7 @@ export function Thailand() {
     fire("Successfully Done!", "success");
 
     clearLocalStore();
-    if (auth.admin) return navigate("/admin");
-    navigate("/agent");
+    navigate(-1);
   }
 
   useEffect(() => {

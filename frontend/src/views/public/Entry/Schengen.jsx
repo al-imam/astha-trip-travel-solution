@@ -8,13 +8,12 @@ import { useAuth } from "hook/useAuth";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import useFormPersist from "react-hook-form-persist";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 import countries from "../countries.json";
 import districts from "../districts.json";
 import { Spinner } from "./Spinner";
 import { fire, flattenObject, populate, setValue } from "./util";
-import { useSearchParams } from "react-router-dom";
 
 const countriesOptions = countries.map((e) => ({
   label: e.name,
@@ -109,7 +108,7 @@ export function Schengen() {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [form, setForm] = useState({});
-  const auth = useAuth();
+  useAuth();
 
   const [url] = useSearchParams();
 
@@ -170,10 +169,8 @@ export function Schengen() {
     if (!serverRes) return fire();
     fire("Successfully Done!", "success");
 
-    setForm({});
     clearLocalStore();
-    if (auth.admin) return navigate("/admin");
-    navigate("/agent");
+    navigate(-1);
   }
 
   useEffect(() => {
