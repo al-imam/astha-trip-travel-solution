@@ -486,7 +486,7 @@ export function Thailand() {
               </div>
 
               <Input
-                label="Flight No Or Vessel's Name"
+                label="Flight No Or Vessel's Name *"
                 register={contact.register("flight_no_or_vessel_name", {
                   required: "Flight no or vessel's name is required",
                 })}
@@ -494,7 +494,7 @@ export function Thailand() {
               />
 
               <Input
-                label="Duration Of Proposed Stay"
+                label="Duration Of Proposed Stay *"
                 register={contact.register("duration-of-proposed-stay", {
                   required: "Duration of proposed stay is required",
                 })}

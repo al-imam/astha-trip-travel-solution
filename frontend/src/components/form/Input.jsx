@@ -4,7 +4,7 @@ import { twMerge } from "tailwind-merge";
 export function Input({
   register,
   error,
-  label,
+  label = "",
   placeholder = label.replace(/ \*$/, ""),
   className,
   classNameLabel,

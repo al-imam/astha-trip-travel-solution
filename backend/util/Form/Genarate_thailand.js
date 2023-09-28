@@ -437,7 +437,6 @@ const Generate_thailand = async (id, pass) => {
 
     form.flatten();
     const pdfByt = await pdfDoc.save();
-    await writeFile("generate-thailand.pdf", pdfByt);
 
     return {
       file: pdfByt,

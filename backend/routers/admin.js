@@ -19,7 +19,9 @@ const getAgentByEmailAndDate = require("../controller/admin/getAgentByEmailAndDa
 const resetPassword = require("../controller/admin/resetPassword");
 const write = require("../controller/heading/write");
 const read = require("../controller/heading/read");
+const adsRouter = require("./ads");
 
+AdminRouter.use("/ads", adsRouter);
 AdminRouter.get("/get-all-agent", isAdmin, getAllAgent);
 AdminRouter.get("/get-status", isAdmin, getStatus);
 AdminRouter.post(
@@ -69,7 +71,7 @@ AdminRouter.post(
   resetPassword
 );
 
-AdminRouter.put("/heading", validateBody([isString("text")]), write);
+AdminRouter.put("/heading", validateBody([isString("text")]), isAdmin, write);
 
 AdminRouter.get("/heading", read);
 

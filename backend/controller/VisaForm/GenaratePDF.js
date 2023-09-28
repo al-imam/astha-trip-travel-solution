@@ -17,10 +17,7 @@ const GeneratePDF = () => {
           "Content-Type": "application/pdf",
         });
         res.end(file);
-
-        // res.send(name);
       } catch (error) {
-        // res.status(500).send(error);
         next(error);
       }
     },
@@ -40,10 +37,7 @@ const GeneratePDF = () => {
           "Content-Type": "application/pdf",
         });
         res.end(file);
-
-        // res.send(name);
       } catch (error) {
-        // res.status(500).send(error);
         next(error);
       }
     },

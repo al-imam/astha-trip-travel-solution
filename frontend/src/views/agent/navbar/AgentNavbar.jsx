@@ -23,8 +23,14 @@ function AgentNavbar({ agent }) {
           </Link>
           <div className="flex items-center gap-10">
             <div>
-              <Link to={'/agent/visa-application'} className="px-10 bg-brand-300/10 rounded-md hover:shadow-md transition-all duration-300 cursor-pointer hover:ring-1 ring-brand-400 py-2 flex items-center">
-                <span className=" text-brand-500 text-2xl pr-2"> <QuillPaper /></span>
+              <Link
+                to={"/agent/visa-application"}
+                className="flex cursor-pointer items-center rounded-md bg-brand-300/10 px-10 py-2 ring-brand-400 transition-all duration-300 hover:shadow-md hover:ring-1"
+              >
+                <span className=" pr-2 text-2xl text-brand-500">
+                  {" "}
+                  <QuillPaper />
+                </span>
                 Visa Application Form
               </Link>
             </div>
@@ -34,11 +40,12 @@ function AgentNavbar({ agent }) {
               </div>
               <p className="text-md font-dm font-medium text-gray-800">{agent.balance}</p>
             </div>
-            <div onClick={() => setOpen(!open)} className="relative">
+            <div onClick={() => setOpen(!open)} className="relative aspect-square w-12">
               <img
-                src={"/logoastha.png"}
+                src={agent ? `/api/agent/avatar/${agent?.photo} ` : "/logoastha.png"}
+                onError={(evt) => (evt.target.src = "/logoastha.png")}
                 alt="User Profile"
-                className="h-12 w-12 cursor-pointer rounded-full ring-2 ring-offset-brand-800"
+                className="aspect-square h-full cursor-pointer rounded-full border border-gray-200 object-cover object-center"
               />
 
               {open && (
@@ -84,9 +91,18 @@ export function Fa6SolidBangladeshiTakaSign(props) {
   );
 }
 
-
 export function QuillPaper(props) {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32" {...props}><g fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 9h4m-4 7h12m-12 4h12m-12 4h4m-6 5h16a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v22a2 2 0 0 0 2 2Z"></path><circle cx="22" cy="9" r=".5" fill="currentColor"></circle></g></svg>
-  )
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32" {...props}>
+      <g fill="none" stroke="currentColor">
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          d="M10 9h4m-4 7h12m-12 4h12m-12 4h4m-6 5h16a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v22a2 2 0 0 0 2 2Z"
+        ></path>
+        <circle cx="22" cy="9" r=".5" fill="currentColor"></circle>
+      </g>
+    </svg>
+  );
 }
