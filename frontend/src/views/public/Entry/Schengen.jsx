@@ -78,12 +78,21 @@ const numberOfEntryRequestOptions = ["Single entry", "Two entries", "Multiple en
   value,
 }));
 
-const costOfTravelingAndLivingOptions = [
-  "by the applicant himself/herself Means of support",
+const selfCostOfTravelingAndLivingOptions = [
   "Cash",
   "Traveler's cheques",
   "Credit card",
   "Prepaid accommodation",
+  "Prepaid transport",
+].map((value) => ({
+  label: value,
+  value,
+}));
+
+const sponsorCostOfTravelingAndLivingOptions = [
+  "Cash",
+  "Accommodation provided",
+  "All expenses covered during the stay",
   "Prepaid transport",
 ].map((value) => ({
   label: value,
@@ -125,6 +134,7 @@ export function Schengen() {
   const isResidence = contact.watch("residence-in-a-country") === "Yes";
   const isEuCitizen = travel.watch("have-eu-citizen") === "Yes";
   const isFingerprintsCollectedPreviously = info.watch("fingerprints-collected-previously") === "Yes";
+  const methodOpen = paymentMethod === "By A Sponsor  (Host, Company Organization)" ? 2 : 1;
 
   useEffect(() => {
     info.clearErrors(["referred-to-in-field-30-or-31", "sponsor-other"]);
@@ -838,20 +848,20 @@ export function Schengen() {
                 options={["By The Applicant Himself/Herself", "By A Sponsor  (Host, Company Organization)"]}
                 legend="Cost Of Traveling And Living During The Applicant's Stay Is Covered *"
                 classNameContainer="col-span-full"
-                checked={1}
+                checked={methodOpen}
                 register={info.register("cost-payment-method", {
                   required: "Cost of traveling is required",
                 })}
                 error={info.formState.errors["cost-payment-method"]}
                 isOpen={true}
-                className="flex flex-col gap-4 md:flex-row [&>*]:flex-1"
+                className="grid gap-4 md:grid-cols-2"
                 disabled={info.formState.isSubmitting}
               >
                 {paymentMethod === "By The Applicant Himself/Herself" ? (
                   <Select
-                    label="Cost Of Traveling And Living During The Applicant's Stay Is Covered *"
+                    label="Means Of Support *"
                     classNameLabel="line-clamp-none"
-                    options={costOfTravelingAndLivingOptions}
+                    options={selfCostOfTravelingAndLivingOptions}
                     control={info.control}
                     isDisabled={info.formState.isSubmitting}
                     isMulti
@@ -859,7 +869,7 @@ export function Schengen() {
                     register={info.register("self-means-support", {
                       required: {
                         value: paymentMethod === "By The Applicant Himself/Herself",
-                        message: "Cost of traveling and living during the applicant's stay is covered is required",
+                        message: "Means of support is required",
                       },
                     })}
                     error={info.formState.errors["self-means-support"]}
@@ -891,6 +901,23 @@ export function Schengen() {
                       })}
                       error={info.formState.errors["sponsor-other"]}
                       classNameLabel="line-clamp-none"
+                    />
+
+                    <Select
+                      label="Means Of Support *"
+                      classNameLabel="line-clamp-none"
+                      options={sponsorCostOfTravelingAndLivingOptions}
+                      control={info.control}
+                      isDisabled={info.formState.isSubmitting}
+                      isMulti
+                      name="sponsor-means-support"
+                      register={info.register("sponsor-means-support", {
+                        required: {
+                          value: paymentMethod === "By A Sponsor  (Host, Company Organization)",
+                          message: "Means of support is required",
+                        },
+                      })}
+                      error={info.formState.errors["sponsor-means-support"]}
                     />
                   </Fragment>
                 )}
