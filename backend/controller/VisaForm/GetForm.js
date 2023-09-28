@@ -81,6 +81,7 @@ function combineData(...objects) {
     if (commonKeys && key in commonKeys) {
       for (let i = 0; i < objects.length; i++) {
         const obj = objects[i];
+
         if (obj && key in obj && obj[key] !== null) {
           combinedData[key] = obj[key];
           break;
@@ -103,6 +104,7 @@ const GetFormData = () => {
         res.status(500).send("something is wrong ");
       }
     },
+
     Thailand: async (req, res) => {
       try {
         const [serverRes] = await Thailand.findAll();
@@ -112,6 +114,7 @@ const GetFormData = () => {
         res.status(500).send("something is wrong ");
       }
     },
+
     Schengen: async (req, res) => {
       try {
         const [getServer] = await Schengen.findAll();
@@ -121,6 +124,7 @@ const GetFormData = () => {
         res.status(500).send("something is wrong ");
       }
     },
+
     agent: async (req, res) => {
       const Agent = req.AGENT;
       const query = JSON.stringify({
@@ -145,6 +149,7 @@ const GetFormData = () => {
         });
       }
     },
+
     get_by_passport: async (req, res) => {
       try {
         const passport = req.params.passport;
@@ -166,6 +171,14 @@ const GetFormData = () => {
             SchengenDatabase["other_nationalities"]
           );
         }
+
+        console.log(
+          JSON.stringify({
+            singapore: SingaporeDatabase,
+            thailand: ThailandDatabase,
+            schengen: SchengenDatabase,
+          })
+        );
 
         res.status(200).json({
           singapore: SingaporeDatabase,
