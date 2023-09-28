@@ -76,7 +76,7 @@ const Index = () => {
           },
           {
             Header: "Agent",
-            accessor: "agent",
+            accessor: "agent.email",
             Cell: (props) => {
               // console.log(props);
               return (

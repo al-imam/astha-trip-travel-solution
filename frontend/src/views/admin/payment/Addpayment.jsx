@@ -94,7 +94,7 @@ const Addpayment = ({ close }) => {
 
     const numRate = getNumber(rate);
     const numAmount = getNumber(amount);
-
+    if (numAmount > status.duePayment) return toast.error("You are Enter extra Amount");
     if (!(numRate > 0 && numAmount > 0)) return toast.error("Type rate and amount");
 
     try {

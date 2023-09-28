@@ -40,11 +40,19 @@ const Index = () => {
           },
           {
             Header: "Agent",
-            accessor: "agent",
+            accessor: "agent_email",
           },
           {
             Header: "Amount",
             accessor: "amount",
+            Cell: (prop) => (
+              <span className="flex items-center gap-1">
+                {prop.row.original.rate * prop.row.original.amount}{" "}
+                <span className="relative -top-[2px]">
+                  <StreamlineMoneyWalletMoneyPaymentFinanceWallet />
+                </span>
+              </span>
+            ),
           },
           {
             Header: "Transition Id",
@@ -55,12 +63,26 @@ const Index = () => {
             accessor: "message",
           },
           {
-            Header: "Action",
-            accessor: "action",
-            Cell: (props) => {
-              return <button className="rounded bg-brand-400 px-2 py-1 text-white">Details</button>;
+            Header: "Date",
+            accessor: "createdAt",
+            Cell: (prop) => {
+              return (
+                <span>
+                  {new Date(prop.row.original.createdAt).toLocaleDateString(
+                    {},
+                    { year: "numeric", month: "short", day: "numeric" }
+                  )}
+                </span>
+              );
             },
           },
+          // {
+          //   Header: "Action",
+          //   accessor: "action",
+          //   Cell: (props) => {
+          //     return <button className="rounded bg-brand-400 px-2 py-1 text-white">Details</button>;
+          //   },
+          // },
         ]}
         datas={payments}
       />
@@ -78,6 +100,17 @@ export function StreamlineMoneyAtmCard2DepositMoneyPaymentFinanceAtmWithdraw(pro
         <rect width="7" height="8" x="3.5" y="3" rx=".5"></rect>
         <circle cx="7" cy="7" r="1.5"></circle>
         <path d="M3.5 13.5h7"></path>
+      </g>
+    </svg>
+  );
+}
+
+export function StreamlineMoneyWalletMoneyPaymentFinanceWallet(props) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 14 14" {...props}>
+      <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 7.5v-2a1 1 0 0 0-1-1H1.5a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1H11a1 1 0 0 0 1-1V10M3.84 2L9.51.52a.49.49 0 0 1 .61.36L10.4 2"></path>
+        <rect width="3.5" height="2.5" x="10" y="7.5" rx=".5"></rect>
       </g>
     </svg>
   );

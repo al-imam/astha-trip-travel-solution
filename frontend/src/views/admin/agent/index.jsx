@@ -46,14 +46,20 @@ const Agent = () => {
       {DetailAgent ? <DetailAgentmodule dataraw={DetailAgent} close={SetDetailsAgent} reload={SetReload} /> : ""}
       <div className="mt-3 grid h-full grid-cols-1 gap-5 xl:grid-cols-2 2xl:grid-cols-3">
         <Widget
-          icon={<MaterialSymbolsPersonRaisedHandOutline className="h-7 w-7" />}
-          title={"Request"}
-          subtitle={"400"}
-        />
-        <Widget
           icon={<MaterialSymbolsSupervisedUserCircleOutline className="h-7 w-7" />}
           title={"total Agent"}
-          subtitle={"400"}
+          subtitle={agentData.length || "00"}
+        />
+        <Widget
+          icon={<MaterialSymbolsPersonRaisedHandOutline className="h-7 w-7" />}
+          title={"Request"}
+          subtitle={agentData.filter((e) => e.status === 0).length || "00"}
+        />
+
+        <Widget
+          icon={<MaterialSymbolsSupervisedUserCircleOutline className="h-7 w-7" />}
+          title={"total Agent Approved"}
+          subtitle={agentData.filter((e) => e.status === 1).length || "00"}
         />
       </div>
       <div className="relative mt-8 w-full dark:text-white">

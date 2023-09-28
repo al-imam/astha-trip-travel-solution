@@ -3,9 +3,9 @@ const Agent = require("../../model/Agent");
 
 function formatDateWithRandomString(agent, admin) {
   const now = new Date();
-  return `${now.getFullYear()}${agent}${randomStr(5)}${admin}-${
+  return `${now.getFullYear()}${agent}${randomStr(5)}${admin}${
     now.getMonth() + 1
-  }-${now.getDate()}-${now.getHours()}-${now.getSeconds()}`;
+  }${now.getDate()}${now.getHours()}${now.getSeconds()}`;
 }
 
 function randomStr(length) {
@@ -28,6 +28,7 @@ module.exports = async function (req, res, next) {
     await Payment.Add({
       agent: agent.id,
       admin: req.ADMIN.id,
+      agent_email: agent.email,
       rate: req.body.rate,
       amount: req.body.amount,
       message: req.body.message,
