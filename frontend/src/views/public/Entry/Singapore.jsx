@@ -12,6 +12,7 @@ import useFormPersist from "react-hook-form-persist";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import countries from "../countries.json";
 import districts from "../districts.json";
+import occupationJSON from "../occupation.json";
 import races from "../races.json";
 import { AddIcon, DeleteIcon } from "./MainEntry";
 import { NextIcon } from "./Schengen";
@@ -31,6 +32,11 @@ const countriesOptions = countries.map((e) => ({
 }));
 
 const stateOfBirthOptions = districts.map((value) => ({
+  label: value,
+  value,
+}));
+
+const occupationOptions = occupationJSON.map((value) => ({
   label: value,
   value,
 }));
@@ -154,6 +160,10 @@ export function Singapore() {
     setValue: particularsOfLocalContact.setValue,
     storage: window.localStorage,
   });
+
+  useEffect(() => {
+    otherDetails.setValue("religion", religionOptions[0]);
+  }, []);
 
   function particularsOfApplicantSubmit(data) {
     setForm((prev) => Object.assign(prev, flattenObject(data)));
@@ -289,9 +299,8 @@ export function Singapore() {
               />
 
               <Input
-                label="Alias *"
+                label="Alias"
                 register={particularsOfApplicant.register("alias", {
-                  required: "Alias is required",
                   maxLength: { value: 50, message: "Exceeds 50 character limit" },
                 })}
                 error={particularsOfApplicant.formState.errors["alias"]}
@@ -557,8 +566,12 @@ export function Singapore() {
                 error={otherDetails.formState.errors["contact-number"]}
               />
 
-              <Input
+              <Select
                 label="Occupation *"
+                placeholder="Select occupation"
+                control={otherDetails.control}
+                options={occupationOptions}
+                name="occupation"
                 register={otherDetails.register("occupation", {
                   required: "Occupation is required",
                   maxLength: { value: 25, message: "Exceeds 25 character limit" },
