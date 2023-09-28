@@ -188,7 +188,7 @@ export function Schengen() {
     if (!serverRes) return fire();
     fire("Successfully Done!", "success");
 
-    clearLocalStore();
+    setTimeout(clearLocalStore, 500);
     navigate(-1);
   }
 
@@ -254,7 +254,7 @@ export function Schengen() {
         }
         onClick={() => {
           navigate(-1);
-          clearLocalStore();
+          setTimeout(clearLocalStore, 500);
         }}
         className="my-1 inline-flex items-center rounded-md border-gray-200 bg-white px-5 py-2.5 text-center text-sm font-medium text-blue-700 shadow hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:opacity-0"
       >
@@ -858,22 +858,24 @@ export function Schengen() {
                 disabled={info.formState.isSubmitting}
               >
                 {paymentMethod === "By The Applicant Himself/Herself" ? (
-                  <Select
-                    label="Means Of Support *"
-                    classNameLabel="line-clamp-none"
-                    options={selfCostOfTravelingAndLivingOptions}
-                    control={info.control}
-                    isDisabled={info.formState.isSubmitting}
-                    isMulti
-                    name="self-means-support"
-                    register={info.register("self-means-support", {
-                      required: {
-                        value: paymentMethod === "By The Applicant Himself/Herself",
-                        message: "Means of support is required",
-                      },
-                    })}
-                    error={info.formState.errors["self-means-support"]}
-                  />
+                  <div className="col-span-full">
+                    <Select
+                      label="Means Of Support *"
+                      classNameLabel="line-clamp-none"
+                      options={selfCostOfTravelingAndLivingOptions}
+                      control={info.control}
+                      isDisabled={info.formState.isSubmitting}
+                      isMulti
+                      name="self-means-support"
+                      register={info.register("self-means-support", {
+                        required: {
+                          value: paymentMethod === "By The Applicant Himself/Herself",
+                          message: "Means of support is required",
+                        },
+                      })}
+                      error={info.formState.errors["self-means-support"]}
+                    />
+                  </div>
                 ) : (
                   <Fragment>
                     <Input
@@ -903,22 +905,24 @@ export function Schengen() {
                       classNameLabel="line-clamp-none"
                     />
 
-                    <Select
-                      label="Means Of Support *"
-                      classNameLabel="line-clamp-none"
-                      options={sponsorCostOfTravelingAndLivingOptions}
-                      control={info.control}
-                      isDisabled={info.formState.isSubmitting}
-                      isMulti
-                      name="sponsor-means-support"
-                      register={info.register("sponsor-means-support", {
-                        required: {
-                          value: paymentMethod === "By A Sponsor  (Host, Company Organization)",
-                          message: "Means of support is required",
-                        },
-                      })}
-                      error={info.formState.errors["sponsor-means-support"]}
-                    />
+                    <div className="col-span-full">
+                      <Select
+                        label="Means Of Support *"
+                        classNameLabel="line-clamp-none"
+                        options={sponsorCostOfTravelingAndLivingOptions}
+                        control={info.control}
+                        isDisabled={info.formState.isSubmitting}
+                        isMulti
+                        name="sponsor-means-support"
+                        register={info.register("sponsor-means-support", {
+                          required: {
+                            value: paymentMethod === "By A Sponsor  (Host, Company Organization)",
+                            message: "Means of support is required",
+                          },
+                        })}
+                        error={info.formState.errors["sponsor-means-support"]}
+                      />
+                    </div>
                   </Fragment>
                 )}
               </Group>

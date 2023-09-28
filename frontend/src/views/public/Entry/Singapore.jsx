@@ -183,7 +183,7 @@ export function Singapore() {
     if (!serverRes) return fire();
     fire("Successfully Done!", "success");
 
-    clearLocalStore();
+    setTimeout(clearLocalStore, 500);
     navigate(-1);
   }
 
@@ -238,7 +238,7 @@ export function Singapore() {
       <button
         onClick={() => {
           navigate(-1);
-          clearLocalStore();
+          setTimeout(clearLocalStore, 500);
         }}
         disabled={
           particularsOfApplicant.formState.isSubmitting ||

@@ -148,7 +148,7 @@ export function Thailand() {
 
     fire("Successfully Done!", "success");
 
-    clearLocalStore();
+    setTimeout(clearLocalStore, 500);
     navigate(-1);
   }
 
@@ -193,8 +193,8 @@ export function Thailand() {
     <main className="container mx-auto space-y-4 p-4">
       <button
         onClick={() => {
-          clearLocalStore();
           navigate(-1);
+          setTimeout(clearLocalStore, 500);
         }}
         disabled={contact.formState.isSubmitting || personal.formState.isSubmitting || purpose.formState.isSubmitting}
         className="my-1 inline-flex items-center rounded-md border-gray-200 bg-white px-5 py-2.5 text-center text-sm font-medium text-blue-700 shadow hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-blue-300  disabled:opacity-0"
