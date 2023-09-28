@@ -57,7 +57,7 @@ const Agent = () => {
         />
 
         <Widget
-          icon={<MaterialSymbolsSupervisedUserCircleOutline className="h-7 w-7" />}
+          icon={<PepiconsPencilPersonCheckmarkCircle className="h-7 w-7" />}
           title={"total Agent Approved"}
           subtitle={agentData.filter((e) => e.status === 1).length || "00"}
         />
@@ -205,6 +205,23 @@ export function PhAddressBookFill(props) {
         fill="currentColor"
         d="M160 112a24 24 0 1 1-24-24a24 24 0 0 1 24 24Zm64-72v176a16 16 0 0 1-16 16H64a16 16 0 0 1-16-16v-24H32a8 8 0 0 1 0-16h16v-40H32a8 8 0 0 1 0-16h16V80H32a8 8 0 0 1 0-16h16V40a16 16 0 0 1 16-16h144a16 16 0 0 1 16 16Zm-33.6 123.2a67.88 67.88 0 0 0-27.4-21.69a40 40 0 1 0-53.94 0A67.88 67.88 0 0 0 81.6 163.2a8 8 0 1 0 12.8 9.6a52 52 0 0 1 83.2 0a8 8 0 1 0 12.8-9.6Z"
       ></path>
+    </svg>
+  );
+}
+
+export function PepiconsPencilPersonCheckmarkCircle(props) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 26 26" {...props}>
+      <g fill="currentColor" fillRule="evenodd" clipRule="evenodd">
+        <path
+          fill="currentColor"
+          d="m21.1 12.5l1.4 1.41l-6.53 6.59L12.5 17l1.4-1.41l2.07 2.08l5.13-5.17M11 4a4 4 0 0 1 4 4a4 4 0 0 1-4 4a4 4 0 0 1-4-4a4 4 0 0 1 4-4m0 2a2 2 0 0 0-2 2a2 2 0 0 0 2 2a2 2 0 0 0 2-2a2 2 0 0 0-2-2m0 7c.68 0 1.5.09 2.41.26l-1.67 1.67l-.74-.03c-2.97 0-6.1 1.46-6.1 2.1v1.1h6.2L13 20H3v-3c0-2.66 5.33-4 8-4Z"
+        />
+        <path
+          stroke="2em"
+          d="M13 24.5c6.351 0 11.5-5.149 11.5-11.5S19.351 1.5 13 1.5S1.5 6.649 1.5 13S6.649 24.5 13 24.5Zm0 1c6.904 0 12.5-5.596 12.5-12.5S19.904.5 13 .5S.5 6.096.5 13S6.096 25.5 13 25.5Z"
+        ></path>
+      </g>
     </svg>
   );
 }
