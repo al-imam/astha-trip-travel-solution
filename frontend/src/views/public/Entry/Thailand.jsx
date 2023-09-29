@@ -13,7 +13,7 @@ import { twMerge } from "tailwind-merge";
 import countries from "../countries.json";
 import districts from "../districts.json";
 import { Spinner } from "./Spinner";
-import { fire, flattenObject, getExactOption, getNumberSelect, populate, setValue } from "./util";
+import { fire, flattenObject, formatDateToYYYYMMDD, getExactOption, getNumberSelect, populate, setValue } from "./util";
 
 const placeOfBirthOptions = districts.map((value) => ({
   label: value,
@@ -78,14 +78,6 @@ function clearLocalStore() {
   localStorage.removeItem(localPersonal);
   localStorage.removeItem(localContact);
   localStorage.removeItem(localPurpose);
-}
-
-function formatDateToYYYYMMDD(date) {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-
-  return `${year}-${month}-${day}`;
 }
 
 export function Thailand() {
