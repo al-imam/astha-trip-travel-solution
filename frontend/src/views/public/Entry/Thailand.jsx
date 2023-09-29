@@ -80,6 +80,14 @@ function clearLocalStore() {
   localStorage.removeItem(localPurpose);
 }
 
+function formatDateToYYYYMMDD(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+
 export function Thailand() {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
@@ -92,11 +100,23 @@ export function Thailand() {
   const purpose = useForm();
 
   const number = personal.watch("passport-number") || {};
+  const dateOfIssue = personal.watch("passport-date-of-issue");
+
+  useEffect(() => {
+    if (dateOfIssue && !personal.getValues("passport-expire-date")) {
+      const issue = new Date(dateOfIssue);
+      issue.setFullYear(issue.getFullYear() + 10);
+      issue.setDate(issue.getDate() - 1);
+
+      personal.setValue("passport-expire-date", formatDateToYYYYMMDD(issue));
+    }
+  }, [dateOfIssue]);
 
   useEffect(() => {
     personal.setValue("type-of-visa-requested", typeOfVisaRequestedOptions[0]);
     personal.setValue("nationality", nationalityOptions[0]);
     personal.setValue("nationality-at-birth", nationalityOptions[0]);
+    personal.setValue("passport-issued-at", placeOfBirthOptions[0]);
     personal.setValue("type-of-passport", "INT. PASSPORT");
     purpose.setValue("countries-for-which-travel-document-is-valid", validCountryOptions[0]);
     purpose.setValue("purpose-of-visit", purposeOfVisitOptions[0]);
