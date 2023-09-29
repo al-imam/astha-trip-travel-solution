@@ -157,7 +157,7 @@ const VisaFormColector = () => {
           contact_number: body["contact-number"],
           occupation: body["occupation"],
           high_academic: body["highest-academic"],
-          qualifications_attained: body["qualifications-attained"],
+
           annual_income: body["annual-income"],
           religion: body["religion"],
           expected_date_of_arrival: body["arrival-date"],

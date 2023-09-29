@@ -6,13 +6,16 @@ const schema = {
   name: ["name", "first_name"],
   first_name: ["name", "first_name"],
   date_of_birth: ["date_of_birth"],
-  place_of_birth: ["place_of_birth"],
   nationality: ["nationality", "current_nationality"],
-
+  birth_place: ["birth_place", "state_place_of_birth", "place_of_birth"],
+  place_of_birth: ["birth_place", "state_place_of_birth", "place_of_birth"],
+  state_place_of_birth: [
+    "birth_place",
+    "state_place_of_birth",
+    "place_of_birth",
+  ],
   current_nationality: ["nationality", "current_nationality"],
-
   nationality_at_birth: ["nationality_at_birth"],
-
   type_of_passport: ["type_of_passport", "type_of_travel_document"],
   type_of_travel_document: ["type_of_passport", "type_of_travel_document"],
   passport_number: ["passport_number"],
@@ -24,9 +27,7 @@ const schema = {
   passport_issued_country: ["passport_issued_country"],
   email: ["email", "home_email"],
   home_email: ["email", "home_email"],
-
   phone: ["phone"],
-
   marital_status: ["marital_status", "civil_status"],
   civil_status: ["marital_status", "civil_status"],
   name_title: ["name_title"],

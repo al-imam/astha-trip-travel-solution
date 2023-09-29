@@ -91,7 +91,7 @@ class Model {
       }
 
       const DB = await DataBase();
-      let sql = `SELECT * FROM ${this.name}`;
+      let sql = `SELECT * FROM ${this.name} ORDER BY ${this.name}.updateAt DESC`;
       return DB.execute(sql);
     } catch (error) {
       console.log(`error to get all in [${this.name}] =>`, error);

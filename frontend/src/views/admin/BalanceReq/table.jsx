@@ -211,11 +211,11 @@ const Table = ({ datas, colunm, nav = true }) => {
             </span>{" "}
             prev
           </button>
-          <span className="capitalize dark:text-brand-50 text-gray-900">
+          <span className="capitalize text-gray-900 dark:text-brand-50">
             page : {pageIndex + 1} of {pageOptions.length} <span> </span>
             <select
               value={pageSize}
-              className="relative text-brand-600  ml-4 border-[1px] border-brand-200"
+              className="relative ml-4  border-[1px] border-brand-200 text-brand-600"
               onChange={(e) => {
                 setPageSize(Number(e.target.value));
               }}

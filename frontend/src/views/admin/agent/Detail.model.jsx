@@ -1,4 +1,5 @@
 import axios from "axios";
+import Radio from "components/radio/index";
 import Widget from "components/widget/Widget";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -10,6 +11,7 @@ const swalWithBootstrapButtons = Swal.mixin();
 const DetailAgentmodule = ({ dataraw, close, reload }) => {
   const [data, setData] = useState(dataraw);
   const [stat, setStat] = useState(null);
+  const [permission, Setpermission] = useState();
 
   useEffect(() => {
     if (data) {
@@ -20,6 +22,13 @@ const DetailAgentmodule = ({ dataraw, close, reload }) => {
       res
         .then((re) => {
           setStat(re.data);
+        })
+        .catch((e) => console.log(e));
+
+      const pemission_db = axios.post("/api/visa-form/get-permission-status", { id: data.id });
+      pemission_db
+        .then((re) => {
+          Setpermission(re.data);
         })
         .catch((e) => console.log(e));
     }
@@ -103,6 +112,41 @@ const DetailAgentmodule = ({ dataraw, close, reload }) => {
       });
   }
 
+  const changePermission = async (status, id) => {
+    try {
+      swalWithBootstrapButtons
+        .fire({
+          title: "Are you sure?",
+          text: `You want to Change permission ?`,
+          icon: "question",
+          showCancelButton: true,
+          confirmButtonText: "Yes",
+          cancelButtonText: "No",
+          reverseButtons: true,
+          confirmButtonColor: "#ff0000db",
+        })
+        .then(async (result) => {
+          if (result.isConfirmed) {
+            try {
+              await axios.post("/api/visa-form/update-permission-status", { id: id, status });
+              Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "Agent has been activated.",
+                showConfirmButton: false,
+                timer: 1500,
+              });
+              reload((old) => old + 1);
+              close(false);
+            } catch (error) {
+              console.log(error);
+            }
+          }
+        });
+    } catch (error) {
+      console.log("🚀 ~ file: Detail.model.jsx:119 ~ changePermission ~ error:", error);
+    }
+  };
   function resetAgentPassword() {
     swalWithBootstrapButtons
       .fire({
@@ -354,6 +398,66 @@ const DetailAgentmodule = ({ dataraw, close, reload }) => {
                     >
                       Reset Agent Password
                     </button>
+                    <div className="relative w-full">
+                      <h1 className="mb-1 flex items-center justify-start border-t-2 border-brand-200 pt-3 pb-1 ">
+                        Set Visa Form Application Permission{" "}
+                        <span className="text-2x pl-2 text-brand-800">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 48 48">
+                            <path
+                              fill="none"
+                              stroke="currentColor"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M33.07 19.51L28 23.2l2 5.93a.57.57 0 0 1-.87.63L24 26.15l-5.08 3.7a.56.56 0 0 1-.79-.15a.62.62 0 0 1-.08-.48L20 23.3l-5.07-3.7a.55.55 0 0 1 .32-1h6.27l1.95-5.93a.55.55 0 0 1 1.06-.09l1.95 5.92h6.27a.56.56 0 0 1 .55.57a.53.53 0 0 1-.23.44Z"
+                            ></path>
+                            <path
+                              fill="none"
+                              stroke="currentColor"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M24 4.5s-11.26 2-15.25 2v20a11.16 11.16 0 0 0 .8 4.1a15 15 0 0 0 2 3.61a22 22 0 0 0 2.81 3.07a34.47 34.47 0 0 0 3 2.48a34 34 0 0 0 2.89 1.86c1 .59 1.71 1 2.13 1.19l1 .49a1.44 1.44 0 0 0 1.24 0l1-.49c.42-.2 1.13-.6 2.13-1.19a34 34 0 0 0 2.89-1.86a34.47 34.47 0 0 0 3-2.48a22 22 0 0 0 2.81-3.07a15 15 0 0 0 2-3.61a11.16 11.16 0 0 0 .8-4.1v-20c-3.99.03-15.25-2-15.25-2Z"
+                            ></path>
+                          </svg>
+                        </span>
+                      </h1>
+                      {permission && (
+                        <div className="grid w-full grid-cols-2 gap-3 md:grid-cols-3">
+                          <div className="relative flex w-full items-center gap-2">
+                            <Radio
+                              onChange={(e) => {
+                                changePermission("block", permission.id);
+                              }}
+                              color="red"
+                              name="permission"
+                              checked={permission?.visa_form === "block"}
+                            />
+                            <label htmlFor="block">Block</label>
+                          </div>
+                          <div className="relative flex w-full items-center gap-2">
+                            <Radio
+                              onChange={(e) => {
+                                changePermission("auto", permission.id);
+                              }}
+                              color="green"
+                              name="permission"
+                              checked={permission?.visa_form === "auto"}
+                            />
+                            <label htmlFor="block">Auto</label>
+                          </div>
+                          <div className="relative col-span-2 flex w-full items-center gap-2 md:col-span-1">
+                            <Radio
+                              onChange={(e) => {
+                                changePermission("pending", permission.id);
+                              }}
+                              color="blue"
+                              name="permission"
+                              checked={permission?.visa_form === "pending"}
+                            />
+                            <label htmlFor="block">Request First</label>
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>

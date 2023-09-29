@@ -6,17 +6,18 @@ import Table from "./table";
 const Index = () => {
   const [add, setAdd] = useState(false);
   const [payments, setPayments] = useState([]);
+  const [Reload, SetReload] = useState(0);
 
   useEffect(() => {
     axios
       .get("/api/payment/")
       .then((res) => setPayments(res.data))
       .catch(console.log);
-  }, []);
+  }, [Reload]);
 
   return (
     <div className="relative w-full pt-5 ">
-      {add ? <Addpayment close={() => setAdd(false)} /> : ""}
+      {add ? <Addpayment close={() => setAdd(false)} ReaLoad={SetReload} /> : ""}
       <div className="relative w-full p-3 ">
         <div className="relative w-full">
           <button

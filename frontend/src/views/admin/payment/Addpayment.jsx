@@ -12,7 +12,7 @@ function getNumber(str, fallback = 0) {
   return num;
 }
 
-const Addpayment = ({ close }) => {
+const Addpayment = ({ close, ReaLoad }) => {
   const [allAgent, SetAllAgent] = useState([]);
   const [loading, setLoading] = useState(true);
   const [SelectedAgent, setSelectedAgent] = useState(null);
@@ -112,6 +112,7 @@ const Addpayment = ({ close }) => {
         }
       );
       close();
+      ReaLoad((s) => s + 1);
     } catch (error) {
       console.log(error);
     }

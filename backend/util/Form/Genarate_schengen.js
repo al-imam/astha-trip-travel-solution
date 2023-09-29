@@ -705,6 +705,11 @@ const GenerateSchengen = async (id) => {
               ].find((v) => compare(v, m))
           ).length > 0,
       },
+      // {
+      //   type: "PDFTextField",
+      //   name: "place and Date",
+      //   value: new Date().toLocaleDateString({}, { dateStyle: "medium" }),
+      // },
     ]);
 
     function compareSome(to, ...args) {

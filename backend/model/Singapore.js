@@ -106,10 +106,7 @@ const SingaporeSchema = new Schema({
     type: "VARCHAR(255)",
     req: true,
   },
-  qualifications_attained: {
-    type: "VARCHAR(255)",
-    req: true,
-  },
+
   annual_income: {
     type: "VARCHAR(255)",
     req: true,

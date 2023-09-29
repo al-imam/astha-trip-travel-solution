@@ -392,17 +392,17 @@ const Generate_Singapore = async (id) => {
       {
         type: "PDFCheckBox",
         name: "Diploma",
-        value: response["qualifications_attained"] === "Diploma",
+        value: response["high_academic"] === "Diploma",
       },
       {
         type: "PDFCheckBox",
         name: "University",
-        value: response["qualifications_attained"] === "University",
+        value: response["high_academic"] === "University",
       },
       {
         type: "PDFCheckBox",
         name: "PostGraduate",
-        value: response["qualifications_attained"] === "Post-Graduate",
+        value: response["high_academic"] === "Post-Graduate",
       },
       {
         type: "PDFTextField",
@@ -791,6 +791,11 @@ const Generate_Singapore = async (id) => {
               antecedent_of_applicant.details.length
             )
           : "",
+      },
+      {
+        type: "PDFTextField",
+        name: "Date",
+        value: new Date().toLocaleDateString({}, { dateStyle: "medium" }),
       },
     ]);
 

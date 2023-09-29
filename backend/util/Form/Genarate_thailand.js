@@ -393,10 +393,15 @@ const Generate_thailand = async (id, pass) => {
         ),
         font: 11,
       },
+      {
+        type: "PDFTextField",
+        name: "Date",
+        value: new Date().toLocaleDateString({}, { dateStyle: "medium" }),
+      },
     ]);
 
     function AsAbove(value, len = 0) {
-      return value ? value : len > 0 ? " " : "AS ABOVE";
+      return value ? value : len > 0 ? " " : "SAME AS ABOVE";
     }
 
     function NA(value, len = 0) {

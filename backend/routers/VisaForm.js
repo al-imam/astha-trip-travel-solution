@@ -14,6 +14,9 @@ const GeneratePDF = require("../controller/VisaForm/GenaratePDF");
 const Approval = require("../middleware/visa-form/Approval");
 const Reject = require("../controller/VisaForm/Reject");
 
+const Permission = require("../controller/VisaForm/VisaApplicationPermission");
+const PermissionChange = require("../controller/VisaForm/UpdateVisaFormPermission");
+
 VisaFormRouter.post(
   "/schengen",
   isAuthenticate,
@@ -68,5 +71,7 @@ VisaFormRouter.get(
 );
 
 VisaFormRouter.get("/passport-numbers", isAuthenticate, passportNumbers);
+VisaFormRouter.post("/get-permission-status", isAdmin, Permission);
+VisaFormRouter.post("/update-permission-status", isAdmin, PermissionChange);
 
 module.exports = VisaFormRouter;
