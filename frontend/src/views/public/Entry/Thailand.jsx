@@ -392,7 +392,7 @@ export function Thailand() {
                 </label>
                 <div className="flex gap-2 [&>*]:flex-1">
                   <Input
-                    placeholder="Occupation"
+                    placeholder="Present position"
                     register={personal.register("present-position-occupation", {
                       required: "Present position is required",
                     })}
