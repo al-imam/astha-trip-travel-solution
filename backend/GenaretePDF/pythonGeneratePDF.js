@@ -9,8 +9,10 @@ function fix(str) {
   return `${str}`.trim().replace(/\s+/g, "-").toLowerCase();
 }
 
-async function generateVisaPDF(name, passport) {
+async function generateVisaPDF(name, passport, purpose, country) {
   try {
+    if (country.toLowerCase() === "vietnam") return null;
+
     const fileFullPath = path.join(
       __dirname,
       "generated-pdf",
@@ -20,6 +22,7 @@ async function generateVisaPDF(name, passport) {
     const { data: BufferPDF } = await axios.post(`${baseURL}/generate/visa/`, {
       name,
       passport: `${passport}`,
+      purpose,
     });
 
     fs.writeFileSync(fileFullPath, BufferPDF);
@@ -30,8 +33,12 @@ async function generateVisaPDF(name, passport) {
   }
 }
 
-async function generateItenaryPDF({ guest, itenary }) {
+async function generateItenaryPDF({ guest, itenary: _i }) {
   try {
+    const iternary = JSON.parse(_i);
+
+    if (iternary.length < 0) return null;
+
     const fileFullPath = path.join(
       __dirname,
       "generated-pdf",
@@ -40,13 +47,17 @@ async function generateItenaryPDF({ guest, itenary }) {
 
     const { data: BufferPDF } = await axios.post(
       `${baseURL}/generate/itenary/`,
-      { guest, itenary: JSON.parse(itenary) }
+      {
+        guest,
+        itenary: iternary.map(({ to, from, date }) => ({ to, from, date })),
+      }
     );
 
     fs.writeFileSync(fileFullPath, BufferPDF);
 
     return fileFullPath;
   } catch (error) {
+    console.log(error, "iternary");
     return null;
   }
 }

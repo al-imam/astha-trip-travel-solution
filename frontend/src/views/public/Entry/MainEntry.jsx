@@ -223,7 +223,7 @@ export function MainEntry() {
   }
 
   async function submitLoiRequest() {
-    if (itenaries.length < 1 || allGuest.length < 1) return;
+    if ((itenaries.length < 1 && country?.value !== "Vietnam") || allGuest.length < 1) return;
 
     try {
       await toast.promise(
@@ -412,7 +412,7 @@ export function MainEntry() {
               multiple={false}
             />
 
-            {country.value === "Vietnam" && (
+            {country?.value === "Vietnam" && (
               <Input
                 label="Passport Size Photo *"
                 register={guest.register("passport-size-photo", {
@@ -472,7 +472,7 @@ export function MainEntry() {
         </div>
       )}
 
-      {allGuest.length > 0 && (
+      {allGuest.length > 0 && country?.value !== "Vietnam" && (
         <div className="mt-4 flex flex-col gap-4 rounded border border-gray-200 bg-white px-4 py-8 shadow-sm ">
           <p className="flex items-center gap-2 py-2 text-2xl font-semibold text-gray-900 ">
             <TravelIcon className="text-xl" />
@@ -540,7 +540,7 @@ export function MainEntry() {
         </div>
       )}
 
-      {allGuest.length > 0 && itenaries.length > 0 && (
+      {allGuest.length > 0 && (itenaries.length > 0 || country?.value === "Vietnam") && (
         <>
           <button
             onClick={submitLoiRequest}
