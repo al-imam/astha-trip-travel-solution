@@ -5,7 +5,7 @@ const SchengenSchema = new Schema({
   surname: {
     type: "VARCHAR(255)",
     req: true,
-  },
+  }, 
   surname_at_birth: {
     type: "VARCHAR(255)",
     req: true,
