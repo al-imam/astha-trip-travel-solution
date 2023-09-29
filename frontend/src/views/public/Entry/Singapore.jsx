@@ -109,6 +109,22 @@ const stayLocationOptions = ["Hotel", "Next of Kin's Place", "Relative's Place",
   value,
 }));
 
+const streetNameOptions = ["Hotel Boss"].map((value) => ({
+  label: value,
+  value: value.toUpperCase(),
+}));
+
+const streetNameOptionsRelatedData = {
+  "hotel boss": {
+    houseNo: "00500",
+    floorNo: "02",
+    unitNo: "02",
+    postalCode: "199020",
+    contactNo: "6568090000",
+    buildingName: "ORCHARD HOTEL",
+  },
+};
+
 const steps = ["", "", ""];
 
 const localParticulars = "singapore-particulars-of-applicant";
@@ -138,6 +154,7 @@ export function Singapore() {
   const number = particularsOfApplicant.watch("passport-no") || {};
 
   const dateOfIssue = particularsOfApplicant.watch("passport-issue-date");
+  const streetName = otherDetails.watch("singapore-street-name");
   const citizenshipOfSpouse = particularsOfApplicant.watch("citizenship-of-spouse");
   const answers = particularsOfLocalContact.watch(["a", "b", "c", "d"]);
 
@@ -184,6 +201,18 @@ export function Singapore() {
     otherDetails.setValue("details-of-purpose", "TOURISM");
     otherDetails.setValue("stay-location", stayLocationOptions[0]);
   }, []);
+
+  useEffect(() => {
+    if (streetName.value && streetName.value.toLowerCase() in streetNameOptionsRelatedData) {
+      const more = streetNameOptionsRelatedData[streetName.value.toLowerCase()];
+      otherDetails.setValue("singapore-house-no", more.houseNo);
+      otherDetails.setValue("singapore-floor-no", more.floorNo);
+      otherDetails.setValue("singapore-unit-no", more.unitNo);
+      otherDetails.setValue("singapore-postal-code", more.postalCode);
+      otherDetails.setValue("singapore-contact-no", more.contactNo);
+      otherDetails.setValue("singapore-building-name", more.buildingName);
+    }
+  }, [streetName?.value]);
 
   useEffect(() => {
     if (dateOfIssue && !particularsOfApplicant.getValues("passport-expiry-date")) {
@@ -738,6 +767,19 @@ export function Singapore() {
                 classNameContainer="col-span-full"
                 className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 xl:flex xl:flex-wrap xl:[&>*]:flex-1"
               >
+                <div className="col-span-full md:col-span-2">
+                  <Select
+                    label="Street Name *"
+                    placeholder="Select street name"
+                    name="singapore-street-name"
+                    options={streetNameOptions}
+                    control={otherDetails.control}
+                    register={otherDetails.register("singapore-street-name", {
+                      required: "Street name is required",
+                    })}
+                    error={otherDetails.formState.errors["singapore-street-name"]}
+                  />
+                </div>
                 <Input
                   label="Block/House No *"
                   register={otherDetails.register("singapore-house-no", {
@@ -769,18 +811,9 @@ export function Singapore() {
                   label="Postal Code *"
                   register={otherDetails.register("singapore-postal-code", {
                     required: "Postal code is required",
-                    maxLength: { value: 4, message: "Exceeds 4 character limit" },
+                    maxLength: { value: 6, message: "Exceeds 4 character limit" },
                   })}
                   error={otherDetails.formState.errors["singapore-postal-code"]}
-                />
-
-                <Input
-                  label="Street Name *"
-                  register={otherDetails.register("singapore-street-name", {
-                    required: "Street name is required",
-                    maxLength: { value: 20, message: "Exceeds 20 character limit" },
-                  })}
-                  error={otherDetails.formState.errors["singapore-street-name"]}
                 />
                 <Input
                   label="Contact No *"
@@ -791,15 +824,13 @@ export function Singapore() {
                   error={otherDetails.formState.errors["singapore-contact-no"]}
                 />
 
-                <div className="col-span-full md:col-span-2">
-                  <Input
-                    label="Building Name *"
-                    register={otherDetails.register("singapore-building-name", {
-                      required: "Building name is required",
-                    })}
-                    error={otherDetails.formState.errors["singapore-building-name"]}
-                  />
-                </div>
+                <Input
+                  label="Building Name *"
+                  register={otherDetails.register("singapore-building-name", {
+                    required: "Building name is required",
+                  })}
+                  error={otherDetails.formState.errors["singapore-building-name"]}
+                />
               </Join>
 
               <Group
@@ -976,10 +1007,7 @@ export function Singapore() {
             onSubmit={particularsOfLocalContact.handleSubmit(particularsOfLocalContactSubmit)}
             autoComplete="off"
           >
-            <fieldset
-              disabled={particularsOfLocalContact.formState.isSubmitting}
-              className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
-            >
+            <fieldset disabled={particularsOfLocalContact.formState.isSubmitting} className="grid gap-4 md:grid-cols-2">
               <Input
                 label="Name Of Local Contact Company/Hotel *"
                 register={particularsOfLocalContact.register("name-of-local-contact", {
