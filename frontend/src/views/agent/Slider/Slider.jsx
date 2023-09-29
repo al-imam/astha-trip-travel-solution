@@ -17,8 +17,10 @@ const Slider = () => {
         spaceBetween={30}
         centeredSlides={true}
         loop
+        speed={1000}
         autoplay={{
-          delay: 2500,
+          delay: 6500,
+          pauseOnMouseEnter: true,
           disableOnInteraction: false,
         }}
         modules={[Autoplay]}

@@ -258,7 +258,7 @@ const Index = () => {
       </div>
       <div className="my-2 p-3">
         <div>
-          <h1 className="flex items-center justify-start text-xl">
+          <h1 className="flex items-center justify-start text-xl text-brand-400">
             {" "}
             <span className="pr-2">
               <SolarPenNewRoundLineDuotone />
@@ -288,7 +288,7 @@ const Index = () => {
         </div>
       </div>
       <div className="relative w-full p-3">
-        <span className="text-xl">Choose Country:</span>
+        <span className="text-xl text-gray-900 dark:text-brand-50">Choose Country:</span>
         <NormalSelect
           onChange={(e) => {
             setSelectedCountry(e.value);
@@ -347,8 +347,8 @@ const Index = () => {
             {/* table  */}
             <div className="relative mt-6 w-full">
               <div className="relative grid w-full grid-cols-3 gap-3 p-3">
-                <div className="relative w-full">
-                  <label>Filter Status</label>
+                <div className="relative w-full ">
+                  <label className="text-gray-900 dark:text-brand-50">Filter Status</label>
                   <NormalSelect
                     onChange={(e) => {
                       SetfilterStatus(e.value);
@@ -363,7 +363,7 @@ const Index = () => {
                   />
                 </div>
                 <div className="relative w-full">
-                  <label className="flex items-center ">
+                  <label className="flex items-center text-gray-900 dark:text-brand-50">
                     Filter Agent
                     {agenterror && (
                       <span className="pl-1 text-xl shadow-red-400 drop-shadow-md">

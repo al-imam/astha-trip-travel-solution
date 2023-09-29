@@ -56,7 +56,7 @@ async function SendMailWithAttachment(loiReqData, guests) {
     }
 
     const mailRes = await SendEmail({
-      to: ["i3371595@gmail.com"],
+      to: ["i3371595@gmail.com", "nahidhasan141400@gmail.com"],
       bcc: mails,
       subject: `${loiReqData.pasport_number}-${loiReqData.guest_name}`,
       attachments,

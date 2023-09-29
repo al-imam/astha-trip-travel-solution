@@ -177,6 +177,7 @@ const AgentProfile = () => {
               <Input
                 type="file"
                 label="Profile photo"
+                accept=".png, .jpg, .jpeg"
                 disabled={photo.formState.isSubmitting}
                 register={photo.register("photo", { required: "Photo is required" })}
                 error={photo.formState.errors["photo"]}

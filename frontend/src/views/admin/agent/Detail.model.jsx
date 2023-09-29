@@ -8,23 +8,22 @@ import Swal from "sweetalert2";
 const swalWithBootstrapButtons = Swal.mixin();
 
 const DetailAgentmodule = ({ dataraw, close, reload }) => {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState(dataraw);
   const [stat, setStat] = useState(null);
-  useEffect(() => {
-    setData(dataraw);
-  }, [dataraw]);
 
-  if (data) {
-    const res = axios.post("/api/payment/status", {
-      agent_id: data.id,
-      email: data.email,
-    });
-    res
-      .then((re) => {
-        setStat(re.data);
-      })
-      .catch((e) => console.log(e));
-  }
+  useEffect(() => {
+    if (data) {
+      const res = axios.post("/api/payment/status", {
+        agent_id: data.id,
+        email: data.email,
+      });
+      res
+        .then((re) => {
+          setStat(re.data);
+        })
+        .catch((e) => console.log(e));
+    }
+  }, []);
 
   const [inpbal, setInpbal] = useState("");
 
@@ -269,7 +268,7 @@ const DetailAgentmodule = ({ dataraw, close, reload }) => {
                         </span>
                         Already Paid
                       </div>
-                      <div className="pl-4 text-3xl">{stat?.duePayment || "000"}</div>
+                      <div className="pl-4 text-3xl">{stat?.totalPaid || "000"}</div>
                     </div>
                   </div>
                 </div>

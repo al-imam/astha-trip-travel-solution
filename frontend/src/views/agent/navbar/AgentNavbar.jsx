@@ -22,7 +22,7 @@ function AgentNavbar({ agent }) {
             <span className="text-lg font-semibold ">Astha Trip</span>
           </Link>
           <div className="flex items-center gap-10">
-            <div>
+            <div className="hidden md:block ">
               <Link
                 to={"/agent/visa-application"}
                 className="flex cursor-pointer items-center rounded-md bg-brand-300/10 px-10 py-2 ring-brand-400 transition-all duration-300 hover:shadow-md hover:ring-1"
@@ -49,7 +49,7 @@ function AgentNavbar({ agent }) {
               />
 
               {open && (
-                <div className="absolute right-0 z-10 mt-2 w-[300px] rounded bg-white py-2 px-4 text-sm text-gray-800 shadow-lg">
+                <div className="absolute right-0 z-10 mt-2 w-[230px] rounded bg-white py-2 px-4 text-sm text-gray-800 shadow-lg">
                   <div className="border-b py-3">
                     <p className=" font-bold text-navy-700 dark:text-white">👋 Hey, {agent.name}</p>
                   </div>
@@ -60,6 +60,13 @@ function AgentNavbar({ agent }) {
                     >
                       Profile Settings
                     </Link>
+                    <Link
+                      to={"/agent/visa-application"}
+                      className="block rounded bg-blue-400 px-4 py-2 font-medium text-white transition duration-200 hover:bg-blue-500 active:bg-brand-700 dark:bg-brand-400 dark:text-white dark:hover:bg-brand-300 dark:active:bg-brand-200 md:hidden"
+                    >
+                      Visa Application Form
+                    </Link>
+
                     <button
                       onClick={logout}
                       className="rounded bg-red-500 px-4 py-2 text-left font-medium text-white transition duration-200 hover:bg-red-600 active:bg-red-700"
