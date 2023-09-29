@@ -96,5 +96,14 @@ export function setValue(value, callback = () => {}, select = false) {
   if (!value) return;
   if (!select) return callback(value);
   if (Array.isArray(value)) return callback(value.map((value) => ({ value, label: value })));
+  if (value instanceof Object && "value" in value && "label" in value) return callback(value);
   callback({ label: capitalizeFirstLetter(value), value });
+}
+
+export function getExactOption(optionArray = [], value) {
+  return optionArray.find((_v) => compare(_v?.value, value));
+}
+
+export function compare(_1, _2) {
+  return _1?.toString().toLowerCase() === _2?.toString().toLowerCase();
 }
