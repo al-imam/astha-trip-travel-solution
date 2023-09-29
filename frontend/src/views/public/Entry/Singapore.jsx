@@ -125,6 +125,19 @@ const streetNameOptionsRelatedData = {
   },
 };
 
+const localCompanyOptions = ["Joy Travel & Tours Pte LT"].map((value) => ({
+  label: value,
+  value: value.toUpperCase(),
+}));
+
+const localCompanyOptionsRelatedData = {
+  "joy travel & tours pte lt": {
+    relationship: "CLIENT",
+    contactNo: "6591381993",
+    email: "JOYHOLIDAYS88@GMAIL.COM",
+  },
+};
+
 const steps = ["", "", ""];
 
 const localParticulars = "singapore-particulars-of-applicant";
@@ -155,6 +168,7 @@ export function Singapore() {
 
   const dateOfIssue = particularsOfApplicant.watch("passport-issue-date");
   const streetName = otherDetails.watch("singapore-street-name");
+  const localContact = particularsOfLocalContact.watch("name-of-local-contact");
   const citizenshipOfSpouse = particularsOfApplicant.watch("citizenship-of-spouse");
   const answers = particularsOfLocalContact.watch(["a", "b", "c", "d"]);
 
@@ -203,7 +217,7 @@ export function Singapore() {
   }, []);
 
   useEffect(() => {
-    if (streetName.value && streetName.value.toLowerCase() in streetNameOptionsRelatedData) {
+    if (streetName?.value && streetName.value.toLowerCase() in streetNameOptionsRelatedData) {
       const more = streetNameOptionsRelatedData[streetName.value.toLowerCase()];
       otherDetails.setValue("singapore-house-no", more.houseNo);
       otherDetails.setValue("singapore-floor-no", more.floorNo);
@@ -213,6 +227,15 @@ export function Singapore() {
       otherDetails.setValue("singapore-building-name", more.buildingName);
     }
   }, [streetName?.value]);
+
+  useEffect(() => {
+    if (localContact?.value && localContact.value.toLowerCase() in localCompanyOptionsRelatedData) {
+      const more = localCompanyOptionsRelatedData[localContact.value.toLowerCase()];
+      particularsOfLocalContact.setValue("relationship-of-local-contact", more.relationship);
+      particularsOfLocalContact.setValue("contact-no-of-local-contact", more.contactNo);
+      particularsOfLocalContact.setValue("email-of-local-contact", more.email);
+    }
+  }, [localContact?.value]);
 
   useEffect(() => {
     if (dateOfIssue && !particularsOfApplicant.getValues("passport-expiry-date")) {
@@ -1008,15 +1031,14 @@ export function Singapore() {
             autoComplete="off"
           >
             <fieldset disabled={particularsOfLocalContact.formState.isSubmitting} className="grid gap-4 md:grid-cols-2">
-              <Input
+              <Select
                 label="Name Of Local Contact Company/Hotel *"
+                placeholder="Select company/hotel"
+                options={localCompanyOptions}
+                name="name-of-local-contact"
+                control={particularsOfLocalContact.control}
                 register={particularsOfLocalContact.register("name-of-local-contact", {
                   required: "Name of local contact company/hotel is required",
-
-                  maxLength: {
-                    value: 50,
-                    message: "Exceeds 50 character limit",
-                  },
                 })}
                 error={particularsOfLocalContact.formState.errors["name-of-local-contact"]}
               />
