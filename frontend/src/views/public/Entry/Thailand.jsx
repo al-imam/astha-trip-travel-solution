@@ -26,29 +26,16 @@ const nationalityOptions = countries.map(({ nationality }) => ({
 }));
 
 const typeOfVisaRequestedOptions = [
+  "Tourist Visa",
   "Diplomatic Visa",
   "Official Visa",
   "Courtesy Visa",
   "SMART Visa",
   "Non-Immigrant Visa",
-  "Tourist Visa",
   "Transit Visa",
 ].map((value) => ({
   label: value,
   value,
-}));
-
-const typeOfPassportOptions = [
-  "Ordinary passport",
-  "Diplomatic passport",
-  "Official passport",
-  "Travel document",
-  "Certificate identification",
-  "Document identification",
-  "Laissez-passer",
-].map((value) => ({
-  label: value,
-  value: value.toLocaleUpperCase(),
 }));
 
 const numberOfEntryOptions = [...getNumberSelect(1, 3), { label: "Multi", value: "MULTI" }];
@@ -63,12 +50,12 @@ const maritalStatusOptions = ["Single", "Married", "Divorced", "Widowed"].map((v
   value: value.toLocaleUpperCase(),
 }));
 
-const travelingByOptions = ["Ait plane", "Train", "Bus / Car", "Cruise"].map((value) => ({
+const travelingByOptions = ["Thai Air", "Biman Bangladesh", "Us Bangla"].map((value) => ({
   label: value,
   value: value.toLocaleUpperCase(),
 }));
 
-const purposeOfVisitOptions = ["Tourist", "Transit", "Business", "Diplomatic/Official"].map((value) => ({
+const purposeOfVisitOptions = ["Tourism", "Transit", "Business", "Diplomatic/Official"].map((value) => ({
   label: value,
   value,
 }));
@@ -93,6 +80,14 @@ function clearLocalStore() {
   localStorage.removeItem(localPurpose);
 }
 
+function formatDateToYYYYMMDD(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+
 export function Thailand() {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
@@ -105,9 +100,28 @@ export function Thailand() {
   const purpose = useForm();
 
   const number = personal.watch("passport-number") || {};
+  const dateOfIssue = personal.watch("passport-date-of-issue");
 
   useEffect(() => {
+    if (dateOfIssue && !personal.getValues("passport-expire-date")) {
+      const issue = new Date(dateOfIssue);
+      issue.setFullYear(issue.getFullYear() + 10);
+      issue.setDate(issue.getDate() - 1);
+
+      personal.setValue("passport-expire-date", formatDateToYYYYMMDD(issue));
+    }
+  }, [dateOfIssue]);
+
+  useEffect(() => {
+    personal.setValue("type-of-visa-requested", typeOfVisaRequestedOptions[0]);
+    personal.setValue("nationality", nationalityOptions[0]);
+    personal.setValue("nationality-at-birth", nationalityOptions[0]);
+    personal.setValue("passport-issued-at", placeOfBirthOptions[0]);
+    personal.setValue("type-of-passport", "INT. PASSPORT");
     purpose.setValue("countries-for-which-travel-document-is-valid", validCountryOptions[0]);
+    purpose.setValue("purpose-of-visit", purposeOfVisitOptions[0]);
+    purpose.setValue("proposed-address-in-thailand", "HOTEL AMBASSADOR, SUKIMVIT, SOI-11, BANGKOK");
+    contact.setValue("traveling-by", travelingByOptions[0]);
   }, []);
 
   useFormPersist(localPersonal, {
@@ -180,11 +194,6 @@ export function Thailand() {
         true
       );
       setValue(db["date_of_birth"], (_v) => personal.setValue("date-of-birth", _v));
-      setValue(
-        getExactOption(typeOfPassportOptions, db["type_of_passport"]),
-        (_v) => personal.setValue("type-of-passport", _v),
-        true
-      );
       setValue(db["passport_issued_at"], (_v) => personal.setValue("passport-issued-at", _v), true);
       setValue(db["passport_issue_date"], (_v) => personal.setValue("passport-date-of-issue", _v));
       setValue(db["passport_expiry_date"], (_v) => personal.setValue("passport-expire-date", _v));
@@ -356,14 +365,10 @@ export function Thailand() {
                 type="date"
               />
 
-              <SelectNotCreatable
-                label="Type Of Passport *"
-                options={typeOfPassportOptions}
-                placeholder="Select passport type"
-                control={personal.control}
-                isDisabled={personal.formState.isSubmitting}
-                name="type-of-passport"
-                register={personal.register("type-of-passport", { required: "Type of passport is required" })}
+              <Input
+                label="Type of Travel Document *"
+                placeholder="Passport type"
+                register={personal.register("type-of-passport", { required: "Type of travel document is required" })}
                 error={personal.formState.errors["type-of-passport"]}
               />
 
@@ -404,16 +409,16 @@ export function Thailand() {
                 </label>
                 <div className="flex gap-2 [&>*]:flex-1">
                   <Input
-                    placeholder="Present position"
+                    placeholder="Current Designation"
                     register={personal.register("present-position-occupation", {
-                      required: "Present position is required",
+                      required: "Current designation is required",
                     })}
                     error={personal.formState.errors["present-position-occupation"]}
                   />
                   <Input
-                    placeholder="Name of employer"
+                    placeholder="Name of Organization"
                     register={personal.register("name-of-employer-occupation", {
-                      required: "Name is required",
+                      required: "Name of organization is required",
                     })}
                     error={personal.formState.errors["name-of-employer-occupation"]}
                   />

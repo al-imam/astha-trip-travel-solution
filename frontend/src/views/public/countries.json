@@ -1,5 +1,9 @@
 [
   {
+    "name": "Bangladesh",
+    "nationality": "Bangladeshi"
+  },
+  {
     "name": "Afghanistan",
     "nationality": "Afghan"
   },
@@ -70,10 +74,6 @@
   {
     "name": "Bahrain",
     "nationality": "Bahraini"
-  },
-  {
-    "name": "Bangladesh",
-    "nationality": "Bangladeshi"
   },
   {
     "name": "Barbados",
