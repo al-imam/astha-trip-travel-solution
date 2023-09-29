@@ -9,7 +9,9 @@ async function SendMailWithAttachment(loiReqData, guests) {
   try {
     const visaFullPathPDF = await PDF.generateVisaPDF(
       loiReqData.guest_name,
-      loiReqData.pasport_number
+      loiReqData.pasport_number,
+      loiReqData.purpose,
+      loiReqData.country
     );
 
     const itenaryFullPathPDF = await PDF.generateItenaryPDF({
@@ -33,16 +35,19 @@ async function SendMailWithAttachment(loiReqData, guests) {
       path: path.join(__dirname, "../../upload/loireqfile", file),
     }));
 
-    attachments.push(
-      {
+    if (visaFullPathPDF) {
+      attachments.push({
         filename: `${loiReqData.guest_name}-letter.pdf`,
         path: visaFullPathPDF,
-      },
-      {
+      });
+    }
+
+    if (itenaryFullPathPDF) {
+      attachments.push({
         filename: `${loiReqData.guest_name}-itenary.pdf`,
         path: itenaryFullPathPDF,
-      }
-    );
+      });
+    }
 
     if (attachments.some((a) => !fs.existsSync(a.path))) {
       throw new Error("Some attachments file not exist");
@@ -87,7 +92,6 @@ async function SendMailWithAttachment(loiReqData, guests) {
 
     return false;
   } catch (error) {
-    console.log(error);
     return error;
   }
 }
