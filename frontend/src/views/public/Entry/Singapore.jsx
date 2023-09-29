@@ -17,6 +17,7 @@ import races from "../races.json";
 import { AddIcon, DeleteIcon } from "./MainEntry";
 import { NextIcon } from "./Schengen";
 import { Spinner } from "./Spinner";
+import { SEPARATOR } from "./Thailand";
 import { fire, flattenObject, populate, setValue } from "./util";
 
 const religionOptions = ["Islam", "Christianity", "Hinduism", "Buddhism", "Sikhism", "Spiritism", "Judaism"].map(
@@ -234,7 +235,13 @@ export function Singapore() {
 
       setValue(db["email"], (_v) => setStepTwo("email-address", _v));
       setValue(db["contact_number"], (_v) => setStepTwo("contact-number", _v));
-      setValue(db["occupation"], (_v) => setStepTwo("occupation", _v));
+
+      if (db["occupation"]?.includes(SEPARATOR)) {
+        setValue(db["occupation"].split(SEPARATOR)[0], (_v) => setStepTwo("occupation", _v), true);
+      } else {
+        setValue(db["occupation"], (_v) => setStepTwo("occupation", _v), true);
+      }
+
       setValue(db["high_academic"], (_v) => setStepTwo("highest-academic", _v), true);
       setValue(db["qualifications_attained"], (_v) => setStepTwo("qualifications-attained", _v), true);
       setValue(db["annual_income"], (_v) => setStepTwo("annual-income", _v));

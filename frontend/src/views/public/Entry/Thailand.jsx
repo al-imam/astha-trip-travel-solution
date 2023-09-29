@@ -81,7 +81,7 @@ const validCountryOptions = ["ALL COUNTRIES OF THE WORLD EXCEPT ISRAIL"].map((va
 const steps = ["", "", ""];
 
 // if you're going to change it change it in backend too
-const SEPARATOR = "<$72$31$33$>";
+export const SEPARATOR = "<$72$31$33$>";
 
 const localPersonal = "thailand-personal-submit";
 const localContact = "thailand-contact-submit";
@@ -159,10 +159,13 @@ export function Thailand() {
       const db = Object.assign(_value.common, _value.thailand);
       if (!db) return;
 
-      console.log(db);
-
       setValue(db["type_of_visa"], (_v) => personal.setValue("type-of-visa-requested", _v), true);
-      setValue(db["name_title"], (_v) => personal.setValue("name-title", _v), true);
+
+      if (typeof db["name_title"] === "string") {
+        const label = db["name_title"].toLowerCase() === "undefined" ? "Miss" : db["name_title"];
+        personal.setValue("name-title", { value: db["name_title"], label });
+      }
+
       setValue(db["first_name"], (_v) => personal.setValue("first-name", _v));
       setValue(db["middle_name"], (_v) => personal.setValue("middle-name", _v));
       setValue(db["family_name"], (_v) => personal.setValue("last-name", _v));
