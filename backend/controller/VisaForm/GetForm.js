@@ -78,6 +78,7 @@ const GetFormData = () => {
         res.status(500).send("something is wrong ");
       }
     },
+
     Thailand: async (req, res) => {
       try {
         const [serverRes] = await Thailand.findAll();
@@ -87,6 +88,7 @@ const GetFormData = () => {
         res.status(500).send("something is wrong ");
       }
     },
+
     Schengen: async (req, res) => {
       try {
         const [getServer] = await Schengen.findAll();
@@ -96,6 +98,7 @@ const GetFormData = () => {
         res.status(500).send("something is wrong ");
       }
     },
+
     agent: async (req, res) => {
       const Agent = req.AGENT;
       const query = JSON.stringify({
@@ -120,6 +123,7 @@ const GetFormData = () => {
         });
       }
     },
+
     get_by_passport: async (req, res) => {
       try {
         const passport = req.params.passport;
@@ -141,7 +145,7 @@ const GetFormData = () => {
             SchengenDatabase["other_nationalities"]
           );
         }
-
+        
         const singapore = removeEmpty(SingaporeDatabase);
         const thailand = removeEmpty(ThailandDatabase);
         const schengen = removeEmpty(SchengenDatabase);

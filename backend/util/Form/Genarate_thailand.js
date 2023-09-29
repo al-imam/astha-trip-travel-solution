@@ -10,10 +10,6 @@ const { v4: uuid } = require("uuid");
 const SEPARATOR = "<$72$31$33$>";
 
 const Generate_thailand = async (id, pass) => {
-  console.log(
-    "🚀 ~ file: Genarate_thailand.js:13 ~ constGenerate_thailand= ~ pass:",
-    pass
-  );
   try {
     if (!id) throw "id not found";
     const [response] = await THAILAND_DATABASE.findById(id);
@@ -70,17 +66,17 @@ const Generate_thailand = async (id, pass) => {
       {
         type: "PDFCheckBox",
         name: "NonImmigration Visa",
-        value: compare("Courtesy Visa", response["type_of_visa"]),
+        value: compare("Non-Immigrant Visa", response["type_of_visa"]),
       },
       {
         type: "PDFCheckBox",
         name: "Tourist Visa",
-        value: compare("Courtesy Visa", response["type_of_visa"]),
+        value: compare("Tourist Visa", response["type_of_visa"]),
       },
       {
         type: "PDFCheckBox",
         name: "Transit Visa",
-        value: compare("Courtesy Visa", response["type_of_visa"]),
+        value: compare("Transit Visa", response["type_of_visa"]),
       },
       {
         type: "PDFTextField",

@@ -65,6 +65,7 @@ AgentRoute.post(
   isAgent,
   getMulter({
     destination: path.normalize(path.join(__dirname, "..", "upload", "avatar")),
+    regex: /png|jpg|jpeg/,
   }).single("photo"),
   uploadProfilePhoto
 );
