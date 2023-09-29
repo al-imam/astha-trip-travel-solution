@@ -409,16 +409,16 @@ export function Thailand() {
                 </label>
                 <div className="flex gap-2 [&>*]:flex-1">
                   <Input
-                    placeholder="Present position"
+                    placeholder="Current Designation"
                     register={personal.register("present-position-occupation", {
-                      required: "Present position is required",
+                      required: "Current designation is required",
                     })}
                     error={personal.formState.errors["present-position-occupation"]}
                   />
                   <Input
-                    placeholder="Name of employer"
+                    placeholder="Name of Organization"
                     register={personal.register("name-of-employer-occupation", {
-                      required: "Name is required",
+                      required: "Name of organization is required",
                     })}
                     error={personal.formState.errors["name-of-employer-occupation"]}
                   />
