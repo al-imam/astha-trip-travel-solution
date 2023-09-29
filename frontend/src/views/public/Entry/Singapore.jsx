@@ -12,10 +12,12 @@ import useFormPersist from "react-hook-form-persist";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import countries from "../countries.json";
 import districts from "../districts.json";
+import occupationJSON from "../occupation.json";
 import races from "../races.json";
 import { AddIcon, DeleteIcon } from "./MainEntry";
 import { NextIcon } from "./Schengen";
 import { Spinner } from "./Spinner";
+import { SEPARATOR } from "./Thailand";
 import { fire, flattenObject, populate, setValue } from "./util";
 
 const religionOptions = ["Islam", "Christianity", "Hinduism", "Buddhism", "Sikhism", "Spiritism", "Judaism"].map(
@@ -31,6 +33,11 @@ const countriesOptions = countries.map((e) => ({
 }));
 
 const stateOfBirthOptions = districts.map((value) => ({
+  label: value,
+  value,
+}));
+
+const occupationOptions = occupationJSON.map((value) => ({
   label: value,
   value,
 }));
@@ -155,6 +162,10 @@ export function Singapore() {
     storage: window.localStorage,
   });
 
+  useEffect(() => {
+    otherDetails.setValue("religion", religionOptions[0]);
+  }, []);
+
   function particularsOfApplicantSubmit(data) {
     setForm((prev) => Object.assign(prev, flattenObject(data)));
     setStep(2);
@@ -224,7 +235,13 @@ export function Singapore() {
 
       setValue(db["email"], (_v) => setStepTwo("email-address", _v));
       setValue(db["contact_number"], (_v) => setStepTwo("contact-number", _v));
-      setValue(db["occupation"], (_v) => setStepTwo("occupation", _v));
+
+      if (db["occupation"]?.includes(SEPARATOR)) {
+        setValue(db["occupation"].split(SEPARATOR)[0], (_v) => setStepTwo("occupation", _v), true);
+      } else {
+        setValue(db["occupation"], (_v) => setStepTwo("occupation", _v), true);
+      }
+
       setValue(db["high_academic"], (_v) => setStepTwo("highest-academic", _v), true);
       setValue(db["qualifications_attained"], (_v) => setStepTwo("qualifications-attained", _v), true);
       setValue(db["annual_income"], (_v) => setStepTwo("annual-income", _v));
@@ -289,9 +306,8 @@ export function Singapore() {
               />
 
               <Input
-                label="Alias *"
+                label="Alias"
                 register={particularsOfApplicant.register("alias", {
-                  required: "Alias is required",
                   maxLength: { value: 50, message: "Exceeds 50 character limit" },
                 })}
                 error={particularsOfApplicant.formState.errors["alias"]}
@@ -557,8 +573,12 @@ export function Singapore() {
                 error={otherDetails.formState.errors["contact-number"]}
               />
 
-              <Input
+              <Select
                 label="Occupation *"
+                placeholder="Select occupation"
+                control={otherDetails.control}
+                options={occupationOptions}
+                name="occupation"
                 register={otherDetails.register("occupation", {
                   required: "Occupation is required",
                   maxLength: { value: 25, message: "Exceeds 25 character limit" },

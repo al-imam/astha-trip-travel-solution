@@ -13,7 +13,7 @@ import { twMerge } from "tailwind-merge";
 import countries from "../countries.json";
 import districts from "../districts.json";
 import { Spinner } from "./Spinner";
-import { fire, flattenObject, getNumberSelect, populate, setValue } from "./util";
+import { fire, flattenObject, getExactOption, getNumberSelect, populate, setValue } from "./util";
 
 const placeOfBirthOptions = districts.map((value) => ({
   label: value,
@@ -81,7 +81,7 @@ const validCountryOptions = ["ALL COUNTRIES OF THE WORLD EXCEPT ISRAIL"].map((va
 const steps = ["", "", ""];
 
 // if you're going to change it change it in backend too
-const SEPARATOR = "<$72$31$33$>";
+export const SEPARATOR = "<$72$31$33$>";
 
 const localPersonal = "thailand-personal-submit";
 const localContact = "thailand-contact-submit";
@@ -159,10 +159,14 @@ export function Thailand() {
       const db = Object.assign(_value.common, _value.thailand);
       if (!db) return;
 
-      console.log(db);
+      setValue(
+        getExactOption(typeOfVisaRequestedOptions, db["type_of_visa"]),
+        (_v) => personal.setValue("type-of-visa-requested", _v),
+        true
+      );
 
-      setValue(db["type_of_visa"], (_v) => personal.setValue("type-of-visa-requested", _v), true);
-      setValue(db["name_title"], (_v) => personal.setValue("name-title", _v), true);
+      setValue(getExactOption(nameTitleOptions, db["name_title"]), (_v) => personal.setValue("name-title", _v), true);
+
       setValue(db["first_name"], (_v) => personal.setValue("first-name", _v));
       setValue(db["middle_name"], (_v) => personal.setValue("middle-name", _v));
       setValue(db["family_name"], (_v) => personal.setValue("last-name", _v));
@@ -170,9 +174,17 @@ export function Thailand() {
       setValue(db["nationality"], (_v) => personal.setValue("nationality", _v), true);
       setValue(db["nationality_at_birth"], (_v) => personal.setValue("nationality-at-birth", _v), true);
       setValue(db["birth_place"], (_v) => personal.setValue("place-of-birth", _v), true);
-      setValue(db["marital_status"], (_v) => personal.setValue("marital-status", _v), true);
+      setValue(
+        getExactOption(maritalStatusOptions, db["marital_status"]),
+        (_v) => personal.setValue("marital-status", _v),
+        true
+      );
       setValue(db["date_of_birth"], (_v) => personal.setValue("date-of-birth", _v));
-      setValue(db["type_of_passport"], (_v) => personal.setValue("type-of-passport", _v), true);
+      setValue(
+        getExactOption(typeOfPassportOptions, db["type_of_passport"]),
+        (_v) => personal.setValue("type-of-passport", _v),
+        true
+      );
       setValue(db["passport_issued_at"], (_v) => personal.setValue("passport-issued-at", _v), true);
       setValue(db["passport_issue_date"], (_v) => personal.setValue("passport-date-of-issue", _v));
       setValue(db["passport_expiry_date"], (_v) => personal.setValue("passport-expire-date", _v));
@@ -392,7 +404,7 @@ export function Thailand() {
                 </label>
                 <div className="flex gap-2 [&>*]:flex-1">
                   <Input
-                    placeholder="Occupation"
+                    placeholder="Present position"
                     register={personal.register("present-position-occupation", {
                       required: "Present position is required",
                     })}
