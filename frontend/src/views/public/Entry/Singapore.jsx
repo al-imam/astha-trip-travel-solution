@@ -18,7 +18,7 @@ import { AddIcon, DeleteIcon } from "./MainEntry";
 import { NextIcon } from "./Schengen";
 import { Spinner } from "./Spinner";
 import { SEPARATOR } from "./Thailand";
-import { fire, flattenObject, populate, setValue } from "./util";
+import { fire, flattenObject, formatDateToYYYYMMDD, getExactOption, populate, setValue } from "./util";
 
 const religionOptions = ["Islam", "Christianity", "Hinduism", "Buddhism", "Sikhism", "Spiritism", "Judaism"].map(
   (value) => ({
@@ -86,12 +86,15 @@ const purposeOfVisitOptions = ["Social", "Business"].map((value) => ({
   value,
 }));
 
-const academicOptions = ["No Formal Education", "Primary", "Secondary", "Pre-University"].map((value) => ({
-  label: value,
-  value,
-}));
-
-const qualificationsAttainedOptions = ["Diploma", "University", "Post-Graduate"].map((value) => ({
+const academicOptions = [
+  "Post-Graduate",
+  "Pre-University",
+  "No Formal Education",
+  "Primary",
+  "Secondary",
+  "Diploma",
+  "University",
+].map((value) => ({
   label: value,
   value,
 }));
@@ -101,10 +104,39 @@ const typeOfVisaOptions = ["Single Journey", "Double Journey", "Triple Journey",
   value,
 }));
 
-const stayLocationOptions = ["Next of Kin's Place", "Relative's Place", "Friend's Place", "Hotel"].map((value) => ({
+const stayLocationOptions = ["Hotel", "Next of Kin's Place", "Relative's Place", "Friend's Place"].map((value) => ({
   label: value,
   value,
 }));
+
+const streetNameOptions = ["Hotel Boss"].map((value) => ({
+  label: value,
+  value: value.toUpperCase(),
+}));
+
+const streetNameOptionsRelatedData = {
+  "hotel boss": {
+    houseNo: "00500",
+    floorNo: "02",
+    unitNo: "02",
+    postalCode: "199020",
+    contactNo: "6568090000",
+    buildingName: "ORCHARD HOTEL",
+  },
+};
+
+const localCompanyOptions = ["Joy Travel & Tours Pte LT"].map((value) => ({
+  label: value,
+  value: value.toUpperCase(),
+}));
+
+const localCompanyOptionsRelatedData = {
+  "joy travel & tours pte lt": {
+    relationship: "CLIENT",
+    contactNo: "6591381993",
+    email: "JOYHOLIDAYS88@GMAIL.COM",
+  },
+};
 
 const steps = ["", "", ""];
 
@@ -134,6 +166,9 @@ export function Singapore() {
 
   const number = particularsOfApplicant.watch("passport-no") || {};
 
+  const dateOfIssue = particularsOfApplicant.watch("passport-issue-date");
+  const streetName = otherDetails.watch("singapore-street-name");
+  const localContact = particularsOfLocalContact.watch("name-of-local-contact");
   const citizenshipOfSpouse = particularsOfApplicant.watch("citizenship-of-spouse");
   const answers = particularsOfLocalContact.watch(["a", "b", "c", "d"]);
 
@@ -164,7 +199,53 @@ export function Singapore() {
 
   useEffect(() => {
     otherDetails.setValue("religion", religionOptions[0]);
+    particularsOfApplicant.setValue("country-of-birth", countriesOptions[0]);
+    particularsOfApplicant.setValue("state-of-birth", stateOfBirthOptions[0]);
+    particularsOfApplicant.setValue("nationality", nationalityOptions[0]);
+    particularsOfApplicant.setValue("race", racesOptions[0]);
+    particularsOfApplicant.setValue("type-of-passport", documentTypeOptions[0]);
+    particularsOfApplicant.setValue("residence", countriesOptions[0]);
+    particularsOfApplicant.setValue("state-of-residence", stateOfBirthOptions[0]);
+    particularsOfApplicant.setValue("citizenship-of-spouse", "Bangladesh");
+
+    otherDetails.setValue("occupation", occupationOptions[0]);
+    otherDetails.setValue("highest-academic", academicOptions[0]);
+    otherDetails.setValue("type-of-visa", typeOfVisaOptions[1]);
+    otherDetails.setValue("purpose-of-visit", purposeOfVisitOptions[0]);
+    otherDetails.setValue("details-of-purpose", "TOURISM");
+    otherDetails.setValue("stay-location", stayLocationOptions[0]);
   }, []);
+
+  useEffect(() => {
+    if (streetName?.value && streetName.value.toLowerCase() in streetNameOptionsRelatedData) {
+      const more = streetNameOptionsRelatedData[streetName.value.toLowerCase()];
+      otherDetails.setValue("singapore-house-no", more.houseNo);
+      otherDetails.setValue("singapore-floor-no", more.floorNo);
+      otherDetails.setValue("singapore-unit-no", more.unitNo);
+      otherDetails.setValue("singapore-postal-code", more.postalCode);
+      otherDetails.setValue("singapore-contact-no", more.contactNo);
+      otherDetails.setValue("singapore-building-name", more.buildingName);
+    }
+  }, [streetName?.value]);
+
+  useEffect(() => {
+    if (localContact?.value && localContact.value.toLowerCase() in localCompanyOptionsRelatedData) {
+      const more = localCompanyOptionsRelatedData[localContact.value.toLowerCase()];
+      particularsOfLocalContact.setValue("relationship-of-local-contact", more.relationship);
+      particularsOfLocalContact.setValue("contact-no-of-local-contact", more.contactNo);
+      particularsOfLocalContact.setValue("email-of-local-contact", more.email);
+    }
+  }, [localContact?.value]);
+
+  useEffect(() => {
+    if (dateOfIssue && !particularsOfApplicant.getValues("passport-expiry-date")) {
+      const issue = new Date(dateOfIssue);
+      issue.setFullYear(issue.getFullYear() + 10);
+      issue.setDate(issue.getDate() - 1);
+
+      particularsOfApplicant.setValue("passport-expiry-date", formatDateToYYYYMMDD(issue));
+    }
+  }, [dateOfIssue]);
 
   function particularsOfApplicantSubmit(data) {
     setForm((prev) => Object.assign(prev, flattenObject(data)));
@@ -215,8 +296,12 @@ export function Singapore() {
       setValue(db["name"], (_v) => setStepOne("name", _v));
       setValue(db["alias"], (_v) => setStepOne("alias", _v));
       setValue(db["date_of_birth"], (_v) => setStepOne("date-of-birth", _v));
-      setValue(db["sex"], (_v) => setStepOne("sex", _v), true);
-      setValue(db["marital_status"], (_v) => setStepOne("marital-status", _v), true);
+      setValue(getExactOption(sexesOptions, db["sex"]), (_v) => setStepOne("sex", _v), true);
+      setValue(
+        getExactOption(maritalStatusOptions, db["marital_status"]),
+        (_v) => setStepOne("marital-status", _v),
+        true
+      );
       setValue(db["nationality"], (_v) => setStepOne("nationality", _v), true);
       setValue(db["citizenship"], (_v) => setStepOne("citizenship-of-spouse", _v), true);
       setValue(db["nric"], (_v) => setStepOne("nric-no", _v));
@@ -504,7 +589,7 @@ export function Singapore() {
               />
 
               <Input
-                label="Prefecture Of Origin/Residence *"
+                label="Prefecture Of Origin/Residence"
                 register={particularsOfApplicant.register("prefecture-of-residence", {
                   maxLength: {
                     value: 25,
@@ -600,20 +685,6 @@ export function Singapore() {
                 error={otherDetails.formState.errors["highest-academic"]}
               />
 
-              <SelectNotCreatable
-                label="Qualifications Attained *"
-                options={qualificationsAttainedOptions}
-                control={otherDetails.control}
-                isDisabled={otherDetails.formState.isSubmitting}
-                name="qualifications-attained"
-                placeholder="Select Qualifications Attained"
-                isSearchable={false}
-                register={otherDetails.register("qualifications-attained", {
-                  required: "Qualifications Attained is required",
-                })}
-                error={otherDetails.formState.errors["qualifications-attained"]}
-              />
-
               <Input
                 label="Annual Income In Singapore Dollars (SGD) *"
                 register={otherDetails.register("annual-income", {
@@ -680,18 +751,20 @@ export function Singapore() {
                 error={otherDetails.formState.errors["details-of-purpose"]}
               />
 
-              <Select
-                label="Where Will You Be Staying In Singapore? *"
-                placeholder="Select location"
-                name="stay-location"
-                options={stayLocationOptions}
-                control={otherDetails.control}
-                isDisabled={otherDetails.formState.isSubmitting}
-                register={otherDetails.register("stay-location", {
-                  required: "Stay location is required",
-                })}
-                error={otherDetails.formState.errors["stay-location"]}
-              />
+              <div className="sm:col-span-2">
+                <Select
+                  label="Where Will You Be Staying In Singapore? *"
+                  placeholder="Select location"
+                  name="stay-location"
+                  options={stayLocationOptions}
+                  control={otherDetails.control}
+                  isDisabled={otherDetails.formState.isSubmitting}
+                  register={otherDetails.register("stay-location", {
+                    required: "Stay location is required",
+                  })}
+                  error={otherDetails.formState.errors["stay-location"]}
+                />
+              </div>
 
               <Group
                 options={["Less than 30 days", "More than 30 days"]}
@@ -717,6 +790,19 @@ export function Singapore() {
                 classNameContainer="col-span-full"
                 className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 xl:flex xl:flex-wrap xl:[&>*]:flex-1"
               >
+                <div className="col-span-full md:col-span-2">
+                  <Select
+                    label="Street Name *"
+                    placeholder="Select street name"
+                    name="singapore-street-name"
+                    options={streetNameOptions}
+                    control={otherDetails.control}
+                    register={otherDetails.register("singapore-street-name", {
+                      required: "Street name is required",
+                    })}
+                    error={otherDetails.formState.errors["singapore-street-name"]}
+                  />
+                </div>
                 <Input
                   label="Block/House No *"
                   register={otherDetails.register("singapore-house-no", {
@@ -748,18 +834,9 @@ export function Singapore() {
                   label="Postal Code *"
                   register={otherDetails.register("singapore-postal-code", {
                     required: "Postal code is required",
-                    maxLength: { value: 4, message: "Exceeds 4 character limit" },
+                    maxLength: { value: 6, message: "Exceeds 4 character limit" },
                   })}
                   error={otherDetails.formState.errors["singapore-postal-code"]}
-                />
-
-                <Input
-                  label="Street Name *"
-                  register={otherDetails.register("singapore-street-name", {
-                    required: "Street name is required",
-                    maxLength: { value: 20, message: "Exceeds 20 character limit" },
-                  })}
-                  error={otherDetails.formState.errors["singapore-street-name"]}
                 />
                 <Input
                   label="Contact No *"
@@ -770,15 +847,13 @@ export function Singapore() {
                   error={otherDetails.formState.errors["singapore-contact-no"]}
                 />
 
-                <div className="col-span-full md:col-span-2">
-                  <Input
-                    label="Building Name *"
-                    register={otherDetails.register("singapore-building-name", {
-                      required: "Building name is required",
-                    })}
-                    error={otherDetails.formState.errors["singapore-building-name"]}
-                  />
-                </div>
+                <Input
+                  label="Building Name *"
+                  register={otherDetails.register("singapore-building-name", {
+                    required: "Building name is required",
+                  })}
+                  error={otherDetails.formState.errors["singapore-building-name"]}
+                />
               </Join>
 
               <Group
@@ -955,19 +1030,15 @@ export function Singapore() {
             onSubmit={particularsOfLocalContact.handleSubmit(particularsOfLocalContactSubmit)}
             autoComplete="off"
           >
-            <fieldset
-              disabled={particularsOfLocalContact.formState.isSubmitting}
-              className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
-            >
-              <Input
+            <fieldset disabled={particularsOfLocalContact.formState.isSubmitting} className="grid gap-4 md:grid-cols-2">
+              <Select
                 label="Name Of Local Contact Company/Hotel *"
+                placeholder="Select company/hotel"
+                options={localCompanyOptions}
+                name="name-of-local-contact"
+                control={particularsOfLocalContact.control}
                 register={particularsOfLocalContact.register("name-of-local-contact", {
                   required: "Name of local contact company/hotel is required",
-
-                  maxLength: {
-                    value: 50,
-                    message: "Exceeds 50 character limit",
-                  },
                 })}
                 error={particularsOfLocalContact.formState.errors["name-of-local-contact"]}
               />

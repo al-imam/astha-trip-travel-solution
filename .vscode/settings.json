@@ -8,7 +8,14 @@
   "editor.codeActionsOnSave": {
     "source.sortImports": true
   },
-  "cSpell.words": ["Addpayment", "Getdata", "lenth", "loibyagent", "LONGTEXT"],
+  "cSpell.words": [
+    "Addpayment",
+    "Getdata",
+    "lenth",
+    "loibyagent",
+    "LONGTEXT",
+    "SUKIMVIT"
+  ],
   "cSpell.ignoreWords": [
     "Relod",
     "Thedf",
