@@ -18,7 +18,7 @@ import { AddIcon, DeleteIcon } from "./MainEntry";
 import { NextIcon } from "./Schengen";
 import { Spinner } from "./Spinner";
 import { SEPARATOR } from "./Thailand";
-import { fire, flattenObject, populate, setValue } from "./util";
+import { fire, flattenObject, formatDateToYYYYMMDD, getExactOption, populate, setValue } from "./util";
 
 const religionOptions = ["Islam", "Christianity", "Hinduism", "Buddhism", "Sikhism", "Spiritism", "Judaism"].map(
   (value) => ({
@@ -86,12 +86,15 @@ const purposeOfVisitOptions = ["Social", "Business"].map((value) => ({
   value,
 }));
 
-const academicOptions = ["No Formal Education", "Primary", "Secondary", "Pre-University"].map((value) => ({
-  label: value,
-  value,
-}));
-
-const qualificationsAttainedOptions = ["Diploma", "University", "Post-Graduate"].map((value) => ({
+const academicOptions = [
+  "Post-Graduate",
+  "Pre-University",
+  "No Formal Education",
+  "Primary",
+  "Secondary",
+  "Diploma",
+  "University",
+].map((value) => ({
   label: value,
   value,
 }));
@@ -101,7 +104,7 @@ const typeOfVisaOptions = ["Single Journey", "Double Journey", "Triple Journey",
   value,
 }));
 
-const stayLocationOptions = ["Next of Kin's Place", "Relative's Place", "Friend's Place", "Hotel"].map((value) => ({
+const stayLocationOptions = ["Hotel", "Next of Kin's Place", "Relative's Place", "Friend's Place"].map((value) => ({
   label: value,
   value,
 }));
@@ -134,6 +137,7 @@ export function Singapore() {
 
   const number = particularsOfApplicant.watch("passport-no") || {};
 
+  const dateOfIssue = particularsOfApplicant.watch("passport-issue-date");
   const citizenshipOfSpouse = particularsOfApplicant.watch("citizenship-of-spouse");
   const answers = particularsOfLocalContact.watch(["a", "b", "c", "d"]);
 
@@ -164,7 +168,32 @@ export function Singapore() {
 
   useEffect(() => {
     otherDetails.setValue("religion", religionOptions[0]);
+    particularsOfApplicant.setValue("country-of-birth", countriesOptions[0]);
+    particularsOfApplicant.setValue("state-of-birth", stateOfBirthOptions[0]);
+    particularsOfApplicant.setValue("nationality", nationalityOptions[0]);
+    particularsOfApplicant.setValue("race", racesOptions[0]);
+    particularsOfApplicant.setValue("type-of-passport", documentTypeOptions[0]);
+    particularsOfApplicant.setValue("residence", countriesOptions[0]);
+    particularsOfApplicant.setValue("state-of-residence", stateOfBirthOptions[0]);
+    particularsOfApplicant.setValue("citizenship-of-spouse", "Bangladesh");
+
+    otherDetails.setValue("occupation", occupationOptions[0]);
+    otherDetails.setValue("highest-academic", academicOptions[0]);
+    otherDetails.setValue("type-of-visa", typeOfVisaOptions[1]);
+    otherDetails.setValue("purpose-of-visit", purposeOfVisitOptions[0]);
+    otherDetails.setValue("details-of-purpose", "TOURISM");
+    otherDetails.setValue("stay-location", stayLocationOptions[0]);
   }, []);
+
+  useEffect(() => {
+    if (dateOfIssue && !particularsOfApplicant.getValues("passport-expiry-date")) {
+      const issue = new Date(dateOfIssue);
+      issue.setFullYear(issue.getFullYear() + 10);
+      issue.setDate(issue.getDate() - 1);
+
+      particularsOfApplicant.setValue("passport-expiry-date", formatDateToYYYYMMDD(issue));
+    }
+  }, [dateOfIssue]);
 
   function particularsOfApplicantSubmit(data) {
     setForm((prev) => Object.assign(prev, flattenObject(data)));
@@ -215,8 +244,12 @@ export function Singapore() {
       setValue(db["name"], (_v) => setStepOne("name", _v));
       setValue(db["alias"], (_v) => setStepOne("alias", _v));
       setValue(db["date_of_birth"], (_v) => setStepOne("date-of-birth", _v));
-      setValue(db["sex"], (_v) => setStepOne("sex", _v), true);
-      setValue(db["marital_status"], (_v) => setStepOne("marital-status", _v), true);
+      setValue(getExactOption(sexesOptions, db["sex"]), (_v) => setStepOne("sex", _v), true);
+      setValue(
+        getExactOption(maritalStatusOptions, db["marital_status"]),
+        (_v) => setStepOne("marital-status", _v),
+        true
+      );
       setValue(db["nationality"], (_v) => setStepOne("nationality", _v), true);
       setValue(db["citizenship"], (_v) => setStepOne("citizenship-of-spouse", _v), true);
       setValue(db["nric"], (_v) => setStepOne("nric-no", _v));
@@ -504,7 +537,7 @@ export function Singapore() {
               />
 
               <Input
-                label="Prefecture Of Origin/Residence *"
+                label="Prefecture Of Origin/Residence"
                 register={particularsOfApplicant.register("prefecture-of-residence", {
                   maxLength: {
                     value: 25,
@@ -600,20 +633,6 @@ export function Singapore() {
                 error={otherDetails.formState.errors["highest-academic"]}
               />
 
-              <SelectNotCreatable
-                label="Qualifications Attained *"
-                options={qualificationsAttainedOptions}
-                control={otherDetails.control}
-                isDisabled={otherDetails.formState.isSubmitting}
-                name="qualifications-attained"
-                placeholder="Select Qualifications Attained"
-                isSearchable={false}
-                register={otherDetails.register("qualifications-attained", {
-                  required: "Qualifications Attained is required",
-                })}
-                error={otherDetails.formState.errors["qualifications-attained"]}
-              />
-
               <Input
                 label="Annual Income In Singapore Dollars (SGD) *"
                 register={otherDetails.register("annual-income", {
@@ -680,18 +699,20 @@ export function Singapore() {
                 error={otherDetails.formState.errors["details-of-purpose"]}
               />
 
-              <Select
-                label="Where Will You Be Staying In Singapore? *"
-                placeholder="Select location"
-                name="stay-location"
-                options={stayLocationOptions}
-                control={otherDetails.control}
-                isDisabled={otherDetails.formState.isSubmitting}
-                register={otherDetails.register("stay-location", {
-                  required: "Stay location is required",
-                })}
-                error={otherDetails.formState.errors["stay-location"]}
-              />
+              <div className="sm:col-span-2">
+                <Select
+                  label="Where Will You Be Staying In Singapore? *"
+                  placeholder="Select location"
+                  name="stay-location"
+                  options={stayLocationOptions}
+                  control={otherDetails.control}
+                  isDisabled={otherDetails.formState.isSubmitting}
+                  register={otherDetails.register("stay-location", {
+                    required: "Stay location is required",
+                  })}
+                  error={otherDetails.formState.errors["stay-location"]}
+                />
+              </div>
 
               <Group
                 options={["Less than 30 days", "More than 30 days"]}
