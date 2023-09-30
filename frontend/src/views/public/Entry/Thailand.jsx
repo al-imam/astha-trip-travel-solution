@@ -67,6 +67,11 @@ const validCountryOptions = ["ALL COUNTRIES OF THE WORLD EXCEPT ISRAIL"].map((va
 
 const steps = ["", "", ""];
 
+const proposedAddressInThailandOptions = ["Hotel Ambassador Sukimvit, Soi-11, Bangkok"].map((value) => ({
+  label: value,
+  value: value.toUpperCase(),
+}));
+
 // if you're going to change it change it in backend too
 export const SEPARATOR = "<$72$31$33$>";
 
@@ -560,8 +565,12 @@ export function Thailand() {
                 error={purpose.formState.errors["countries-for-which-travel-document-is-valid"]}
               />
 
-              <Input
+              <Select
                 label="Proposed Address In Thailand *"
+                placeholder="Select address"
+                control={purpose.control}
+                name="proposed-address-in-thailand"
+                options={proposedAddressInThailandOptions}
                 register={purpose.register("proposed-address-in-thailand", {
                   required: "Proposed address in thailand is required",
                 })}
