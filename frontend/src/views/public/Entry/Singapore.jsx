@@ -206,7 +206,9 @@ export function Singapore() {
     particularsOfApplicant.setValue("type-of-passport", documentTypeOptions[0]);
     particularsOfApplicant.setValue("residence", countriesOptions[0]);
     particularsOfApplicant.setValue("state-of-residence", stateOfBirthOptions[0]);
-    particularsOfApplicant.setValue("citizenship-of-spouse", "Bangladesh");
+    particularsOfApplicant.setValue("citizenship-of-spouse", { label: "Bangladesh", value: "Bangladesh" });
+    particularsOfApplicant.setValue("country-of-issue", "Dhaka, Bangladesh");
+    particularsOfLocalContact.setValue("name-of-local-contact", localCompanyOptions[0]);
 
     otherDetails.setValue("occupation", occupationOptions[0]);
     otherDetails.setValue("highest-academic", academicOptions[0]);
@@ -214,14 +216,18 @@ export function Singapore() {
     otherDetails.setValue("purpose-of-visit", purposeOfVisitOptions[0]);
     otherDetails.setValue("details-of-purpose", "TOURISM");
     otherDetails.setValue("stay-location", stayLocationOptions[0]);
+
+    otherDetails.setValue("singapore-street-name", streetNameOptions[0]);
+    otherDetails.setValue("singapore-floor-no", "01");
+    otherDetails.setValue("singapore-unit-no", "01");
   }, []);
 
   useEffect(() => {
     if (streetName?.value && streetName.value.toLowerCase() in streetNameOptionsRelatedData) {
       const more = streetNameOptionsRelatedData[streetName.value.toLowerCase()];
       otherDetails.setValue("singapore-house-no", more.houseNo);
-      otherDetails.setValue("singapore-floor-no", more.floorNo);
-      otherDetails.setValue("singapore-unit-no", more.unitNo);
+      more.floorNo && otherDetails.setValue("singapore-floor-no", more.floorNo);
+      more.unitNo && otherDetails.setValue("singapore-unit-no", more.unitNo);
       otherDetails.setValue("singapore-postal-code", more.postalCode);
       otherDetails.setValue("singapore-contact-no", more.contactNo);
       otherDetails.setValue("singapore-building-name", more.buildingName);
@@ -433,7 +439,7 @@ export function Singapore() {
               />
 
               <Select
-                label="Ationality/Citizenship Of Spouse *"
+                label="Nationality/Citizenship Of Spouse *"
                 placeholder="Select ationality/citizenship"
                 name="citizenship-of-spouse"
                 options={citizenshipOfSpouseOptions}
