@@ -51,14 +51,16 @@ function valueAndLabel(array) {
 }
 
 const purposeOfTourOptions = valueAndLabel([
-  "holiday",
-  "transit",
-  "business",
-  "meeting",
-  "exhibition",
-  "visiting friends & relatives",
-  "employment",
-  "education",
+  "Holiday",
+  "Tourism",
+  "Medical",
+  "Transit",
+  "Business",
+  "Meeting",
+  "Exhibition",
+  "Visiting friends & relatives",
+  "Employment",
+  "Education",
 ]);
 
 function getFromAndTo(name) {
@@ -139,6 +141,7 @@ export function MainEntry() {
     guest.setValue("guest-type", guestTypeOptions[0]);
     guest.setValue("guest-number", guestNumbersOptions[0]);
     guest.setValue("country", countryOptions[0]);
+    guest.setValue("tour-purpose", purposeOfTourOptions[0]);
   }, []);
 
   async function submitGuest(data) {
@@ -223,7 +226,7 @@ export function MainEntry() {
   }
 
   async function submitLoiRequest() {
-    if ((itenaries.length < 1 && country?.value !== "Vietnam") || allGuest.length < 1) return;
+    if ((itenaries.length < 1 && country && country.value === "Singapore") || allGuest.length < 1) return;
 
     try {
       await toast.promise(
@@ -412,7 +415,7 @@ export function MainEntry() {
               multiple={false}
             />
 
-            {country?.value === "Vietnam" && (
+            {country && country.value !== "Singapore" && (
               <Input
                 label="Passport Size Photo *"
                 register={guest.register("passport-size-photo", {

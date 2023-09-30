@@ -13,7 +13,7 @@ import { twMerge } from "tailwind-merge";
 import countries from "../countries.json";
 import districts from "../districts.json";
 import { Spinner } from "./Spinner";
-import { fire, flattenObject, populate, setValue } from "./util";
+import { fire, flattenObject, formatDateToYYYYMMDD, populate, setValue } from "./util";
 
 const countriesOptions = countries.map((e) => ({
   label: e.name,
@@ -130,6 +130,7 @@ export function Schengen() {
   const paymentMethod = info.watch("cost-payment-method");
   const referred = info.watch("referred-to-in-field-30-or-31");
   const referredOther = info.watch("sponsor-other");
+  const dateOfIssue = travel.watch("date-of-issue");
 
   const isResidence = contact.watch("residence-in-a-country") === "Yes";
   const isEuCitizen = travel.watch("have-eu-citizen") === "Yes";
@@ -193,6 +194,27 @@ export function Schengen() {
   }
 
   useEffect(() => {
+    personal.setValue("place-of-birth", placeOfBirthOptions[0]);
+    personal.setValue("country-of-birth", countriesOptions[0]);
+    personal.setValue("current-nationality", nationalityOptions[0]);
+
+    travel.setValue("travel-document-type", documentTypeOptions[0]);
+    travel.setValue("issued-country", countriesOptions[0]);
+
+    contact.setValue("purpose-of-journey", purposeOfJourneyOptions[0]);
+  }, []);
+
+  useEffect(() => {
+    if (dateOfIssue && !travel.getValues("valid-until")) {
+      const issue = new Date(dateOfIssue);
+      issue.setFullYear(issue.getFullYear() + 10);
+      issue.setDate(issue.getDate() - 1);
+
+      travel.setValue("valid-until", formatDateToYYYYMMDD(issue));
+    }
+  }, [dateOfIssue]);
+
+  useEffect(() => {
     if (number.__isNew__ || !number.value) return;
 
     populate(number.value, (_value) => {
@@ -235,7 +257,6 @@ export function Schengen() {
       setValue(db["residence_in_a_country_valid"], (_v) => contact.setValue("resident-valid-until", _v));
 
       setValue(db["employer_and_employers_address"], (v) => contact.setValue("employers-address-telephone-number", v));
-      setValue(db["current_occupation"], (_v) => contact.setValue("current-occupation", _v));
       setValue(db["purpose_of_the_journey"], (_v) => contact.setValue("purpose-of-journey", _v), true);
       setValue(db["additional_info_purpose"], (_v) => contact.setValue("purpose-of-journey-additional", _v));
       setValue(db["member_state_of_main_destination"], (_v) => contact.setValue("main-destination", _v));
@@ -420,8 +441,8 @@ export function Schengen() {
           <form name="document" autoComplete="off" className="space-y-4" onSubmit={travel.handleSubmit(travelSubmit)}>
             <fieldset disabled={travel.formState.isSubmitting} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <Input
-                label="National Identity Number *"
-                placeholder="National identity number"
+                label="National Identity Number (NID) *"
+                placeholder="NID"
                 register={travel.register("national-identity-number", {
                   required: "National identity number is required",
                 })}
