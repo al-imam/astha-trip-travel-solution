@@ -5,7 +5,7 @@ const SchengenSchema = new Schema({
   surname: {
     type: "VARCHAR(255)",
     req: true,
-  }, 
+  },
   surname_at_birth: {
     type: "VARCHAR(255)",
     req: true,
@@ -218,6 +218,6 @@ const SchengenSchema = new Schema({
   },
 });
 
-const Schengen = new Model(SchengenSchema, "Schengen_data");
+const Schengen = new Model(SchengenSchema, "schengen_data");
 
 module.exports = Schengen;

@@ -12,9 +12,9 @@ const addBalance = require("../controller/agent/addBalance");
 const changePassword = require("../controller/agent/changePassword");
 const getLOIById = require("../controller/agent/getLOIById");
 const getMulter = require("../util/multer");
-const uploadProfilePhoto = require("../controller/Agent/uploadProfilePhoto");
+const uploadProfilePhoto = require("../controller/agent/uploadProfilePhoto");
 const path = require("path");
-const sendProfilePhoto = require("../controller/Agent/sendProfilePhoto");
+const sendProfilePhoto = require("../controller/agent/sendProfilePhoto");
 
 const AgentRoute = express.Router();
 

@@ -71,7 +71,7 @@ class Model {
                       }).join(",")}`
                     : ""
                 }
-                ) ENGINE = InnoDB;`;
+                ) ENGINE = MYISAM`;
 
       return DB.execute(sql);
     } catch (error) {
