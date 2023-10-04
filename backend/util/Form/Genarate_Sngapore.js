@@ -314,7 +314,9 @@ const Generate_Singapore = async (id) => {
       {
         type: "PDFTextField",
         name: "M M_2",
-        value: PreFix(new Date(response["passport_expire_date"]).getDate() + 1),
+        value: PreFix(
+          new Date(response["passport_expire_date"]).getMonth() + 1
+        ),
       },
       {
         type: "PDFTextField",

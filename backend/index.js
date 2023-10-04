@@ -8,9 +8,7 @@ const MainRouter = require("./routers/router");
 var bodyParser = require("body-parser");
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
-
 // setup ejs
-
 app.set("view engine", "ejs");
 app.set("views", "./views");
 

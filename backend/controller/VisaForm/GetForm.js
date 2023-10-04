@@ -68,7 +68,6 @@ const GetFormData = () => {
         const [getServer] = await Singapore.findAll();
         res.send(getServer);
       } catch (error) {
-        console.log("🚀 ~ file: GetForm.js:7 ~ Singapore: ~ error:", error);
         res.status(500).send("something is wrong ");
       }
     },
@@ -78,7 +77,6 @@ const GetFormData = () => {
         const [serverRes] = await Thailand.findAll();
         res.send(serverRes);
       } catch (error) {
-        console.log("🚀 ~ file: GetForm.js:19 ~ Thailand: ~ error:", error);
         res.status(500).send("something is wrong ");
       }
     },
@@ -88,7 +86,6 @@ const GetFormData = () => {
         const [getServer] = await Schengen.findAll();
         res.send(getServer);
       } catch (error) {
-        console.log("🚀 ~ file: GetForm.js:32 ~ Schengen: ~ error:", error);
         res.status(500).send("something is wrong ");
       }
     },
@@ -110,7 +107,6 @@ const GetFormData = () => {
           Schengen: SchengenData,
         });
       } catch (error) {
-        console.log("🚀 ~ file: GetForm.js:41 ~ agent: ~ error:", error);
         res.status(500).send({
           error,
           hint: `⛔ Eroor in GetForm.js > path = backend>controller>VisaForm>GetForm.js : line= 55 `,
@@ -139,20 +135,16 @@ const GetFormData = () => {
             SchengenDatabase["other_nationalities"]
           );
         }
-
         const singapore = removeEmpty(SingaporeDatabase);
         const thailand = removeEmpty(ThailandDatabase);
         const schengen = removeEmpty(SchengenDatabase);
-
         res.status(200).json({
           singapore,
           thailand,
-          thailand,
+          schengen,
           common: merge(schema, singapore, thailand, schengen),
         });
-      } catch (error) {
-        console.log("🚀 get_by_passport ~ error", error);
-      }
+      } catch (error) {}
     },
   };
 };

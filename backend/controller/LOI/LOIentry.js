@@ -95,6 +95,7 @@ const LOIEntry = async (req, res, next) => {
     }
 
     const BODY = req.body;
+    console.log("🚀 ~ file: LOIentry.js:98 ~ LOIEntry ~ BODY:", BODY);
     const refarense = uuid4();
     // console.log("datas", BODY.datas);
     // console.log("iten", BODY.iternary);
@@ -115,7 +116,7 @@ const LOIEntry = async (req, res, next) => {
             country: e.country,
             tiket_copy: e.ticket,
             iternary: BODY.iternary,
-            purpose: BODY["tour-purpose"],
+            purpose: e.tourPurpose,
             status: "pending",
             agent: JSON.stringify(whoe),
           });
