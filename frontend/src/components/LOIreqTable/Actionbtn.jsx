@@ -206,6 +206,15 @@ function CardMenu(props) {
                 <p>Hotel name: {prop.hotel_name}</p>
                 <p>Travel date: {prop.travel_date}</p>
                 <p>
+                  Submission date: {new Date(prop.createdAt).toLocaleDateString()} -{" "}
+                  {new Date(prop.createdAt).toLocaleTimeString()}{" "}
+                </p>
+                <p>
+                  Last Updated: {new Date(prop.updateAt).toLocaleDateString()} -{" "}
+                  {new Date(prop.updateAt).toLocaleTimeString()}{" "}
+                </p>
+
+                <p>
                   Status: <span className={prop.status === "cancel" && "text-red-500"}>{prop.status}</span>
                 </p>
               </div>
@@ -228,6 +237,7 @@ function CardMenu(props) {
                   Hotel_copy
                 </a>
               </div>
+              <div className="relative col-span-2 mt-2 w-full border-t-2 border-brand-200 pt-2">hello</div>
             </div>
             <div className={`flex ${prop.status === "approved" ? "justify-between" : "justify-end"} `}>
               {prop.status === "approved" && (
