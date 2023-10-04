@@ -78,16 +78,18 @@ function getFromAndTo(name) {
       `${name} to Sentosa Mega Adventure Park`,
       `${name} to National Gallery`,
       `${name} to Full-Day City Tour`,
+      `${name} to Singapore River Cruise`,
+      `${name} to Big Bus Night Tour`,
+      `${name} to Gardens by the Bay`,
+      `${name} to MBS Observation`,
       `${name}`,
     ]),
     to: valueAndLabel([
       `Hotel ${name}`,
-      "AirPort",
-      `City Tour`,
       `Market to ${name}`,
       `Marina Bay Sands to ${name}`,
-      `Universal Studios to ${name}`,
       `Sentosa Theme Park to ${name}`,
+      `Universal Studios to ${name}`,
       `Hop-On Hop-Off Sightseeing Bus Tour to ${name}`,
       `S.E.A. Aquarium Entrance to ${name}`,
       `Art Science Museum to ${name}`,
@@ -95,6 +97,12 @@ function getFromAndTo(name) {
       `Sentosa Mega Adventure Park to ${name}`,
       `National Gallery to ${name}`,
       `Full-Day City Tour to ${name}`,
+      `Singapore River Cruise to ${name}`,
+      `Big Bus Night Tour to ${name}`,
+      `Gardens by the Bay to ${name}`,
+      `MBS Observation to ${name}`,
+      "AirPort",
+      `City Tour`,
     ]),
   };
 }
@@ -116,6 +124,7 @@ export function MainEntry() {
   const [familyMemberOptions, setFamilyMemberOptions] = useState(guestNumbersOptions);
 
   const guestType = guest.watch("guest-type");
+
   const hotelName = guest.watch("hotel-name");
   const guestNumber = guest.watch("guest-number");
   const country = guest.watch("country") ?? {};
@@ -198,6 +207,8 @@ export function MainEntry() {
           id: uuid(),
         },
       ]);
+      console.log(data["travel-date"]);
+      itenary.setValue("date", data["travel-date"] || null);
 
       guest.setValue("passport-number", "");
       guest.setValue("guest-name", "");
@@ -224,7 +235,22 @@ export function MainEntry() {
 
     obj.id = uuid();
     setItenaries((prev) => [...prev, obj]);
+
+    // console.log(obj.date);
+    // make comparison of last departure date
     itenary.reset();
+    let nextdate = new Date(obj.date).setDate(new Date(obj.date).getDate() + 1);
+
+    let year = new Date(nextdate).getFullYear();
+    let mm =
+      new Date(nextdate).getMonth() + 1 < 10
+        ? `0${new Date(nextdate).getMonth() + 1}`
+        : new Date(nextdate).getMonth() + 1;
+    let dd = new Date(nextdate).getDate() < 10 ? `0${new Date(nextdate).getDate()}` : new Date(nextdate).getDate();
+
+    itenary.setValue("to", locations.to.length !== -1 ? locations.to[itenaries.length || 1] : null);
+    itenary.setValue("from", locations.from.length !== -1 ? locations.from[itenaries.length || 1] : null);
+    itenary.setValue("date", `${year}-${mm}-${dd}` || null);
   }
 
   async function submitLoiRequest() {
@@ -346,6 +372,7 @@ export function MainEntry() {
             <Input
               label="Travel Date *"
               disabled={disableGlobalInputs}
+              name="travel-date"
               register={guest.register("travel-date", { required: "Travel date is required" })}
               error={guest.formState.errors["travel-date"]}
               type="date"
@@ -496,6 +523,7 @@ export function MainEntry() {
                   required: "Date is required",
                   min: { value: new Date().toISOString().split("T")[0], message: "Invalid date" },
                 })}
+                name="date"
                 error={itenary.formState.errors["date"]}
                 type="date"
               />
