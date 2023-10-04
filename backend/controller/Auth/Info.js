@@ -55,7 +55,6 @@ const Info = async (req, res, next) => {
     delete payload["password"];
     res.send(payload);
   } catch (error) {
-    console.log("🚀 ~ file: Info.js:6 ~ Info ~ error:", error);
     next(error);
   }
 };
