@@ -158,8 +158,12 @@ const DataPage = () => {
             onChange={(e) => {
               SetSelectedCountry(e.value);
             }}
-            options={["singapore", "thailand", "schengen"].map((e) => {
-              return { label: e, value: e };
+            options={[
+              ["Singapore", "singapore"],
+              ["Thailand", "thailand"],
+              ["Schengen", "schengen"],
+            ].map((e) => {
+              return { label: e[0], value: e[1] };
             })}
           />
         </div>
