@@ -195,16 +195,17 @@ function CardMenu(props) {
         </div>
       )}
       {showDetails && (
-        <div className="bg-black/10 xsm:m-6 fixed inset-0 z-40 flex items-center justify-center backdrop-blur-sm">
+        <div className="bg-black/10 xsm:m-6 fixed inset-0 z-40 flex items-start justify-center overflow-auto py-10 backdrop-blur-sm">
           <div className="dark:bg- relative mx-2 w-[720px] space-y-6 rounded-lg bg-white p-4 shadow-md dark:!bg-navy-900 sm:p-8">
-            <h3 className="text-center text-3xl">Details</h3>
+            <h3 className="mb-3 border-b-2 border-brand-200 pb-3 text-center text-3xl">Details</h3>
             <div className="text-gray-950 grid grid-cols-1 text-lg sm:grid-cols-2">
               <div>
                 <p>Name: {prop.guest_name}</p>
                 <p>Country: {prop.country}</p>
-                <p>Pasport no: {prop.pasport_number}</p>
+                <p>Passport no: {prop.pasport_number}</p>
+                <p>Purpose: {prop.purpose}</p>
                 <p>Hotel name: {prop.hotel_name}</p>
-                <p>Travel date: {prop.travel_date}</p>
+                <p>Travel date: {prop.travel_date.split("-").reverse().join("-")}</p>
                 <p>
                   Submission date: {new Date(prop.createdAt).toLocaleDateString()} -{" "}
                   {new Date(prop.createdAt).toLocaleTimeString()}{" "}
@@ -237,7 +238,52 @@ function CardMenu(props) {
                   Hotel_copy
                 </a>
               </div>
-              <div className="relative col-span-2 mt-2 w-full border-t-2 border-brand-200 pt-2">hello</div>
+              <div className="relative col-span-2 mt-2 w-full border-t-2 border-brand-200 pt-2">
+                <div className="w-full py-2 text-center text-2xl font-bold text-brand-500">Tour Ternary</div>
+                <div className="flex flex-col">
+                  <div className="overflow-x-auto sm:mx-0.5 lg:mx-0.5">
+                    <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
+                      <div className="overflow-hidden">
+                        <table className="min-w-full">
+                          <thead className="border-b bg-gray-200">
+                            <tr>
+                              <th scope="col" className="px-6 py-2 text-left text-sm font-medium text-gray-900">
+                                Date
+                              </th>
+                              <th scope="col" className="px-6 py-2 text-left text-sm font-medium text-gray-900">
+                                From
+                              </th>
+                              <th scope="col" className="px-6 py-2 text-left text-sm font-medium text-gray-900">
+                                To
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {JSON.parse(prop.iternary).map((e, i) => {
+                              return (
+                                <tr
+                                  key={i}
+                                  className="border-b bg-white transition duration-300 ease-in-out hover:bg-gray-100"
+                                >
+                                  <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900">
+                                    {e.date.split("-").reverse().join("-")}
+                                  </td>
+                                  <td className="whitespace-nowrap px-6 py-4 text-sm font-light text-gray-900">
+                                    {e.from}
+                                  </td>
+                                  <td className="whitespace-nowrap px-6 py-4 text-sm font-light text-gray-900">
+                                    {e.to}
+                                  </td>
+                                </tr>
+                              );
+                            })}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
             <div className={`flex ${prop.status === "approved" ? "justify-between" : "justify-end"} `}>
               {prop.status === "approved" && (
