@@ -101,8 +101,8 @@ function getFromAndTo(name) {
       `Big Bus Night Tour to ${name}`,
       `Gardens by the Bay to ${name}`,
       `MBS Observation to ${name}`,
-      "AirPort",
       `City Tour`,
+      "AirPort",
     ]),
   };
 }
@@ -248,8 +248,8 @@ export function MainEntry() {
         : new Date(nextdate).getMonth() + 1;
     let dd = new Date(nextdate).getDate() < 10 ? `0${new Date(nextdate).getDate()}` : new Date(nextdate).getDate();
 
-    itenary.setValue("to", locations.to.length !== -1 ? locations.to[itenaries.length || 1] : null);
-    itenary.setValue("from", locations.from.length !== -1 ? locations.from[itenaries.length || 1] : null);
+    itenary.setValue("to", locations.to.length !== -1 ? locations.to[locations.to.length - 1 || 1] : null);
+    itenary.setValue("from", locations.from.length !== -1 ? locations.from[locations.from.length - 1 || 1] : null);
     itenary.setValue("date", `${year}-${mm}-${dd}` || null);
   }
 
