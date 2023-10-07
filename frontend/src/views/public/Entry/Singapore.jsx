@@ -109,19 +109,29 @@ const stayLocationOptions = ["Hotel", "Next of Kin's Place", "Relative's Place",
   value,
 }));
 
-const streetNameOptions = ["Hotel Boss"].map((value) => ({
+const streetNameOptions = ["orchard hotel", "arianna hotel"].map((value) => ({
   label: value,
   value: value.toUpperCase(),
 }));
 
 const streetNameOptionsRelatedData = {
-  "ORCHARD HOTEL": {
+  "orchard hotel": {
     houseNo: "00500",
     floorNo: "02",
     unitNo: "02",
     postalCode: "199020",
-    contactNo: "6568090000",
-    buildingName: "hotel boss",
+    contactNo: "+6568090000",
+    buildingName: "Hotel Boos",
+  },
+
+  //add lowercase name for hotel
+  "arianna hotel": {
+    houseNo: "003",
+    floorNo: "03",
+    unitNo: "10",
+    postalCode: "207662",
+    contactNo: "+6567888333",
+    buildingName: "arianna hotel",
   },
 };
 
