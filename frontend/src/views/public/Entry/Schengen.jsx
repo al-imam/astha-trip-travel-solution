@@ -297,7 +297,7 @@ export function Schengen() {
           >
             <fieldset disabled={personal.formState.isSubmitting} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <AsyncSelect
-                label="Passport Number *"
+                label="13. Number of Travel Document *"
                 placeholder="Select passport number"
                 control={personal.control}
                 isDisabled={personal.formState.isSubmitting}
@@ -307,27 +307,27 @@ export function Schengen() {
               />
 
               <Input
-                label="Surname *"
+                label="1.Surname (Family Name) *"
                 placeholder="Surname"
                 register={personal.register("surname", { required: "Surname is required" })}
                 error={personal.formState.errors["surname"]}
               />
 
               <Input
-                label="Surname At Birth"
+                label="2.Surname At Birth (Former Family Name(s)) "
                 register={personal.register("surname-at-birth")}
                 error={personal.formState.errors["surname-at-birth"]}
               />
 
               <Input
-                label="Fist Name *"
+                label="3.First name(s) (Given name(s)) *"
                 placeholder="Fist name"
                 register={personal.register("first-name", { required: "Fist name is required" })}
                 error={personal.formState.errors["first-name"]}
               />
 
               <Input
-                label="Date Of Birth *"
+                label="4.Date Of Birth *"
                 placeholder="Date of birth"
                 register={personal.register("date-of-birth", {
                   required: "Birth date is required",
@@ -338,7 +338,7 @@ export function Schengen() {
               />
 
               <Select
-                label="Place Of Birth *"
+                label="5.Place Of Birth *"
                 placeholder="Select place of birth"
                 name="place-of-birth"
                 options={placeOfBirthOptions}
@@ -349,7 +349,7 @@ export function Schengen() {
               />
 
               <Select
-                label="Country Of Birth *"
+                label="6.Country Of Birth *"
                 options={countriesOptions}
                 control={personal.control}
                 isDisabled={personal.formState.isSubmitting}
@@ -360,7 +360,7 @@ export function Schengen() {
               />
 
               <Select
-                label="Current Nationality *"
+                label="7.Current Nationality *"
                 options={nationalityOptions}
                 control={personal.control}
                 isDisabled={personal.formState.isSubmitting}
@@ -383,7 +383,7 @@ export function Schengen() {
               />
 
               <Select
-                label="Other Nationalities, If You Have"
+                label="Other Nationalities"
                 placeholder="Select other nationalities "
                 options={nationalityOptions}
                 control={personal.control}
@@ -396,7 +396,7 @@ export function Schengen() {
               />
 
               <SelectNotCreatable
-                label="Sex (Gender) *"
+                label="8.Sex (Gender) *"
                 options={sexesOption}
                 placeholder="Select your gender"
                 control={personal.control}
@@ -407,7 +407,7 @@ export function Schengen() {
                 error={personal.formState.errors["sex"]}
               />
               <Select
-                label="Civil Status *"
+                label="9.Civil Status *"
                 options={civilStatusOptions}
                 control={personal.control}
                 isDisabled={personal.formState.isSubmitting}
@@ -419,7 +419,7 @@ export function Schengen() {
 
               <div className="col-span-full">
                 <Input
-                  label="Parental Authority (In Case Of Minors) /Legal Guardian (Surname, First Name, Address, If Different From Applicant's, Telephone No, E-Mail Address, And Nationality)"
+                  label="10.Parental Authority (In Case Of Minors) /Legal Guardian (Surname, First Name, Address, If Different From Applicant's, Telephone No, E-Mail Address, And Nationality)"
                   placeholder="surname, first name, address, if different from applicant's, telephone no., e-mail address, and nationality"
                   classNameLabel="line-clamp-none"
                   register={personal.register("parental-authority")}
@@ -441,16 +441,14 @@ export function Schengen() {
           <form name="document" autoComplete="off" className="space-y-4" onSubmit={travel.handleSubmit(travelSubmit)}>
             <fieldset disabled={travel.formState.isSubmitting} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <Input
-                label="National Identity Number (NID) *"
+                label="11.National Identity Number  (NID), Where Applicable "
                 placeholder="NID"
-                register={travel.register("national-identity-number", {
-                  required: "National identity number is required",
-                })}
+                register={travel.register("national-identity-number")}
                 error={travel.formState.errors["national-identity-number"]}
               />
 
               <Select
-                label="Type Of Travel Document *"
+                label="12.Type Of Travel Document *"
                 options={documentTypeOptions}
                 control={travel.control}
                 isDisabled={travel.formState.isSubmitting}
@@ -461,7 +459,7 @@ export function Schengen() {
               />
 
               <Input
-                label="Date Of Issue *"
+                label="14.Date Of Issue *"
                 register={travel.register("date-of-issue", {
                   required: "Issue date is required",
                 })}
@@ -470,7 +468,7 @@ export function Schengen() {
               />
 
               <Input
-                label="Valid Until *"
+                label="15.Valid Until *"
                 register={travel.register("valid-until", {
                   required: "Valid until is required",
                 })}
@@ -479,7 +477,7 @@ export function Schengen() {
               />
 
               <Select
-                label="Issued By (Country) *"
+                label="16.Issued By (Country) *"
                 options={countriesOptions}
                 control={travel.control}
                 isDisabled={travel.formState.isSubmitting}
@@ -490,7 +488,7 @@ export function Schengen() {
               />
 
               <Input
-                label="Applicant's Home Address *"
+                label="19.Applicant's Home Address *"
                 placeholder="Home address"
                 register={travel.register("home-address", {
                   required: "Home address is required",
@@ -499,7 +497,7 @@ export function Schengen() {
               />
 
               <Input
-                label="Applicant's Email Address *"
+                label="19.Applicant's Email Address *"
                 placeholder="Email address"
                 register={travel.register("email-address", {
                   required: "Email address is required",
@@ -509,7 +507,7 @@ export function Schengen() {
 
               <div className="lg:col-span-2">
                 <Input
-                  label="Applicant's Telephone No *"
+                  label="19.Applicant's Telephone No *"
                   placeholder="Telephone no"
                   register={travel.register("telephone-no", {
                     required: "Telephone no is required",
@@ -521,7 +519,7 @@ export function Schengen() {
 
               <Group
                 options={["No", "Yes"]}
-                legend="Personal Data Of The Family Member Who Is An Eu, Eea Or Ch Citizen Or An Uk National Who Is A Withdrawal Agreement Beneficiary, Have Any? *"
+                legend="17.Personal Data Of The Family Member Who Is An Eu, Eea Or Ch Citizen Or An Uk National Who Is A Withdrawal Agreement Beneficiary, Have Any? *"
                 classNameContainer="col-span-full"
                 checked={isEuCitizen ? 2 : 1}
                 register={travel.register("have-eu-citizen", { required: "Answer the question" })}
@@ -581,7 +579,7 @@ export function Schengen() {
 
                 <div className="col-span-full">
                   <Select
-                    label="Family Relationship With An Eu, Eea Or Ch Citizen Or An Uk National Who Is A Withdrawal Agreement Beneficiary, If Applicable *"
+                    label="18.Family Relationship With An Eu, Eea Or Ch Citizen Or An Uk National Who Is A Withdrawal Agreement Beneficiary, If Applicable *"
                     options={citizenRelationshipOptions}
                     control={travel.control}
                     isDisabled={travel.formState.isSubmitting}
@@ -620,7 +618,7 @@ export function Schengen() {
             <fieldset disabled={contact.formState.isSubmitting} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <Group
                 options={["No", "Yes"]}
-                legend="Residence In A Country Other Than The Country Of Current Nationality? *"
+                legend="20.Residence In A Country Other Than The Country Of Current Nationality? *"
                 classNameContainer="col-span-full"
                 checked={isResidence ? 2 : 1}
                 register={contact.register("residence-in-a-country", { required: "Residence is required" })}
@@ -657,7 +655,7 @@ export function Schengen() {
 
               <div className="col-span-full">
                 <Input
-                  label="Employer And Employer's Address And Telephone Number. For Students, Name And Address Of Educational Establishment. *"
+                  label="22.Employer And Employer's Address And Telephone Number. For Students, Name And Address Of Educational Establishment. *"
                   classNameLabel="line-clamp-none"
                   register={contact.register("employers-address-telephone-number", {
                     required: "Employer's address and telephone number is required",
@@ -667,7 +665,7 @@ export function Schengen() {
               </div>
 
               <Input
-                label="Current Occupation *"
+                label="21.Current Occupation *"
                 register={contact.register("current-occupation", {
                   required: "Current occupation is required",
                 })}
@@ -675,7 +673,7 @@ export function Schengen() {
               />
 
               <Select
-                label="Purpose(s) Of The Journey *"
+                label="23.Purpose(s) Of The Journey *"
                 control={contact.control}
                 options={purposeOfJourneyOptions}
                 isDisabled={contact.formState.isSubmitting}
@@ -687,7 +685,7 @@ export function Schengen() {
               />
 
               <Input
-                label="Additional Info On Purpose Of Stay *"
+                label="24.Additional Info On Purpose Of Stay *"
                 register={contact.register("purpose-of-journey-additional", {
                   required: "Additional information on purpose of stay is required",
                 })}
@@ -695,7 +693,7 @@ export function Schengen() {
               />
 
               <Input
-                label="Member State Of Main Destination (And Other Member States Of Destination, If Applicable) *"
+                label="25.Member State Of Main Destination (And Other Member States Of Destination, If Applicable) *"
                 placeholder="Member State of main destination"
                 register={contact.register("main-destination", {
                   required: "Main destination is required",
@@ -703,7 +701,7 @@ export function Schengen() {
                 error={contact.formState.errors["main-destination"]}
               />
               <Input
-                label="Member State Of First Entry *"
+                label="26.Member State Of First Entry *"
                 register={contact.register("first-entry", {
                   required: "Member state of first entry is required",
                 })}
@@ -711,7 +709,7 @@ export function Schengen() {
               />
 
               <SelectNotCreatable
-                label="Number Of Entries Requested *"
+                label="27.Number Of Entries Requested *"
                 placeholder="Select Number of entries requested"
                 options={numberOfEntryRequestOptions}
                 control={contact.control}
@@ -746,7 +744,7 @@ export function Schengen() {
             <fieldset disabled={info.formState.isSubmitting} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <div className="col-span-full flex flex-col gap-4 md:flex-row [&>*]:flex-1">
                 <Input
-                  label="Intended Date Of Arrival Of First Intended Stay In The Schengen Area *"
+                  label="27.Intended Date Of Arrival Of First Intended Stay In The Schengen Area *"
                   placeholder="Intended date of arrival"
                   register={info.register("intended-date-of-arrival", {
                     required: "Intended date of arrival is required",
@@ -756,7 +754,7 @@ export function Schengen() {
                 />
 
                 <Input
-                  label="Intended Date Of Departure From Schengen Area After The First Intended Stay *"
+                  label="27.Intended Date Of Departure From Schengen Area After The First Intended Stay *"
                   placeholder="Intended date of arrival"
                   register={info.register("intended-date-of-departure", {
                     required: "Intended date of departure is required",
@@ -768,7 +766,7 @@ export function Schengen() {
 
               <Group
                 options={["No", "Yes"]}
-                legend="Fingerprints Collected Previously For The Purpose Of Applying For A Schengen Visa? *"
+                legend="28.Fingerprints Collected Previously For The Purpose Of Applying For A Schengen Visa? *"
                 classNameContainer="col-span-full"
                 checked={isFingerprintsCollectedPreviously ? 2 : 1}
                 register={info.register("fingerprints-collected-previously", {
@@ -794,7 +792,7 @@ export function Schengen() {
               </Group>
 
               <Join
-                legend="Entry Permit For The Final Country Of Destination, Where Applicable"
+                legend="29.Entry Permit For The Final Country Of Destination, Where Applicable"
                 classNameContainer="col-span-full"
                 className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
               >
@@ -822,7 +820,7 @@ export function Schengen() {
 
               <div className="col-span-full">
                 <Input
-                  label="Surname And First Name Of The Inviting Person In The Member State. If Not Applicable, Name Of Hotel Or Temporary Accommodation In The Member State"
+                  label="30.Surname And First Name Of The Inviting Person In The Member State. If Not Applicable, Name Of Hotel Or Temporary Accommodation In The Member State"
                   register={info.register("surname-and-first-name-of-inviting-persons")}
                   error={info.formState.errors["surname-and-first-name-of-inviting-persons"]}
                   classNameLabel="line-clamp-none"
@@ -845,7 +843,7 @@ export function Schengen() {
               />
 
               <Input
-                label="Name And Address Of Inviting Com/Org"
+                label="31.Name And Address Of Inviting Com/Org"
                 register={info.register("name-address-of-inviting-company")}
                 error={info.formState.errors["name-address-of-inviting-company"]}
               />
@@ -867,7 +865,7 @@ export function Schengen() {
 
               <Group
                 options={["By The Applicant Himself/Herself", "By A Sponsor  (Host, Company Organization)"]}
-                legend="Cost Of Traveling And Living During The Applicant's Stay Is Covered *"
+                legend="32.Cost Of Traveling And Living During The Applicant's Stay Is Covered *"
                 classNameContainer="col-span-full"
                 checked={methodOpen}
                 register={info.register("cost-payment-method", {
