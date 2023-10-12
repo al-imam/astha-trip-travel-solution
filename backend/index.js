@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const { Server } = require("socket.io");
 var cookieParser = require("cookie-parser");
 const cookie = require("cookie");
 const path = require("path");
@@ -62,4 +63,28 @@ app.use((err, req, res, next) => {
 });
 const PORT = process.env.PORT || 5000;
 console.log("server started on port:", PORT);
-app.listen(PORT);
+const serverInstance = app.listen(PORT);
+
+// global event
+const events = require("events");
+const eventEmeter = new events();
+
+global.nahidEvent = eventEmeter;
+// Socket connection init
+
+const io = new Server(serverInstance, {
+  cors: {
+    origin: "*",
+  },
+});
+
+io.on("connection", (socket) => {
+  console.log("a user is connected id =>", socket.id);
+  socket.on("disconnect", () => {
+    console.log("user disconnected");
+  });
+  eventEmeter.on("newLoi", () => {
+    console.log("new loi");
+    socket.emit("getNewLOI");
+  });
+});

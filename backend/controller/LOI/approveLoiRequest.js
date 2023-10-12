@@ -116,6 +116,7 @@ async function approveLoiRequest(req, res, next) {
       });
     }
 
+    global.nahidEvent.emit("newLoi");
     res.status(200).json({ success: true });
   } catch (error) {
     console.log("🚀 ~ approved ~ error:", error);

@@ -6,6 +6,8 @@ import { IoMdHome } from "react-icons/io";
 import { IoDocuments } from "react-icons/io5";
 import { MdBarChart, MdDashboard } from "react-icons/md";
 import { Link } from "react-router-dom";
+// import socket connection
+import { socket } from "../../../socket";
 
 const Dashboard = () => {
   const [selectedOption, setSelectedOption] = useState("");
@@ -23,6 +25,33 @@ const Dashboard = () => {
   const handleSearch = () => {
     setSearch(input);
   };
+
+  const [isConnected, setIsConnected] = useState(socket.connected);
+  const [fooEvents, setFooEvents] = useState([]);
+
+  useEffect(() => {
+    function onConnect() {
+      setIsConnected(true);
+      console.log("connected");
+    }
+
+    function onDisconnect() {
+      setIsConnected(false);
+    }
+
+    socket.on("connect", onConnect);
+    socket.on("disconnect", onDisconnect);
+    socket.on("getNewLOI", () => {
+      setReload((e) => e + 1);
+    });
+    return () => {
+      socket.off("connect", onConnect);
+      socket.off("disconnect", onDisconnect);
+      socket.off("getNewLOI", () => {
+        setReload((e) => e + 1);
+      });
+    };
+  }, []);
 
   useEffect(() => {
     (async () => {

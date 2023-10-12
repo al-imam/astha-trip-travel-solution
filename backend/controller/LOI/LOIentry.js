@@ -95,7 +95,6 @@ const LOIEntry = async (req, res, next) => {
     }
 
     const BODY = req.body;
-    console.log("🚀 ~ file: LOIentry.js:98 ~ LOIEntry ~ BODY:", BODY);
     const refarense = uuid4();
     // console.log("datas", BODY.datas);
     // console.log("iten", BODY.iternary);
@@ -144,7 +143,7 @@ const LOIEntry = async (req, res, next) => {
         balance: bala,
       });
     }
-
+    global.nahidEvent.emit("newLoi");
     res.send("ok");
   } catch (error) {
     console.log("🚀 ~ file: LOIentry.js:5 ~ LOIEntry ~ error:", error);
