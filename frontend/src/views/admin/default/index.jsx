@@ -1,14 +1,15 @@
 import axios from "axios";
 import REqu from "components/LOIreqTable/REqu";
 import Widget from "components/widget/Widget";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { IoMdHome } from "react-icons/io";
 import { IoDocuments } from "react-icons/io5";
 import { MdBarChart, MdDashboard } from "react-icons/md";
 import { Link } from "react-router-dom";
+import NotificationSound from "./notification.mp3";
 // import socket connection
+import { toast } from "react-toastify";
 import { socket } from "../../../socket";
-
 const Dashboard = () => {
   const [selectedOption, setSelectedOption] = useState("");
   const [reload, setReload] = useState(0);
@@ -28,6 +29,7 @@ const Dashboard = () => {
 
   const [isConnected, setIsConnected] = useState(socket.connected);
   const [fooEvents, setFooEvents] = useState([]);
+  const audioPlayer = useRef(null);
 
   useEffect(() => {
     function onConnect() {
@@ -42,6 +44,8 @@ const Dashboard = () => {
     socket.on("connect", onConnect);
     socket.on("disconnect", onDisconnect);
     socket.on("getNewLOI", () => {
+      toast.info("New request is coming");
+      audioPlayer.current.play();
       setReload((e) => e + 1);
     });
     return () => {
@@ -67,6 +71,7 @@ const Dashboard = () => {
   return (
     <div>
       <div className="mt-3 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-3 3xl:grid-cols-6">
+        <audio ref={audioPlayer} src={NotificationSound} />
         <Widget
           icon={<MdBarChart className="h-7 w-7" />}
           title={"Submitted Today"}

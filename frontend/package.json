@@ -28,6 +28,7 @@
     "react-hook-form": "^7.45.4",
     "react-hook-form-persist": "^3.0.0",
     "react-icons": "^4.4.0",
+    "react-push-notification": "^1.5.3",
     "react-router-dom": "^6.4.0",
     "react-scripts": "5.0.1",
     "react-select": "^5.7.4",

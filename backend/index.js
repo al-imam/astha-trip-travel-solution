@@ -84,7 +84,6 @@ io.on("connection", (socket) => {
     console.log("user disconnected");
   });
   eventEmeter.on("newLoi", () => {
-    console.log("new loi");
     socket.emit("getNewLOI");
   });
 });
