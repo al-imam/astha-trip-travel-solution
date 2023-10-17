@@ -109,29 +109,93 @@ const stayLocationOptions = ["Hotel", "Next of Kin's Place", "Relative's Place",
   value,
 }));
 
-const streetNameOptions = ["orchard hotel", "arianna hotel"].map((value) => ({
+const buildingNameOptions = [
+  "V Hotel Bencoolen",
+  "Mercure Singapore On Stevens",
+  "Hotel Boss",
+  "ibis budget Singapore Emerald",
+  "Holiday Inn Express Singapore Clarke Quay, an IHG Hotel",
+  "Pan Pacific Singapore",
+  "PARKROYAL",
+  "Mercure Singapore On Stevens",
+  "The Sultan",
+  "Novotel Singapore On Stevens",
+].map((value) => ({
   label: value,
   value: value.toUpperCase(),
 }));
 
-const streetNameOptionsRelatedData = {
-  "orchard hotel": {
-    houseNo: "00500",
-    floorNo: "02",
-    unitNo: "02",
-    postalCode: "199020",
-    contactNo: "+6568090000",
-    buildingName: "Hotel Boos",
+const buildingNameOptionsRelatedData = {
+  "v hotel bencoolen": {
+    houseNo: "48",
+    streetName: "Bencoolen St",
+    floor: "01",
+    unit: "01",
+    postalCode: "189627",
+    buildingName: "V Hotel Bencoolen",
+    contactNo: "+65 6388 2233",
   },
-
-  //add lowercase name for hotel
-  "arianna hotel": {
-    houseNo: "003",
-    floorNo: "03",
-    unitNo: "10",
-    postalCode: "207662",
-    contactNo: "+6567888333",
-    buildingName: "arianna hotel",
+  "mercure singapore on stevens": {
+    houseNo: "28",
+    streetName: "Stevens Rd, Orchard District",
+    floor: "01",
+    unit: "02",
+    postalCode: "257878",
+    buildingName: "Mercure Singapore On Stevens",
+    contactNo: "+65 6491 6100",
+  },
+  "hotel boss": {
+    houseNo: "500",
+    streetName: "Jln Sultan",
+    floor: "01",
+    unit: "01",
+    postalCode: "199020",
+    buildingName: "Hotel Boss",
+    contactNo: "+65 6809 0000",
+  },
+  "ibis budget singapore emerald": {
+    houseNo: "20",
+    streetName: "Lor 6 Geylang",
+    postalCode: "399174",
+    buildingName: "ibis budget Singapore Emerald",
+    contactNo: "+65 6842 3888",
+  },
+  "holiday inn express singapore clarke quay, an ihg hotel": {
+    houseNo: "2",
+    streetName: "Magazine Rd",
+    postalCode: "059573",
+    buildingName: "Holiday Inn Express Singapore Clarke Quay, an IHG Hotel",
+    contactNo: "+65 6589 8000",
+  },
+  "pan pacific singapore": {
+    houseNo: "7",
+    streetName: "Raffles Blvd",
+    postalCode: "039595",
+    buildingName: "Pan Pacific Singapore",
+    contactNo: "+65 6336 8111",
+  },
+  parkroyal: {
+    houseNo: "181",
+    streetName: "Kitchener Rd",
+    postalCode: "208533",
+    buildingName: "PARKROYAL",
+    contactNo: "+65 6428 3000",
+  },
+  "the sultan": {
+    houseNo: "101",
+    streetName: "Jln Sultan",
+    floor: "01",
+    unit: "01",
+    postalCode: "199002",
+    buildingName: "The Sultan",
+    contactNo: "+65 6723 7101",
+  },
+  "novotel singapore on stevens": {
+    houseNo: "28",
+    streetName: "Stevens Rd, Orchard District",
+    postalCode: "257878",
+    buildingName: "Novotel Singapore On Stevens",
+    contactNo: "+65 6491 6100",
   },
 };
 
@@ -177,7 +241,7 @@ export function Singapore() {
   const number = particularsOfApplicant.watch("passport-no") || {};
 
   const dateOfIssue = particularsOfApplicant.watch("passport-issue-date");
-  const streetName = otherDetails.watch("singapore-street-name");
+  const buildingName = otherDetails.watch("singapore-building-name");
   const localContact = particularsOfLocalContact.watch("name-of-local-contact");
   const citizenshipOfSpouse = particularsOfApplicant.watch("citizenship-of-spouse");
   const answers = particularsOfLocalContact.watch(["a", "b", "c", "d"]);
@@ -227,24 +291,23 @@ export function Singapore() {
     otherDetails.setValue("details-of-purpose", "TOURISM");
     otherDetails.setValue("stay-location", stayLocationOptions[0]);
 
-    otherDetails.setValue("singapore-street-name", streetNameOptions[0]);
+    otherDetails.setValue("singapore-building-name", buildingNameOptions[0]);
     otherDetails.setValue("singapore-floor-no", "01");
     otherDetails.setValue("singapore-unit-no", "01");
   }, []);
 
   useEffect(() => {
-    if (streetName?.value && streetName.value.toLowerCase() in streetNameOptionsRelatedData) {
-      const more = streetNameOptionsRelatedData[streetName.value.toLowerCase()];
+    if (buildingName?.value && buildingName.value.toLowerCase() in buildingNameOptionsRelatedData) {
+      const more = buildingNameOptionsRelatedData[buildingName.value.toLowerCase()];
 
       otherDetails.setValue("singapore-house-no", more.houseNo);
-
-      more.floorNo && otherDetails.setValue("singapore-floor-no", more.floorNo);
-      more.unitNo && otherDetails.setValue("singapore-unit-no", more.unitNo);
+      more.floor && otherDetails.setValue("singapore-floor-no", more.floor);
+      more.unit && otherDetails.setValue("singapore-unit-no", more.unit);
       otherDetails.setValue("singapore-postal-code", more.postalCode);
       otherDetails.setValue("singapore-contact-no", more.contactNo);
-      otherDetails.setValue("singapore-building-name", more.buildingName);
+      otherDetails.setValue("singapore-street-name", more.streetName);
     }
-  }, [streetName?.value]);
+  }, [buildingName?.value]);
 
   useEffect(() => {
     if (localContact?.value && localContact.value.toLowerCase() in localCompanyOptionsRelatedData) {
@@ -810,15 +873,15 @@ export function Singapore() {
               >
                 <div className="col-span-full md:col-span-2">
                   <Select
-                    label="Street Name *"
-                    placeholder="Select street name"
-                    name="singapore-street-name"
-                    options={streetNameOptions}
+                    label="Building Name *"
+                    placeholder="Select building name"
+                    name="singapore-building-name"
+                    options={buildingNameOptions}
                     control={otherDetails.control}
-                    register={otherDetails.register("singapore-street-name", {
-                      required: "Street name is required",
+                    register={otherDetails.register("singapore-building-name", {
+                      required: "Building name is required",
                     })}
-                    error={otherDetails.formState.errors["singapore-street-name"]}
+                    error={otherDetails.formState.errors["singapore-building-name"]}
                   />
                 </div>
                 <Input
@@ -866,11 +929,11 @@ export function Singapore() {
                 />
 
                 <Input
-                  label="Building Name *"
-                  register={otherDetails.register("singapore-building-name", {
-                    required: "Building name is required",
+                  label="Street Name *"
+                  register={otherDetails.register("singapore-street-name", {
+                    required: "Street name is required",
                   })}
-                  error={otherDetails.formState.errors["singapore-building-name"]}
+                  error={otherDetails.formState.errors["singapore-street-name"]}
                 />
               </Join>
 

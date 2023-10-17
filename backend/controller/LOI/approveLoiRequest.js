@@ -15,11 +15,10 @@ async function SendMailWithAttachment(loiReqData, guests) {
     );
 
     const itenaryFullPathPDF = await PDF.generateItenaryPDF({
-      guest: {
-        name: loiReqData.guest_name,
-        passport: loiReqData.pasport_number,
-        family: `${guests.length}`,
-      },
+      guests: guests.map((g) => ({
+        name: g.guest_name,
+        passport: g.pasport_number,
+      })),
       itenary: loiReqData.iternary,
     });
 
