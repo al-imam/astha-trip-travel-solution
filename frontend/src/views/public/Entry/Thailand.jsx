@@ -1,6 +1,5 @@
 import axios from "axios";
 import { Button } from "components/form/Button";
-import { Group, Join } from "components/form/Group";
 import { Input } from "components/form/Input";
 import { AsyncSelect, Select, SelectNotCreatable } from "components/form/Select";
 import { StepIndicator } from "components/form/StepIndicator";
@@ -67,10 +66,51 @@ const validCountryOptions = ["ALL COUNTRIES OF THE WORLD EXCEPT ISRAIL"].map((va
 
 const steps = ["", "", ""];
 
-const proposedAddressInThailandOptions = ["Hotel Ambassador Sukimvit, Soi-11, Bangkok"].map((value) => ({
+const proposedAddressInThailandOptions = [
+  "Hotel Ambassador Sukimvit, Soi-11, Bangkok",
+  "Sofitel Bangkok Sukhumvit 189 Sukhumvit Road, Khlong Toei Nuea, Watthana, Bangkok 10110",
+  "Grand Hyatt Erawan Bangkok 494 Ratchadamri Rd, Lumphini, Pathum Wan, Bangkok 10330",
+  "Aloft Bangkok Sukhumvit 11 35 Sukhumvit 11 Alley, Klongtoey-nua, Watthana, Bangkok 10110",
+  "Holiday Inn Express Bangkok Sukhumvit 11 30 Sukhumvit Soi 11 Klongtoey, Nua, Watthana, Bangkok 10110",
+  "Grand President Bangkok 16 Soi Sukhumvit 11, Khlong Toei Nuea, Watthana, Bangkok 10110",
+  "Mövenpick Hotel Sukhumvit 15 Bangkok 47 Sukhumvit 15, Khwaeng Khlong Toei Nuea, Khlong Toei, Bangkok 10110",
+  "Radisson Suites Bangkok Sukhumvit 23/2 Soi Sukhumvit 13, Khwaeng Khlong Toei Nuea, Khlong Toei, Bangkok 10110",
+  "Novotel Bangkok Ploenchit Sukhumvit 566 Phloen Chit Rd, Khwaeng Lumphini, Pathum Wan, Bangkok 10330",
+  "Pullman Bangkok Grande Sukhumvit Asoke 30 Sukhumvit, 21 Asok Montri Rd, Watthana, Bangkok 10110",
+].map((value) => ({
   label: value,
   value: value.toUpperCase(),
 }));
+
+const proposedAddressInThailandOptionsData = {
+  "Sofitel Bangkok Sukhumvit 189 Sukhumvit Road, Khlong Toei Nuea, Watthana, Bangkok 10110": {
+    contact: "+66 2 126 9999",
+  },
+  "Grand Hyatt Erawan Bangkok 494 Ratchadamri Rd, Lumphini, Pathum Wan, Bangkok 10330": {
+    contact: "+66 2 254 1234",
+  },
+  "Aloft Bangkok Sukhumvit 11 35 Sukhumvit 11 Alley, Klongtoey-nua, Watthana, Bangkok 10110": {
+    contact: "+66 2 207 7000",
+  },
+  "Holiday Inn Express Bangkok Sukhumvit 11 30 Sukhumvit Soi 11 Klongtoey, Nua, Watthana, Bangkok 10110": {
+    contact: "+66 2 119 4777",
+  },
+  "Grand President Bangkok 16 Soi Sukhumvit 11, Khlong Toei Nuea, Watthana, Bangkok 10110": {
+    contact: "+66 2 651 1200",
+  },
+  "Mövenpick Hotel Sukhumvit 15 Bangkok 47 Sukhumvit 15, Khwaeng Khlong Toei Nuea, Khlong Toei, Bangkok 10110": {
+    contact: "+66 2 119 3100",
+  },
+  "Radisson Suites Bangkok Sukhumvit 23/2 Soi Sukhumvit 13, Khwaeng Khlong Toei Nuea, Khlong Toei, Bangkok 10110": {
+    contact: "+66 2 645 4999",
+  },
+  "Novotel Bangkok Ploenchit Sukhumvit 566 Phloen Chit Rd, Khwaeng Lumphini, Pathum Wan, Bangkok 10330": {
+    contact: "+66 2 305 6000",
+  },
+  "Pullman Bangkok Grande Sukhumvit Asoke 30 Sukhumvit, 21 Asok Montri Rd, Watthana, Bangkok 10110": {
+    contact: "+66 2 204 4000",
+  },
+};
 
 // if you're going to change it change it in backend too
 export const SEPARATOR = "<$72$31$33$>";
@@ -98,6 +138,16 @@ export function Thailand() {
 
   const number = personal.watch("passport-number") || {};
   const dateOfIssue = personal.watch("passport-date-of-issue");
+  const address = purpose.watch("proposed-address-in-thailand");
+
+  useEffect(() => {
+    if ("value" in address && "label" in address && address.label in proposedAddressInThailandOptionsData) {
+      purpose.setValue(
+        "telephone-fax-of-thailand-guarantor",
+        proposedAddressInThailandOptionsData[address.label].contact
+      );
+    }
+  }, [address?.value]);
 
   useEffect(() => {
     if (dateOfIssue && !personal.getValues("passport-expire-date")) {

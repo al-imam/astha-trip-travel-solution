@@ -109,29 +109,93 @@ const stayLocationOptions = ["Hotel", "Next of Kin's Place", "Relative's Place",
   value,
 }));
 
-const streetNameOptions = ["orchard hotel", "arianna hotel"].map((value) => ({
+const streetNameOptions = [
+  "V Hotel Bencoolen",
+  "Mercure Singapore On Stevens",
+  "Hotel Boss",
+  "ibis budget Singapore Emerald",
+  "Holiday Inn Express Singapore Clarke Quay, an IHG Hotel",
+  "Pan Pacific Singapore",
+  "PARKROYAL",
+  "Mercure Singapore On Stevens",
+  "The Sultan",
+  "Novotel Singapore On Stevens",
+].map((value) => ({
   label: value,
   value: value.toUpperCase(),
 }));
 
 const streetNameOptionsRelatedData = {
-  "orchard hotel": {
-    houseNo: "00500",
-    floorNo: "02",
-    unitNo: "02",
-    postalCode: "199020",
-    contactNo: "+6568090000",
-    buildingName: "Hotel Boos",
+  "v hotel bencoolen": {
+    houseNo: "48",
+    streetName: "V Hotel Bencoolen",
+    floor: "01",
+    unit: "01",
+    postalCode: "189627",
+    buildingName: "Bencoolen St",
+    contactNo: "+65 6388 2233",
   },
-
-  //add lowercase name for hotel
-  "arianna hotel": {
-    houseNo: "003",
-    floorNo: "03",
-    unitNo: "10",
-    postalCode: "207662",
-    contactNo: "+6567888333",
-    buildingName: "arianna hotel",
+  "mercure singapore on stevens": {
+    houseNo: "28",
+    streetName: "Mercure Singapore On Stevens",
+    floor: "01",
+    unit: "02",
+    postalCode: "257878",
+    buildingName: "Stevens Rd, Orchard District",
+    contactNo: "+65 6491 6100",
+  },
+  "hotel boss": {
+    houseNo: "500",
+    streetName: "Hotel Boss",
+    floor: "01",
+    unit: "01",
+    postalCode: "199020",
+    buildingName: "Jln Sultan",
+    contactNo: "+65 6809 0000",
+  },
+  "ibis budget singapore emerald": {
+    houseNo: "20",
+    streetName: "ibis budget Singapore Emerald",
+    postalCode: "399174",
+    buildingName: "Lor 6 Geylang",
+    contactNo: "+65 6842 3888",
+  },
+  "holiday inn express singapore clarke quay, an ihg hotel": {
+    houseNo: "2",
+    streetName: "Holiday Inn Express Singapore Clarke Quay, an IHG Hotel",
+    postalCode: "059573",
+    buildingName: "Magazine Rd",
+    contactNo: "+65 6589 8000",
+  },
+  "pan pacific singapore": {
+    houseNo: "7",
+    streetName: "Pan Pacific Singapore",
+    postalCode: "039595",
+    buildingName: "Raffles Blvd",
+    contactNo: "+65 6336 8111",
+  },
+  parkroyal: {
+    houseNo: "181",
+    streetName: "PARKROYAL",
+    postalCode: "208533",
+    buildingName: "Kitchener Rd",
+    contactNo: "+65 6428 3000",
+  },
+  "the sultan": {
+    houseNo: "101",
+    streetName: "The Sultan",
+    floor: "01",
+    unit: "01",
+    postalCode: "199002",
+    buildingName: "Jln Sultan",
+    contactNo: "+65 6723 7101",
+  },
+  "novotel singapore on stevens": {
+    houseNo: "28",
+    streetName: "Novotel Singapore On Stevens",
+    postalCode: "257878",
+    buildingName: "Stevens Rd, Orchard District",
+    contactNo: "+65 6491 6100",
   },
 };
 
@@ -238,8 +302,8 @@ export function Singapore() {
 
       otherDetails.setValue("singapore-house-no", more.houseNo);
 
-      more.floorNo && otherDetails.setValue("singapore-floor-no", more.floorNo);
-      more.unitNo && otherDetails.setValue("singapore-unit-no", more.unitNo);
+      more.floor && otherDetails.setValue("singapore-floor-no", more.floor);
+      more.unit && otherDetails.setValue("singapore-unit-no", more.unit);
       otherDetails.setValue("singapore-postal-code", more.postalCode);
       otherDetails.setValue("singapore-contact-no", more.contactNo);
       otherDetails.setValue("singapore-building-name", more.buildingName);
