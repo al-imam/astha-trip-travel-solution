@@ -63,6 +63,8 @@ const purposeOfTourOptions = valueAndLabel([
   "Education",
 ]);
 
+const relationOptions = valueAndLabel(["Self"]);
+
 function getFromAndTo(name) {
   return {
     from: valueAndLabel([
@@ -135,15 +137,19 @@ export function MainEntry() {
   useEffect(() => {
     const next = getFromAndTo(hotelName?.value);
 
+    /*
     const fromValue = itenary.getValues("from");
     const toValue = itenary.getValues("to");
     const indexOfFrom = locations.from.findIndex((f) => fromValue && f.value === fromValue.value);
     const indexOfTo = locations.to.findIndex((f) => toValue && f.value === toValue.value);
+    */
 
     setLocations(next);
 
-    // itenary.setValue("to", indexOfTo !== -1 ? next.to[0] : null);
-    // itenary.setValue("from", indexOfFrom !== -1 ? next.from[0] : null);
+    /*  
+    itenary.setValue("to", indexOfTo !== -1 ? next.to[0] : null);
+    itenary.setValue("from", indexOfFrom !== -1 ? next.from[0] : null);
+    */
     itenary.setValue("to", next.to.length !== -1 ? next.to[0] : null);
     itenary.setValue("from", next.from.length !== -1 ? next.from[0] : null);
   }, [hotelName]);
@@ -153,6 +159,7 @@ export function MainEntry() {
     guest.setValue("guest-number", guestNumbersOptions[0]);
     guest.setValue("country", countryOptions[0]);
     guest.setValue("tour-purpose", purposeOfTourOptions[0]);
+    guest.setValue("relationship", relationOptions[0]);
   }, []);
 
   async function submitGuest(data) {
@@ -196,6 +203,7 @@ export function MainEntry() {
           guestName: data["guest-name"],
           passportNumber: data["passport-number"],
           travelDate: data["travel-date"],
+          relationship: data["relationship"],
           hotelName: data["hotel-name"].value,
           passportPhoto: res.data.passpor.name || null,
           visaPhoto: res.data.visa.name || null,
@@ -216,6 +224,7 @@ export function MainEntry() {
       guest.setValue("hotel-copy", "");
       guest.setValue("passport-copy", "");
       guest.setValue("ticket-copy", "");
+      allGuest.length === 0 && guest.setValue("relationship", null);
     } catch {}
   }
 
@@ -236,17 +245,16 @@ export function MainEntry() {
     obj.id = uuid();
     setItenaries((prev) => [...prev, obj]);
 
-    // console.log(obj.date);
     // make comparison of last departure date
     itenary.reset();
-    let nextdate = new Date(obj.date).setDate(new Date(obj.date).getDate() + 1);
+    let nextDate = new Date(obj.date).setDate(new Date(obj.date).getDate() + 1);
 
-    let year = new Date(nextdate).getFullYear();
+    let year = new Date(nextDate).getFullYear();
     let mm =
-      new Date(nextdate).getMonth() + 1 < 10
-        ? `0${new Date(nextdate).getMonth() + 1}`
-        : new Date(nextdate).getMonth() + 1;
-    let dd = new Date(nextdate).getDate() < 10 ? `0${new Date(nextdate).getDate()}` : new Date(nextdate).getDate();
+      new Date(nextDate).getMonth() + 1 < 10
+        ? `0${new Date(nextDate).getMonth() + 1}`
+        : new Date(nextDate).getMonth() + 1;
+    let dd = new Date(nextDate).getDate() < 10 ? `0${new Date(nextDate).getDate()}` : new Date(nextDate).getDate();
 
     itenary.setValue("to", locations.to.length !== -1 ? locations.to[locations.to.length - 1 || 1] : null);
     itenary.setValue("from", locations.from.length !== -1 ? locations.from[locations.from.length - 1 || 1] : null);
@@ -368,6 +376,22 @@ export function MainEntry() {
                 />
               )}
             </div>
+
+            {guestType?.value.toLowerCase() === "family" && (
+              <SelectNotCreatable
+                label="Relationship *"
+                options={relationOptions}
+                placeholder="Select relationship"
+                control={guest.control}
+                name="relationship"
+                isDisabled={allGuest.length > 1}
+                isSearchable={false}
+                register={guest.register("relationship", {
+                  required: { value: guestType?.value.toLowerCase() === "family", message: "Guest type is required" },
+                })}
+                error={guest.formState.errors["relationship"]}
+              />
+            )}
 
             <Input
               label="Travel Date *"
