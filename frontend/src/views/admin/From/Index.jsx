@@ -3,7 +3,7 @@ import Widget from "components/widget/Widget";
 import { AnimatePresence, motion } from "framer-motion";
 import useAgent from "hook/UseAgent";
 import useAllform from "hook/useAllform";
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import NormalSelect from "react-select";
 import { toast } from "react-toastify";
@@ -293,9 +293,10 @@ const Index = () => {
           onChange={(e) => {
             setSelectedCountry(e.value);
           }}
+          placeholder="Download Form"
           value={{ label: SelectedCountry, value: SelectedCountry }}
           options={CountySeletData.map((e) => {
-            return { label: e, value: e };
+            return { label: e.toUpperCase(), value: e };
           })}
           styles={StyleSelect}
         />

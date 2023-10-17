@@ -2,7 +2,7 @@ import axios from "axios";
 import { Button } from "components/form/Button";
 import { Input } from "components/form/Input";
 import Widget from "components/widget/Widget";
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Select from "react-select";
 import { toast } from "react-toastify";
 
@@ -276,6 +276,7 @@ const Addpayment = ({ close, ReaLoad }) => {
           )}
         </div>
       </div>
+      <div className="h-48"></div>
     </div>
   );
 };

@@ -36,7 +36,7 @@ const REqu = ({ selectedOption, search, relaod, setSelect }) => {
         id: e.id,
         Guest_Name: e.guest_name,
         Pasport_Number: e.pasport_number,
-        Travel_Date: e.travel_date,
+        Travel_Date: e.travel_date?.split("-").reverse().join("-"),
         Hotel_Name: e.hotel_name,
         Refarenc: e.reference,
         Agent: `${JSON.parse(e.agent).username} ${JSON.parse(e.agent).type === "admin" ? "Admin" : ""}`,
