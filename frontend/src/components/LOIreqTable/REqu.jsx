@@ -34,13 +34,15 @@ const REqu = ({ selectedOption, search, relaod, setSelect }) => {
     const dats = show.map((e) => {
       return {
         id: e.id,
+        Issue_Date: new Date(e.updateAt).toGMTString(),
         Guest_Name: e.guest_name,
         Pasport_Number: e.pasport_number,
         Travel_Date: e.travel_date?.split("-").reverse().join("-"),
-        Hotel_Name: e.hotel_name,
-        Refarenc: e.reference,
         Agent: `${JSON.parse(e.agent).username} ${JSON.parse(e.agent).type === "admin" ? "Admin" : ""}`,
         Status: e.status,
+        Purpose: e.purpose,
+        Hotel_Name: e.hotel_name,
+        Refarenc: e.reference,
       };
     });
     exportFromJSON({
@@ -100,7 +102,16 @@ const REqu = ({ selectedOption, search, relaod, setSelect }) => {
               Header: "Travel Date",
               accessor: "travelDate",
               Cell: (prop) => {
-                return <div>{prop.row.original?.travel_date}</div>;
+                return (
+                  <div>
+                    {new Date(prop.row.original?.travel_date).toLocaleDateString("en-US", {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                      weekday: "long",
+                    })}
+                  </div>
+                );
               },
             },
             {
