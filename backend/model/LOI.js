@@ -6,6 +6,10 @@ const LOISchema = new Schema({
     type: "TEXT(255)",
     req: true,
   },
+  relationship: {
+    type: "VARCHAR(255)",
+    req: true,
+  },
   pasport_number: {
     type: "TEXT(255)",
     req: true,

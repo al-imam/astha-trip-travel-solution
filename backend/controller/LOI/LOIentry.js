@@ -105,6 +105,7 @@ const LOIEntry = async (req, res, next) => {
           const resdb = await LOI.Add({
             guest_name: e.guestName,
             pasport_number: e.passportNumber,
+            relationship: e.relationship,
             travel_date: e.travelDate,
             hotel_name: e.hotelName,
             reference: refarense,

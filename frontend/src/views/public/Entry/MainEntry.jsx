@@ -221,7 +221,7 @@ export function MainEntry() {
           guestName: data["guest-name"],
           passportNumber: data["passport-number"],
           travelDate: data["travel-date"],
-          relationship: data["relationship"],
+          relationship: data["relationship"]?.value,
           hotelName: data["hotel-name"].value,
           passportPhoto: res.data.passpor.name || null,
           visaPhoto: res.data.visa.name || null,
@@ -233,7 +233,7 @@ export function MainEntry() {
           id: uuid(),
         },
       ]);
-      console.log(data["travel-date"]);
+
       itenary.setValue("date", data["travel-date"] || null);
 
       guest.setValue("passport-number", "");
