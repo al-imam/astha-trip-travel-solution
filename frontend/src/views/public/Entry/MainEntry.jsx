@@ -63,7 +63,25 @@ const purposeOfTourOptions = valueAndLabel([
   "Education",
 ]);
 
-const relationOptions = valueAndLabel(["Self"]);
+const relationOptions = valueAndLabel([
+  "Self",
+  "Child",
+  "Parent",
+  "Sibling",
+  "Grandparent",
+  "Grandchild",
+  "Aunt",
+  "Uncle",
+  "Cousin",
+  "Spouse",
+  "Mother-in-law",
+  "Father-in-law",
+  "Brother-in-law",
+  "Sister-in-law",
+  "Step-sibling",
+  "Step-parent",
+  "Guardian",
+]);
 
 function getFromAndTo(name) {
   return {
@@ -150,8 +168,8 @@ export function MainEntry() {
     itenary.setValue("to", indexOfTo !== -1 ? next.to[0] : null);
     itenary.setValue("from", indexOfFrom !== -1 ? next.from[0] : null);
     */
-    itenary.setValue("to", next.to.length !== -1 ? next.to[0] : null);
-    itenary.setValue("from", next.from.length !== -1 ? next.from[0] : null);
+    itenary.setValue("to", next.to[0]);
+    itenary.setValue("from", next.from[0]);
   }, [hotelName]);
 
   useEffect(() => {
@@ -245,20 +263,12 @@ export function MainEntry() {
     obj.id = uuid();
     setItenaries((prev) => [...prev, obj]);
 
-    // make comparison of last departure date
-    itenary.reset();
-    let nextDate = new Date(obj.date).setDate(new Date(obj.date).getDate() + 1);
+    const currentDate = new Date(obj.date);
+    currentDate.setDate(currentDate.getDate() + 1);
 
-    let year = new Date(nextDate).getFullYear();
-    let mm =
-      new Date(nextDate).getMonth() + 1 < 10
-        ? `0${new Date(nextDate).getMonth() + 1}`
-        : new Date(nextDate).getMonth() + 1;
-    let dd = new Date(nextDate).getDate() < 10 ? `0${new Date(nextDate).getDate()}` : new Date(nextDate).getDate();
-
-    itenary.setValue("to", locations.to.length !== -1 ? locations.to[locations.to.length - 1 || 1] : null);
-    itenary.setValue("from", locations.from.length !== -1 ? locations.from[locations.from.length - 1 || 1] : null);
-    itenary.setValue("date", `${year}-${mm}-${dd}` || null);
+    itenary.setValue("to", locations.to[locations.to.length - 1 || 1]);
+    itenary.setValue("from", locations.from[locations.from.length - 1 || 1]);
+    itenary.setValue("date", currentDate.toISOString().split("T")[0]);
   }
 
   async function submitLoiRequest() {
