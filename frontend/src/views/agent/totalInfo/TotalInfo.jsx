@@ -365,14 +365,32 @@ function TotalInfo() {
               accessor: "action",
               Cell: (prop) => {
                 return (
-                  <div className="relative">
+                  <div className="relative flex items-center justify-end">
+                    {prop.row.original.status === "approved" && (
+                      <button
+                        onClick={() => {
+                          setTimeout(() => {
+                            window.open(`/download/itinerary/${prop.row.original.reference}`, "_blank");
+                          }, 100);
+                          window.open(`/download/loi/${prop.row.original.id}`, "_blank");
+                        }}
+                        title="download loi and itinerary "
+                        className="flex h-full items-center pr-3 text-3xl hover:text-brand-400 md:text-5xl "
+                      >
+                        <LineMdDownloadingLoop />
+                      </button>
+                    )}
+
                     <button
-                      title="delete"
+                      title="details"
                       onClick={() => {
                         setOpenGuest(prop.row.original);
                       }}
-                      className="rounded bg-brand-500 px-6 py-2 text-base font-medium text-white transition duration-200 hover:bg-brand-600 active:bg-brand-700 dark:bg-brand-400 dark:text-white dark:hover:bg-brand-300 dark:active:bg-brand-200"
+                      className="rounded bg-brand-500 px-6 py-2 text-base font-medium text-white transition duration-200
+                      hover:bg-brand-600 active:bg-brand-700 dark:bg-brand-400 dark:text-white dark:hover:bg-brand-300
+                      dark:active:bg-brand-200"
                     >
+                      {" "}
                       Details
                     </button>
                   </div>
@@ -570,6 +588,31 @@ export function LucideFileEdit(props) {
       <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
         <path d="M4 13.5V4a2 2 0 0 1 2-2h8.5L20 7.5V20a2 2 0 0 1-2 2h-5.5"></path>
         <path d="M14 2v6h6m-9.58 4.61a2.1 2.1 0 1 1 2.97 2.97L7.95 21L4 22l.99-3.95l5.43-5.44Z"></path>
+      </g>
+    </svg>
+  );
+}
+
+export function LineMdDownloadingLoop(props) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" {...props}>
+      <g fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="2">
+        <path
+          strokeDasharray="2 4"
+          strokeDashoffset="6"
+          d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21"
+        >
+          <animate attributeName="stroke-dashoffset" dur="0.6s" repeatCount="indefinite" values="6;0"></animate>
+        </path>
+        <path strokeDasharray="30" strokeDashoffset="30" d="M12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3">
+          <animate fill="freeze" attributeName="stroke-dashoffset" begin="0.1s" dur="0.3s" values="30;0"></animate>
+        </path>
+        <path strokeDasharray="10" strokeDashoffset="10" d="M12 8v7.5">
+          <animate fill="freeze" attributeName="stroke-dashoffset" begin="0.5s" dur="0.2s" values="10;0"></animate>
+        </path>
+        <path strokeDasharray="6" strokeDashoffset="6" d="M12 15.5l3.5 -3.5M12 15.5l-3.5 -3.5">
+          <animate fill="freeze" attributeName="stroke-dashoffset" begin="0.7s" dur="0.2s" values="6;0"></animate>
+        </path>
       </g>
     </svg>
   );

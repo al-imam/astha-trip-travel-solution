@@ -44,7 +44,41 @@ async function generateVisaPDF(name, passport, purpose, country) {
   }
 }
 
-async function generateItenaryPDF({ guests, itenary: _i }) {
+// async function generateItenaryPDF({ guests, itenary: _i }) {
+//   try {
+//     function createFolderIfNotExists(folderPath) {
+//       if (!fs.existsSync(folderPath)) {
+//         fs.mkdirSync(folderPath);
+//       }
+//     }
+//     createFolderIfNotExists(path.join(__dirname, "generated-pdf"));
+//     const iternary = JSON.parse(_i);
+
+//     if (iternary.length < 0) return null;
+
+//     const fileFullPath = path.join(
+//       __dirname,
+//       "generated-pdf",
+//       `${v4()}-itenary.pdf`
+//     );
+
+//     const { data: BufferPDF } = await axios.post(
+//       `${baseURL}/generate/itenary/`,
+//       {
+//         guests,
+//         itenary: iternary.map(({ to, from, date }) => ({ to, from, date })),
+//       }
+//     );
+
+//     fs.writeFileSync(fileFullPath, BufferPDF);
+
+//     return fileFullPath;
+//   } catch (error) {
+//     return null;
+//   }
+// }
+
+async function generateItenaryPDF({ guests, itenary: _i, name, passport }) {
   try {
     function createFolderIfNotExists(folderPath) {
       if (!fs.existsSync(folderPath)) {
@@ -59,7 +93,7 @@ async function generateItenaryPDF({ guests, itenary: _i }) {
     const fileFullPath = path.join(
       __dirname,
       "generated-pdf",
-      `${v4()}-itenary.pdf`
+      `${fix(name)}-${fix(passport)}-${v4()}-itenary.pdf`
     );
 
     const { data: BufferPDF } = await axios.post(
@@ -74,6 +108,7 @@ async function generateItenaryPDF({ guests, itenary: _i }) {
 
     return fileFullPath;
   } catch (error) {
+    console.log(error, "iternary");
     return null;
   }
 }
@@ -92,6 +127,10 @@ async function getItenaryPDF({ guests, itenary: _i }) {
 
     return BufferPDF;
   } catch (error) {
+    console.log(
+      "🚀 ~ file: pythonGeneratePDF.js:95 ~ getItenaryPDF ~ error:",
+      error
+    );
     return null;
   }
 }
@@ -106,6 +145,10 @@ async function getVisaPDF(name, passport, purpose) {
 
     return BufferPDF;
   } catch (error) {
+    console.log(
+      "🚀 ~ file: pythonGeneratePDF.js:111 ~ getVisaPDF ~ error:",
+      error
+    );
     return null;
   }
 }
