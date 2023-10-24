@@ -63,6 +63,26 @@ const purposeOfTourOptions = valueAndLabel([
   "Education",
 ]);
 
+const relationOptions = valueAndLabel([
+  "Self",
+  "Child",
+  "Parent",
+  "Sibling",
+  "Grandparent",
+  "Grandchild",
+  "Aunt",
+  "Uncle",
+  "Cousin",
+  "Spouse",
+  "Mother-in-law",
+  "Father-in-law",
+  "Brother-in-law",
+  "Sister-in-law",
+  "Step-sibling",
+  "Step-parent",
+  "Guardian",
+]);
+
 function getFromAndTo(name) {
   return {
     from: valueAndLabel([
@@ -135,17 +155,21 @@ export function MainEntry() {
   useEffect(() => {
     const next = getFromAndTo(hotelName?.value);
 
+    /*
     const fromValue = itenary.getValues("from");
     const toValue = itenary.getValues("to");
     const indexOfFrom = locations.from.findIndex((f) => fromValue && f.value === fromValue.value);
     const indexOfTo = locations.to.findIndex((f) => toValue && f.value === toValue.value);
+    */
 
     setLocations(next);
 
-    // itenary.setValue("to", indexOfTo !== -1 ? next.to[0] : null);
-    // itenary.setValue("from", indexOfFrom !== -1 ? next.from[0] : null);
-    itenary.setValue("to", next.to.length !== -1 ? next.to[0] : null);
-    itenary.setValue("from", next.from.length !== -1 ? next.from[0] : null);
+    /*  
+    itenary.setValue("to", indexOfTo !== -1 ? next.to[0] : null);
+    itenary.setValue("from", indexOfFrom !== -1 ? next.from[0] : null);
+    */
+    itenary.setValue("to", next.to[0]);
+    itenary.setValue("from", next.from[0]);
   }, [hotelName]);
 
   useEffect(() => {
@@ -153,6 +177,7 @@ export function MainEntry() {
     guest.setValue("guest-number", guestNumbersOptions[0]);
     guest.setValue("country", countryOptions[0]);
     guest.setValue("tour-purpose", purposeOfTourOptions[0]);
+    guest.setValue("relationship", relationOptions[0]);
   }, []);
 
   async function submitGuest(data) {
@@ -196,6 +221,7 @@ export function MainEntry() {
           guestName: data["guest-name"],
           passportNumber: data["passport-number"],
           travelDate: data["travel-date"],
+          relationship: data["relationship"]?.value,
           hotelName: data["hotel-name"].value,
           passportPhoto: res.data.passpor.name || null,
           visaPhoto: res.data.visa.name || null,
@@ -207,7 +233,7 @@ export function MainEntry() {
           id: uuid(),
         },
       ]);
-      console.log(data["travel-date"]);
+
       itenary.setValue("date", data["travel-date"] || null);
 
       guest.setValue("passport-number", "");
@@ -216,6 +242,7 @@ export function MainEntry() {
       guest.setValue("hotel-copy", "");
       guest.setValue("passport-copy", "");
       guest.setValue("ticket-copy", "");
+      allGuest.length === 0 && guest.setValue("relationship", null);
     } catch {}
   }
 
@@ -236,21 +263,12 @@ export function MainEntry() {
     obj.id = uuid();
     setItenaries((prev) => [...prev, obj]);
 
-    // console.log(obj.date);
-    // make comparison of last departure date
-    itenary.reset();
-    let nextdate = new Date(obj.date).setDate(new Date(obj.date).getDate() + 1);
+    const currentDate = new Date(obj.date);
+    currentDate.setDate(currentDate.getDate() + 1);
 
-    let year = new Date(nextdate).getFullYear();
-    let mm =
-      new Date(nextdate).getMonth() + 1 < 10
-        ? `0${new Date(nextdate).getMonth() + 1}`
-        : new Date(nextdate).getMonth() + 1;
-    let dd = new Date(nextdate).getDate() < 10 ? `0${new Date(nextdate).getDate()}` : new Date(nextdate).getDate();
-
-    itenary.setValue("to", locations.to.length !== -1 ? locations.to[locations.to.length - 1 || 1] : null);
-    itenary.setValue("from", locations.from.length !== -1 ? locations.from[locations.from.length - 1 || 1] : null);
-    itenary.setValue("date", `${year}-${mm}-${dd}` || null);
+    itenary.setValue("to", locations.to[locations.to.length - 1 || 1]);
+    itenary.setValue("from", locations.from[locations.from.length - 1 || 1]);
+    itenary.setValue("date", currentDate.toISOString().split("T")[0]);
   }
 
   async function submitLoiRequest() {
@@ -368,6 +386,22 @@ export function MainEntry() {
                 />
               )}
             </div>
+
+            {guestType?.value.toLowerCase() === "family" && (
+              <SelectNotCreatable
+                label="Relationship *"
+                options={relationOptions}
+                placeholder="Select relationship"
+                control={guest.control}
+                name="relationship"
+                isDisabled={allGuest.length > 1}
+                isSearchable={false}
+                register={guest.register("relationship", {
+                  required: { value: guestType?.value.toLowerCase() === "family", message: "Guest type is required" },
+                })}
+                error={guest.formState.errors["relationship"]}
+              />
+            )}
 
             <Input
               label="Travel Date *"

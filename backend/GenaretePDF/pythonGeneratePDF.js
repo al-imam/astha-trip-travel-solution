@@ -44,7 +44,7 @@ async function generateVisaPDF(name, passport, purpose, country) {
   }
 }
 
-async function generateItenaryPDF({ guests, itenary: _i, name, passport }) {
+async function generateItenaryPDF({ guests, itenary: _i }) {
   try {
     function createFolderIfNotExists(folderPath) {
       if (!fs.existsSync(folderPath)) {
@@ -59,7 +59,7 @@ async function generateItenaryPDF({ guests, itenary: _i, name, passport }) {
     const fileFullPath = path.join(
       __dirname,
       "generated-pdf",
-      `${fix(name)}-${fix(passport)}-${v4()}-itenary.pdf`
+      `${v4()}-itenary.pdf`
     );
 
     const { data: BufferPDF } = await axios.post(
@@ -74,9 +74,45 @@ async function generateItenaryPDF({ guests, itenary: _i, name, passport }) {
 
     return fileFullPath;
   } catch (error) {
-    console.log(error, "iternary");
     return null;
   }
 }
 
-module.exports = { generateVisaPDF, generateItenaryPDF };
+async function getItenaryPDF({ guests, itenary: _i }) {
+  try {
+    const iternary = JSON.parse(_i);
+
+    const { data: BufferPDF } = await axios.post(
+      `${baseURL}/generate/itenary/`,
+      {
+        guests,
+        itenary: iternary.map(({ to, from, date }) => ({ to, from, date })),
+      }
+    );
+
+    return BufferPDF;
+  } catch (error) {
+    return null;
+  }
+}
+
+async function getVisaPDF(name, passport, purpose) {
+  try {
+    const { data: BufferPDF } = await axios.post(`${baseURL}/generate/visa/`, {
+      name,
+      passport: `${passport}`,
+      purpose,
+    });
+
+    return BufferPDF;
+  } catch (error) {
+    return null;
+  }
+}
+
+module.exports = {
+  generateVisaPDF,
+  generateItenaryPDF,
+  getVisaPDF,
+  getItenaryPDF,
+};
