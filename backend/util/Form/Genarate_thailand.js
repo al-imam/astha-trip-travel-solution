@@ -46,7 +46,6 @@ const Generate_thailand = async (id, pass) => {
 
     const [occupationPosition, occupationName] =
       response["occupation"]?.split(SEPARATOR) || [];
-
     FormHelper(form).SetBulk([
       {
         type: "PDFCheckBox",
@@ -165,7 +164,7 @@ const Generate_thailand = async (id, pass) => {
       {
         type: "PDFTextField",
         name: "Passport No",
-        value: response["passport-number"],
+        value: response["passport_number"],
         font: 9,
       },
       {
@@ -179,19 +178,19 @@ const Generate_thailand = async (id, pass) => {
         type: "PDFTextField",
         name: "Date of Issue",
         value: response["passport_issue_date"]?.split("-").reverse().join("/"),
-        font: 11,
+        font: 9,
       },
       {
         type: "PDFTextField",
         name: "Expiry Date",
         value: response["passport_expiry_date"]?.split("-").reverse().join("/"),
-        font: 11,
+        font: 9,
       },
       {
         type: "PDFTextField",
         name: "Current Address 1",
         value: response["current_address"]?.split(" ").slice(0, 2).join(" "),
-        font: 11,
+        font: 10,
       },
       {
         type: "PDFTextField",
@@ -201,20 +200,20 @@ const Generate_thailand = async (id, pass) => {
             ?.split(" ")
             .slice(2, Infinity)
             .join(" ") || " ",
-        font: 11,
+        font: 10,
       },
 
       {
         type: "PDFTextField",
         name: "Tel",
         value: response["phone"],
-        font: 11,
+        font: 10,
       },
       {
         type: "PDFTextField",
         name: "Email",
         value: response["email"],
-        font: 8,
+        font: 7,
       },
       {
         type: "PDFTextField",
@@ -222,7 +221,7 @@ const Generate_thailand = async (id, pass) => {
         value: AsAbove(
           response["permanent_address"]?.split(" ").slice(0, 1).join(" ")
         ),
-        font: 11,
+        font: 7,
       },
       {
         type: "PDFTextField",
@@ -234,7 +233,7 @@ const Generate_thailand = async (id, pass) => {
             .join(" "),
           response["permanent_address"]?.split(" ").length
         ),
-        font: 11,
+        font: 7,
       },
 
       {
@@ -250,7 +249,7 @@ const Generate_thailand = async (id, pass) => {
         value: NA(
           response["minor_children_info"]?.split(" ").slice(0, 2).join(" ")
         ),
-        font: 11,
+        font: 8,
       },
       {
         type: "PDFTextField",
@@ -321,9 +320,9 @@ const Generate_thailand = async (id, pass) => {
         name: "Proposed Address in Thailand",
         value: response["address_in_thailand"]
           ?.split(" ")
-          .slice(0, 1)
+          .slice(0, 3)
           .join(" "),
-        font: 11,
+        font: 6,
       },
 
       {
@@ -332,9 +331,9 @@ const Generate_thailand = async (id, pass) => {
         value:
           response["address_in_thailand"]
             ?.split(" ")
-            .slice(1, Infinity)
+            .slice(3, Infinity)
             .join(" ") || " ",
-        font: 11,
+        font: 6,
       },
       {
         type: "PDFTextField",

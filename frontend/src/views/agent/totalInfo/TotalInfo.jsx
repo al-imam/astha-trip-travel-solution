@@ -1,6 +1,8 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+
+import exportFromJSON from "export-from-json";
 // import Table from "../../public/Entry/ComplexTable";
 import Table from "../../admin/agent/table";
 function TotalInfo() {
@@ -30,10 +32,32 @@ function TotalInfo() {
     })();
   }, []);
 
+  let ExportToExcel = () => {
+    const dats = loiData.map((e) => {
+      return {
+        id: e.id,
+        Issue_Date: new Date(e.updateAt).toGMTString(),
+        Guest_Name: e.guest_name,
+        Pasport_Number: e.pasport_number,
+        Travel_Date: e.travel_date?.split("-").reverse().join("-"),
+        Agent: `${JSON.parse(e.agent).username} ${JSON.parse(e.agent).type === "admin" ? "Admin" : ""}`,
+        Status: e.status,
+        Purpose: e.purpose,
+        Hotel_Name: e.hotel_name,
+        Refarenc: e.reference,
+      };
+    });
+    exportFromJSON({
+      data: dats,
+      fileName: "Data",
+      exportType: exportFromJSON.types.xls,
+    });
+  };
+
   return (
     <div>
       {typeof openGuest === "object" && (
-        <div className="fixed top-0 left-0 z-10 h-screen  w-full overflow-auto bg-white/60 pt-48 backdrop-blur-md">
+        <div className="fixed left-0 top-0 z-10 h-screen  w-full overflow-auto bg-white/60 pt-48 backdrop-blur-md">
           <div className="mx-2 w-full rounded-md bg-brand-100 p-3 pb-20 shadow-md md:mx-auto md:w-11/12">
             <div className="relative flex w-full items-center justify-between border-b-2 border-brand-600 p-3 text-xl font-bold text-white">
               <div className="flex items-center">
@@ -81,7 +105,7 @@ function TotalInfo() {
                   <a
                     href={`/api/visa-form/download-form-pdf-${openGuest.country}/${openGuest.visa_application}`}
                     target="_blank"
-                    className="float-right mt-2 flex items-center rounded-xl bg-brand-600 py-3 px-5 font-bold text-white transition-all  duration-300 hover:scale-105 hover:shadow-xl active:scale-95"
+                    className="float-right mt-2 flex items-center rounded-xl bg-brand-600 px-5 py-3 font-bold text-white transition-all  duration-300 hover:scale-105 hover:shadow-xl active:scale-95"
                     rel="noreferrer"
                   >
                     <span className="pr-2 text-2xl">
@@ -92,7 +116,7 @@ function TotalInfo() {
                 ) : (
                   <Link
                     to={`/entry/${openGuest.country.toLowerCase()}?ref=${openGuest.id}`}
-                    className="float-right mt-2 flex items-center rounded-xl bg-brand-600 py-3 px-5 font-bold text-white transition-all  duration-300 hover:scale-105 hover:shadow-xl active:scale-95"
+                    className="float-right mt-2 flex items-center rounded-xl bg-brand-600 px-5 py-3 font-bold text-white transition-all  duration-300 hover:scale-105 hover:shadow-xl active:scale-95"
                   >
                     <span className="pr-2 text-2xl">
                       <LucideFileEdit />
@@ -160,7 +184,7 @@ function TotalInfo() {
           </div>
         </div>
       </div> */}
-      <div className="mt-4 flex flex-wrap gap-4">
+      <div className="mt-4 flex flex-wrap justify-between gap-4">
         <Link
           className="inline-block rounded-lg border-2 border-brand-900/30 bg-white/10  p-3 text-xl font-bold text-brand-600 shadow-xl hover:scale-105 dark:border-brand-200 dark:text-brand-100"
           to="/entry"
@@ -175,6 +199,13 @@ function TotalInfo() {
             Add New Entry
           </span>
         </Link>
+        <button
+          type="button"
+          className=" rounded-md bg-green-500 px-4 py-2 font-bold text-white shadow-md"
+          onClick={ExportToExcel}
+        >
+          Export To Excel
+        </button>
       </div>
 
       <div className="mt-5">
@@ -201,7 +232,16 @@ function TotalInfo() {
               Header: "Travel Date",
               accessor: "pasport_number",
               Cell: (prop) => {
-                return <p>{prop.row.original?.travel_date}</p>;
+                return (
+                  <p>
+                    {new Date(prop.row.original?.travel_date).toLocaleDateString("en-US", {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                      weekday: "long",
+                    })}
+                  </p>
+                );
               },
             },
             {
@@ -331,7 +371,7 @@ function TotalInfo() {
                       onClick={() => {
                         setOpenGuest(prop.row.original);
                       }}
-                      className="rounded bg-brand-500 py-2 px-6 text-base font-medium text-white transition duration-200 hover:bg-brand-600 active:bg-brand-700 dark:bg-brand-400 dark:text-white dark:hover:bg-brand-300 dark:active:bg-brand-200"
+                      className="rounded bg-brand-500 px-6 py-2 text-base font-medium text-white transition duration-200 hover:bg-brand-600 active:bg-brand-700 dark:bg-brand-400 dark:text-white dark:hover:bg-brand-300 dark:active:bg-brand-200"
                     >
                       Details
                     </button>

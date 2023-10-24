@@ -61,7 +61,7 @@ app.use((err, req, res, next) => {
   // console.log("🚀 ~ file: index.js:21 ~ app.use ~ err:", err)
   // res.send(err)
 });
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5050;
 console.log("server started on port:", PORT);
 const serverInstance = app.listen(PORT);
 
