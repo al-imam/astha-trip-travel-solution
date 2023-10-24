@@ -83,31 +83,31 @@ const proposedAddressInThailandOptions = [
 }));
 
 const proposedAddressInThailandOptionsData = {
-  "Sofitel Bangkok Sukhumvit 189 Sukhumvit Road, Khlong Toei Nuea, Watthana, Bangkok 10110": {
+  "Sofitel Bangkok Sukhumvit 189 Sukhumvit Road, Khlong Toei Nuea, Watthana, Bangkok": {
     contact: "+66 2 126 9999",
   },
-  "Grand Hyatt Erawan Bangkok 494 Ratchadamri Rd, Lumphini, Pathum Wan, Bangkok 10330": {
+  "Grand Hyatt Erawan Bangkok 494 Ratchadamri Rd, Lumphini, Pathum Wan, Bangkok": {
     contact: "+66 2 254 1234",
   },
-  "Aloft Bangkok Sukhumvit 11 35 Sukhumvit 11 Alley, Klongtoey-nua, Watthana, Bangkok 10110": {
+  "Aloft Bangkok Sukhumvit , Klongtoey-nua, Watthana, Bangkok": {
     contact: "+66 2 207 7000",
   },
-  "Holiday Inn Express Bangkok Sukhumvit 11 30 Sukhumvit Soi 11 Klongtoey, Nua, Watthana, Bangkok 10110": {
+  "Holiday Inn Express Bangkok Sukhumvit, Nua, Watthana, Bangkok": {
     contact: "+66 2 119 4777",
   },
-  "Grand President Bangkok 16 Soi Sukhumvit 11, Khlong Toei Nuea, Watthana, Bangkok 10110": {
+  "Grand President Bangkok 16 Soi Sukhumvit 11, Khlong Toei Nuea, Watthana, Bangkok": {
     contact: "+66 2 651 1200",
   },
-  "Mövenpick Hotel Sukhumvit 15 Bangkok 47 Sukhumvit 15, Khwaeng Khlong Toei Nuea, Khlong Toei, Bangkok 10110": {
+  "Mövenpick Hotel Sukhumvit, Khwaeng Khlong Toei Nuea, Khlong Toei, Bangkok": {
     contact: "+66 2 119 3100",
   },
-  "Radisson Suites Bangkok Sukhumvit 23/2 Soi Sukhumvit 13, Khwaeng Khlong Toei Nuea, Khlong Toei, Bangkok 10110": {
+  "Radisson Suites Bangkok Sukhumvit, Khwaeng Khlong Toei Nuea, Khlong Toei, Bangkok": {
     contact: "+66 2 645 4999",
   },
-  "Novotel Bangkok Ploenchit Sukhumvit 566 Phloen Chit Rd, Khwaeng Lumphini, Pathum Wan, Bangkok 10330": {
+  "Novotel Bangkok Ploenchit Sukhumvit, Khwaeng Lumphini, Pathum Wan, Bangkok": {
     contact: "+66 2 305 6000",
   },
-  "Pullman Bangkok Grande Sukhumvit Asoke 30 Sukhumvit, 21 Asok Montri Rd, Watthana, Bangkok 10110": {
+  "Pullman Bangkok Grande Sukhumvit, 21 Asok Montri Rd, Watthana, Bangkok": {
     contact: "+66 2 204 4000",
   },
 };
@@ -141,10 +141,11 @@ export function Thailand() {
   const address = purpose.watch("proposed-address-in-thailand");
 
   useEffect(() => {
-    if ("value" in address && "label" in address && address.label in proposedAddressInThailandOptionsData) {
+    console.log(address);
+    if (address) {
       purpose.setValue(
         "telephone-fax-of-thailand-guarantor",
-        proposedAddressInThailandOptionsData[address.label].contact
+        proposedAddressInThailandOptionsData[address?.label].contact
       );
     }
   }, [address?.value]);
@@ -451,7 +452,7 @@ export function Thailand() {
               />
 
               <div>
-                <label className="text-base font-medium text-gray-800 line-clamp-1">
+                <label className="line-clamp-1 text-base font-medium text-gray-800">
                   Occupation (Present Position, Name Of Employer) *
                 </label>
                 <div className="flex gap-2 [&>*]:flex-1">

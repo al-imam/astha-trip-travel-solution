@@ -20,6 +20,8 @@ async function SendMailWithAttachment(loiReqData, guests) {
         passport: g.pasport_number,
       })),
       itenary: loiReqData.iternary,
+      name: loiReqData.guest_name,
+      passport: loiReqData.pasport_number,
     });
 
     const fileList = [

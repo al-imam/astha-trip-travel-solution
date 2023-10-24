@@ -11,6 +11,13 @@ function fix(str) {
 
 async function generateVisaPDF(name, passport, purpose, country) {
   try {
+    function createFolderIfNotExists(folderPath) {
+      if (!fs.existsSync(folderPath)) {
+        fs.mkdirSync(folderPath);
+      }
+    }
+    createFolderIfNotExists(path.join(__dirname, "generated-pdf"));
+
     if (country.toLowerCase() === "vietnam") return null;
 
     const fileFullPath = path.join(
@@ -29,12 +36,22 @@ async function generateVisaPDF(name, passport, purpose, country) {
 
     return fileFullPath;
   } catch (error) {
+    console.log(
+      "🚀 ~ file: pythonGeneratePDF.js:32 ~ generateVisaPDF ~ error:",
+      error
+    );
     return null;
   }
 }
 
 async function generateItenaryPDF({ guests, itenary: _i }) {
   try {
+    function createFolderIfNotExists(folderPath) {
+      if (!fs.existsSync(folderPath)) {
+        fs.mkdirSync(folderPath);
+      }
+    }
+    createFolderIfNotExists(path.join(__dirname, "generated-pdf"));
     const iternary = JSON.parse(_i);
 
     if (iternary.length < 0) return null;
