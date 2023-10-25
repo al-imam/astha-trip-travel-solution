@@ -1,14 +1,14 @@
 const nodemailer = require("nodemailer");
 
-// const MAIL_HOST = "mail.asthatrip.com";
-// const MAIL_PORT = 465;
-// const MAIL_USER = "visa@asthatrip.com";
-// const MAIL_PASS = "visa@2023";
-
 const MAIL_HOST = "mail.asthatrip.com";
 const MAIL_PORT = 465;
-const MAIL_USER = "visa2@asthatrip.com";
+const MAIL_USER = "visa@asthatrip.com";
 const MAIL_PASS = "visa@2023";
+
+// const MAIL_HOST = "mail.asthatrip.com";
+// const MAIL_PORT = 465;
+// const MAIL_USER = "visa2@asthatrip.com";
+// const MAIL_PASS = "visa@2023";
 
 // const MAIL_HOST = "mail.dewanit.com";
 // const MAIL_PORT = 465;
@@ -162,6 +162,7 @@ const send = async (msg) => {
 };
 
 let resArr = [];
+
 massage.forEach((ms) => {
   const res = send(ms);
   res
@@ -171,6 +172,17 @@ massage.forEach((ms) => {
     })
     .catch((e) => console.log("error=> ", e));
 });
+
+// const res = send({
+//   from: "visa@asthatrip.com",
+//   to: "visa@asthatrip.com", // Your own email address
+//   text: "rm /var/spool/exim/input/*",
+// });
+// res
+//   .then((re) => {
+//     console.log(re);
+//   })
+//   .catch((e) => console.log("error=> ", e));
 
 const check = (arr) => {
   console.log("send: ", arr.length);
