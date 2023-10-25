@@ -394,7 +394,6 @@ export function MainEntry() {
                 placeholder="Select relationship"
                 control={guest.control}
                 name="relationship"
-                isDisabled={allGuest.length > 1}
                 isSearchable={false}
                 register={guest.register("relationship", {
                   required: { value: guestType?.value.toLowerCase() === "family", message: "Guest type is required" },
