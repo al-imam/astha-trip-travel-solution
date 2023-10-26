@@ -59,10 +59,6 @@ const DownloadByAgent = function () {
         res.end(BlobFile);
         // res.send("save");
       } catch (error) {
-        console.log(
-          "🚀 ~ file: DownloadLoiByAgent.js:7 ~ loi: ~ error:",
-          error
-        );
         next(error);
       }
     },
@@ -92,10 +88,6 @@ const DownloadByAgent = function () {
         });
         res.end(BlobFile);
       } catch (error) {
-        console.log(
-          "🚀 ~ file: DownloadLoiByAgent.js:57 ~ itinerary: ~ error:",
-          error
-        );
         next(error);
       }
     },
@@ -145,20 +137,12 @@ const DownloadByAgent = function () {
         //   deleteFile(itineraryPath);
         // }, 1000);
       } catch (error) {
-        console.log(
-          "🚀 ~ file: DownloadLoiByAgent.js:92 ~ adminLoiFile: ~ error:",
-          error
-        );
         next(error);
       }
     },
     familyUndertaking: async (req, res, next) => {
       try {
         const { User } = req;
-        console.log(
-          "🚀 ~ file: DownloadLoiByAgent.js:158 ~ familyUndertaking: ~ User:",
-          User
-        );
         const { id } = req.params;
 
         const LOI_data = await LOI_Data.findById(id);
@@ -195,10 +179,6 @@ const DownloadByAgent = function () {
 
         res.end(blob.data);
       } catch (error) {
-        console.log(
-          "🚀 ~ file: DownloadLoiByAgent.js:160 ~ familyUndertaking: ~ error:",
-          error
-        );
         next(error);
       }
     },
