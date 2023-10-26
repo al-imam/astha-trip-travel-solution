@@ -1,6 +1,12 @@
 const Generate_schengen = require("../../util/Form/Genarate_schengen");
 const Generate_singapore = require("../../util/Form/Genarate_Sngapore");
 const Generate_thailand = require("../../util/Form/Genarate_thailand");
+const path = require("path");
+var zip = require("express-zip");
+const { readFile, writeFile } = require("fs/promises");
+
+const pdfPath = path.join(__dirname, "/pdf");
+
 const GeneratePDF = () => {
   return {
     schengen: async (req, res, next) => {
@@ -28,15 +34,31 @@ const GeneratePDF = () => {
       }
       try {
         const { id } = req.params;
-        const { file, name } = await Generate_singapore(id, pass);
+
+        const { file, name, undertaking } = await Generate_singapore(id, pass);
+
+        const path_undertaking = `${pdfPath}/${name}-${id}_undertaking.pdf`;
+        await writeFile(path_undertaking, undertaking);
+        const path_visa_form = `${pdfPath}/${name}-${id}_visa-form.pdf`;
+        await writeFile(path_visa_form, undertaking);
+
         if (!file) {
           throw "the pdf is not generated";
         }
-        res.set({
-          "Content-Disposition": `attachment; filename=${name}-visa-form.pdf`,
-          "Content-Type": "application/pdf",
-        });
-        res.end(file);
+        // npm install archiver ** <- zip alternative ** \\
+        return res.zip([
+          { path: path_undertaking, name: `${name}-${id}-undertaking.pdf` },
+          {
+            path: path_visa_form,
+            name: `${name}-${id}-visa_application_form.pdf`,
+          },
+        ]);
+        // return res.zip();
+        // res.set({
+        //   "Content-Disposition": `attachment; filename=${name}-visa-form.pdf`,
+        //   "Content-Type": "application/pdf",
+        // });
+        // res.end(file);
       } catch (error) {
         next(error);
       }

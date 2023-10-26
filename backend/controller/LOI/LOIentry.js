@@ -144,7 +144,7 @@ const LOIEntry = async (req, res, next) => {
         balance: bala,
       });
     }
-    global.nahidEvent.emit("newLoi");
+    global.nahidEvent.emit("newLoi"); 
     res.send("ok");
   } catch (error) {
     console.log("🚀 ~ file: LOIentry.js:5 ~ LOIEntry ~ error:", error);

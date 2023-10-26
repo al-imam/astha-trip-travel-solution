@@ -5,6 +5,8 @@ const { readFile, writeFile } = require("fs/promises");
 const FormHelper = require("./Helper/Function");
 const path = require("path");
 
+const baseURL = process.env.FLASK_BASE_URL ?? "http://127.0.0.1:8000";
+const axios = require("axios");
 const Generate_Singapore = async (id) => {
   try {
     // check is query id is provided
@@ -805,9 +807,23 @@ const Generate_Singapore = async (id) => {
     const pdfByt = await pdfDoc.save();
     // await writeFile("./Singapore-gen test.pdf", pdfByt);
     // return "pdf save ";
-    return { file: pdfByt, name: response["name"] };
+
+    // const /generate/undertaking/single/
+
+    const undertaking = await axios.post(
+      `${baseURL}/generate/undertaking/single/`,
+      {
+        name: response["name"],
+      }
+    );
+
+    return {
+      file: pdfByt,
+      name: response["name"],
+      undertaking: undertaking.data,
+    };
   } catch (error) {
-    // console.log("🚀 ~ file: Genarate_Sngapore.js:9 ~ error:", error);
+    console.log("🚀 ~ file: Genarate_Sngapore.js:9 ~ error:", error);
     throw new Error(error);
   }
 };

@@ -80,9 +80,11 @@ const io = new Server(serverInstance, {
 
 io.on("connection", (socket) => {
   console.log("a user is connected id =>", socket.id);
+
   socket.on("disconnect", () => {
     console.log("user disconnected");
   });
+
   eventEmeter.on("newLoi", () => {
     socket.emit("getNewLOI");
   });

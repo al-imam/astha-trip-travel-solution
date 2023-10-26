@@ -188,7 +188,7 @@ function CardMenu(props) {
     <>
       {isLoading && (
         <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-[2px]">
-          <div className="flex flex-col items-center gap-2 rounded-sm bg-white py-10 px-14 text-center text-gray-900 shadow">
+          <div className="flex flex-col items-center gap-2 rounded-sm bg-white px-14 py-10 text-center text-gray-900 shadow">
             <Spinner className="text-center text-4xl" />
             <p className="text-xl">Please wait</p>
           </div>
@@ -218,7 +218,9 @@ function CardMenu(props) {
                 <p>
                   Status: <span className={prop.status === "cancel" && "text-red-500"}>{prop.status}</span>
                 </p>
+                <div className={"mt-2 border-t-gray-400 pt-2"}>download document</div>
               </div>
+
               <div className="flex flex-col">
                 {/* TODO: complete url for pasport_copy */}
                 <a
