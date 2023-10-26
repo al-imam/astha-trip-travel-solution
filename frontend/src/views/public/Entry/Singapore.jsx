@@ -199,13 +199,13 @@ const buildingNameOptionsRelatedData = {
   },
 };
 
-const localCompanyOptions = ["Joy Travel & Tours Pte LT"].map((value) => ({
+const localCompanyOptions = ["Joy Travel & Tours Pte LTd"].map((value) => ({
   label: value,
   value: value.toUpperCase(),
 }));
 
 const localCompanyOptionsRelatedData = {
-  "joy travel & tours pte lt": {
+  "joy travel & tours pte ltd": {
     relationship: "CLIENT",
     contactNo: "6591381993",
     email: "JOYHOLIDAYS88@GMAIL.COM",

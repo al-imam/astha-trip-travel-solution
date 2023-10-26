@@ -68,15 +68,15 @@ const steps = ["", "", ""];
 
 const proposedAddressInThailandOptions = [
   "Hotel Ambassador Sukimvit, Soi-11, Bangkok",
-  "Sofitel Bangkok Sukhumvit 189 Sukhumvit Road, Khlong Toei Nuea, Watthana, Bangkok 10110",
-  "Grand Hyatt Erawan Bangkok 494 Ratchadamri Rd, Lumphini, Pathum Wan, Bangkok 10330",
-  "Aloft Bangkok Sukhumvit 11 35 Sukhumvit 11 Alley, Klongtoey-nua, Watthana, Bangkok 10110",
-  "Holiday Inn Express Bangkok Sukhumvit 11 30 Sukhumvit Soi 11 Klongtoey, Nua, Watthana, Bangkok 10110",
-  "Grand President Bangkok 16 Soi Sukhumvit 11, Khlong Toei Nuea, Watthana, Bangkok 10110",
-  "Mövenpick Hotel Sukhumvit 15 Bangkok 47 Sukhumvit 15, Khwaeng Khlong Toei Nuea, Khlong Toei, Bangkok 10110",
-  "Radisson Suites Bangkok Sukhumvit 23/2 Soi Sukhumvit 13, Khwaeng Khlong Toei Nuea, Khlong Toei, Bangkok 10110",
-  "Novotel Bangkok Ploenchit Sukhumvit 566 Phloen Chit Rd, Khwaeng Lumphini, Pathum Wan, Bangkok 10330",
-  "Pullman Bangkok Grande Sukhumvit Asoke 30 Sukhumvit, 21 Asok Montri Rd, Watthana, Bangkok 10110",
+  "Sofitel Bangkok Sukhumvit 189 Sukhumvit Road, Khlong Toei Nuea, Watthana, Bangkok",
+  "Grand Hyatt Erawan Bangkok 494 Ratchadamri Rd, Lumphini, Pathum Wan, Bangkok",
+  "Aloft Bangkok Sukhumvit , Klongtoey-nua, Watthana, Bangkok",
+  "Holiday Inn Express Bangkok Sukhumvit, Nua, Watthana, Bangkok",
+  "Grand President Bangkok 16 Soi Sukhumvit 11, Khlong Toei Nuea, Watthana, Bangkok",
+  "Mövenpick Hotel Sukhumvit, Khwaeng Khlong Toei Nuea, Khlong Toei, Bangkok",
+  "Radisson Suites Bangkok Sukhumvit, Khwaeng Khlong Toei Nuea, Khlong Toei, Bangkok",
+  "Novotel Bangkok Ploenchit Sukhumvit, Khwaeng Lumphini, Pathum Wan, Bangkok",
+  "Pullman Bangkok Grande Sukhumvit, 21 Asok Montri Rd, Watthana, Bangkok",
 ].map((value) => ({
   label: value,
   value: value.toUpperCase(),
@@ -141,11 +141,10 @@ export function Thailand() {
   const address = purpose.watch("proposed-address-in-thailand");
 
   useEffect(() => {
-    console.log(address);
     if (address) {
       purpose.setValue(
         "telephone-fax-of-thailand-guarantor",
-        proposedAddressInThailandOptionsData[address?.label].contact
+        proposedAddressInThailandOptionsData[address?.label]?.contact
       );
     }
   }, [address?.value]);
