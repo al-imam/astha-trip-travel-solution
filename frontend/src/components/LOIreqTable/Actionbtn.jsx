@@ -218,7 +218,21 @@ function CardMenu(props) {
                 <p>
                   Status: <span className={prop.status === "cancel" && "text-red-500"}>{prop.status}</span>
                 </p>
-                <div className={"mt-2 border-t-gray-400 pt-2"}>download document</div>
+                <div className={"mt-2 border-t-gray-800 pt-2"}>
+                  <a
+                    href={`/download/admin/loi/${prop.id}`}
+                    target="_blank"
+                    className="rounded-xl bg-brand-200 px-3 py-2 text-gray-800 hover:shadow-md"
+                    rel="noreferrer"
+                  >
+                    Download LOI Files{" "}
+                  </a>
+                  {prop.country === "Singapore" && (
+                    <button className="ml-3 rounded-xl bg-brand-200 px-3 py-2 text-gray-800 hover:shadow-md">
+                      Download Family Undertaking{" "}
+                    </button>
+                  )}
+                </div>
               </div>
 
               <div className="flex flex-col">
