@@ -1,6 +1,22 @@
 const LOI_Data = require("../../model/LOI");
-const fs = require("fs");
+
 const pythonGeneratePDF = require("../../GenaretePDF/pythonGeneratePDF");
+const fs = require("fs");
+
+function deleteFile(filePath) {
+  // Use fs.unlink to delete the file
+  fs.unlink(filePath, (err) => {
+    if (err) {
+      throw err;
+    } else {
+      return true;
+    }
+  });
+}
+const path = require("path");
+var zip = require("express-zip");
+const { readFile, writeFile } = require("fs/promises");
+const pdfPath = path.join(__dirname, "/temp-file");
 const DownloadByAgent = function () {
   return {
     loi: async (req, res, next) => {
@@ -78,6 +94,59 @@ const DownloadByAgent = function () {
       } catch (error) {
         console.log(
           "🚀 ~ file: DownloadLoiByAgent.js:57 ~ itinerary: ~ error:",
+          error
+        );
+        next(error);
+      }
+    },
+
+    // admin download all file related to loi
+    adminLoiFile: async (req, res, next) => {
+      try {
+        const { id } = req.params;
+
+        const LOI_data = await LOI_Data.findById(id);
+        const LOI_dataWithRef = await LOI_Data.find({
+          reference: LOI_data[0].reference,
+        });
+        // generated loi blob |
+        const loiBlob = await pythonGeneratePDF.getVisaPDF(
+          LOI_data[0].guest_name,
+          LOI_data[0].pasport_number,
+          LOI_data[0].purpose
+        );
+        //generated itinerary
+        const itineraryBlob = await pythonGeneratePDF.getItenaryPDF({
+          guests: LOI_dataWithRef.map((g) => ({
+            name: g.guest_name,
+            passport: g.pasport_number,
+          })),
+          itenary: LOI_data[0].iternary,
+          name: LOI_data[0].guest_name,
+          passport: LOI_data[0].pasport_number,
+        });
+        // make zip
+
+        const loipath = `${pdfPath}/${LOI_data[0].guest_name}-${id}loi.pdf`;
+        await writeFile(loipath, loiBlob);
+
+        const itineraryPath = `${pdfPath}/${LOI_data[0].guest_name}-${id}itinerary.pdf`;
+        await writeFile(itineraryPath, itineraryBlob);
+
+        res.zip([
+          { path: loipath, name: `${LOI_data[0].guest_name}-${id}-loi.pdf` },
+          {
+            path: itineraryPath,
+            name: `${LOI_data[0].guest_name}-${id}-itinerary.pdf`,
+          },
+        ]);
+        // setTimeout(() => {
+        //   deleteFile(loipath);
+        //   deleteFile(itineraryPath);
+        // }, 1000);
+      } catch (error) {
+        console.log(
+          "🚀 ~ file: DownloadLoiByAgent.js:92 ~ adminLoiFile: ~ error:",
           error
         );
         next(error);
