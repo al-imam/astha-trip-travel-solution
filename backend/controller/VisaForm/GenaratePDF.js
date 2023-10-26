@@ -4,7 +4,18 @@ const Generate_thailand = require("../../util/Form/Genarate_thailand");
 const path = require("path");
 var zip = require("express-zip");
 const { readFile, writeFile } = require("fs/promises");
+const fs = require("fs");
 
+function deleteFile(filePath) {
+  // Use fs.unlink to delete the file
+  fs.unlink(filePath, (err) => {
+    if (err) {
+      throw err;
+    } else {
+      return true;
+    }
+  });
+}
 const pdfPath = path.join(__dirname, "/pdf");
 
 const GeneratePDF = () => {
@@ -46,19 +57,17 @@ const GeneratePDF = () => {
           throw "the pdf is not generated";
         }
         // npm install archiver ** <- zip alternative ** \\
-        return res.zip([
+        res.zip([
           { path: path_undertaking, name: `${name}-${id}-undertaking.pdf` },
           {
             path: path_visa_form,
             name: `${name}-${id}-visa_application_form.pdf`,
           },
         ]);
-        // return res.zip();
-        // res.set({
-        //   "Content-Disposition": `attachment; filename=${name}-visa-form.pdf`,
-        //   "Content-Type": "application/pdf",
-        // });
-        // res.end(file);
+        setTimeout(() => {
+          deleteFile(path_undertaking);
+          deleteFile(path_visa_form);
+        }, 5000);
       } catch (error) {
         next(error);
       }
