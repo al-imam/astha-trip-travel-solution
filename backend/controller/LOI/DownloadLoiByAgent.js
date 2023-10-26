@@ -1,8 +1,8 @@
 const LOI_Data = require("../../model/LOI");
-
+const axios = require("axios");
 const pythonGeneratePDF = require("../../GenaretePDF/pythonGeneratePDF");
 const fs = require("fs");
-
+const baseURL = process.env.FLASK_BASE_URL ?? "http://127.0.0.1:8000";
 function deleteFile(filePath) {
   // Use fs.unlink to delete the file
   fs.unlink(filePath, (err) => {
@@ -147,6 +147,56 @@ const DownloadByAgent = function () {
       } catch (error) {
         console.log(
           "🚀 ~ file: DownloadLoiByAgent.js:92 ~ adminLoiFile: ~ error:",
+          error
+        );
+        next(error);
+      }
+    },
+    familyUndertaking: async (req, res, next) => {
+      try {
+        const { User } = req;
+        console.log(
+          "🚀 ~ file: DownloadLoiByAgent.js:158 ~ familyUndertaking: ~ User:",
+          User
+        );
+        const { id } = req.params;
+
+        const LOI_data = await LOI_Data.findById(id);
+
+        if (User.Agent) {
+          const agentref = `{"type":"agent","username":"${User.Agent.email}"}`;
+
+          if (LOI_data[0].agent !== agentref) {
+            throw new Error("not valid request");
+          }
+        }
+        const LOI_dataWithRef = await LOI_Data.find({
+          reference: LOI_data[0].reference,
+        });
+
+        const blob = await axios.post(
+          `${baseURL}/generate/undertaking/family/`,
+          {
+            name: LOI_data[0].guest_name,
+            array: LOI_dataWithRef.map((e, i) => {
+              return {
+                sl: `${i}`,
+                name: e.guest_name,
+                number: e.pasport_number,
+                remarks: e.relationship,
+              };
+            }),
+          }
+        );
+        res.set({
+          "Content-Disposition": `attachment; filename=${LOI_data[0].guest_name}-undertaking.pdf`,
+          "Content-Type": "application/pdf",
+        });
+
+        res.end(blob.data);
+      } catch (error) {
+        console.log(
+          "🚀 ~ file: DownloadLoiByAgent.js:160 ~ familyUndertaking: ~ error:",
           error
         );
         next(error);

@@ -228,9 +228,14 @@ function CardMenu(props) {
                     Download LOI Files{" "}
                   </a>
                   {prop.country === "Singapore" && (
-                    <button className="ml-3 rounded-xl bg-brand-200 px-3 py-2 text-gray-800 hover:shadow-md">
+                    <a
+                      href={`/download/family/undertaking/${prop.id}`}
+                      target="_blank"
+                      className="ml-3 rounded-xl bg-brand-200 px-3 py-2 text-gray-800 hover:shadow-md"
+                      rel="noreferrer"
+                    >
                       Download Family Undertaking{" "}
-                    </button>
+                    </a>
                   )}
                 </div>
               </div>

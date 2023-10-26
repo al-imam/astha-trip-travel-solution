@@ -124,6 +124,17 @@ function TotalInfo() {
                     Fill Visa Application Form
                   </Link>
                 )}
+                <a
+                  href={`/download/family/undertaking/${openGuest.id}`}
+                  target="_blank"
+                  className="float-right mx-2 mt-2 flex items-center rounded-xl bg-brand-600 px-5 py-3 font-bold text-white transition-all  duration-300 hover:scale-105 hover:shadow-xl active:scale-95"
+                  rel="noreferrer"
+                >
+                  <span className="pr-2 text-2xl">
+                    <LineMdDownloadOutlineLoop />
+                  </span>
+                  Download Undertaking
+                </a>
               </div>
             </div>
           </div>
