@@ -14,16 +14,6 @@ async function SendMailWithAttachment(loiReqData, guests) {
       loiReqData.country
     );
 
-    // const itenaryFullPathPDF = await PDF.generateItenaryPDF({
-    //   guests: guests.map((g) => ({
-    //     name: g.guest_name,
-    //     passport: g.pasport_number,
-    //   })),
-    //   itenary: loiReqData.iternary,
-    //   name: loiReqData.guest_name,
-    //   passport: loiReqData.pasport_number,
-    // });
-
     const itenaryFullPathPDF = await PDF.generateItenaryPDF({
       guests: guests.map((g) => ({
         name: g.guest_name,
@@ -70,6 +60,12 @@ async function SendMailWithAttachment(loiReqData, guests) {
       const agent = JSON.parse(loiReqData.agent);
       mails.push(agent.username);
     }
+
+    // TODO: add task massager here for set email tasks assigns.
+    /* 
+     [] add a task queue system plane for radis bullQ.
+     [] assign email task to the queue pipe for send email.
+    */
 
     const mailRes = await SendEmail({
       to: ["i3371595@gmail.com", "nahidhasan141400@gmail.com"],
@@ -127,7 +123,7 @@ async function approveLoiRequest(req, res, next) {
       });
     }
 
-    global.nahidEvent.emit("newLoi");
+    global.io.emit("getNewLOI");
     res.status(200).json({ success: true });
   } catch (error) {
     console.log("🚀 ~ approved ~ error:", error);
