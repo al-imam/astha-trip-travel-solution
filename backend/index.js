@@ -65,11 +65,6 @@ const PORT = process.env.PORT || 5050;
 console.log("server started on port:", PORT);
 const serverInstance = app.listen(PORT);
 
-// global event
-const events = require("events");
-const eventEmeter = new events();
-
-global.nahidEvent = eventEmeter;
 // Socket connection init
 
 const io = new Server(serverInstance, {
@@ -78,14 +73,12 @@ const io = new Server(serverInstance, {
   },
 });
 
+global.io = io;
+
 io.on("connection", (socket) => {
   console.log("a user is connected id =>", socket.id);
 
   socket.on("disconnect", () => {
     console.log("user disconnected");
-  });
-
-  eventEmeter.on("newLoi", () => {
-    socket.emit("getNewLOI");
   });
 });
