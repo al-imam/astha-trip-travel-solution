@@ -1,9 +1,19 @@
 const nodemailer = require("nodemailer");
 
-const MAIL_HOST = "mail.asthatrip.com";
-const MAIL_PORT = 465;
-const MAIL_USER = "visa@asthatrip.com";
-const MAIL_PASS = "visa@2023";
+// const MAIL_HOST = "mail.asthatrip.com";
+// const MAIL_PORT = 465;
+// const MAIL_USER = "visa@asthatrip.com";
+// const MAIL_PASS = "visa@2023";
+
+const MAIL_HOST = "us3.smtp.mailhostbox.com";
+const MAIL_PORT = 587;
+const MAIL_USER = "info@asthatrip.com";
+const MAIL_PASS = "swYBUtS8";
+
+// const MAIL_HOST = "smtp.asthatrip.com";
+// const MAIL_PORT = 587;
+// const MAIL_USER = "info@asthatrip.com";
+// const MAIL_PASS = "swYBUtS8";
 
 // const MAIL_HOST = "mail.asthatrip.com";
 // const MAIL_PORT = 465;
